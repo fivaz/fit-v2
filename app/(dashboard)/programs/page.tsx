@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import NewProgramDrawer from "@/components/new-program-drawer";
+import { NewProgramDrawer } from "@/components/new-program-drawer";
 
 export default function Programs() {
 	return (
