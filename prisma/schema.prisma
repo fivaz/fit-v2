@@ -23,9 +23,38 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  programs      Program[]
 
   @@unique([email])
   @@map("user")
+}
+
+enum MuscleGroup {
+  chest
+  back
+  shoulders
+  biceps
+  triceps
+  quads
+  hamstrings
+  glutes
+  calves
+  abs
+  forearms
+  traps
+}
+
+model Program {
+  id        String        @id @default(uuid())
+  name      String
+  muscles   MuscleGroup[]
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("program")
 }
 
 model Session {
