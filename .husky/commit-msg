@@ -1,0 +1,4 @@
+# Skip commitlint if we are in a CI environment
+[ "$CI" = "true" ] && exit 0
+
+pnpm dlx commitlint --edit "$1"
