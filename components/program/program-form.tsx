@@ -1,12 +1,16 @@
-import * as React from "react";
+import { type FormEvent, Fragment, startTransition, useState } from "react";
 
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, X } from "lucide-react";
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { saveProgram } from "@/lib/program/actions";
+import { usePrograms } from "@/lib/program/programs-context";
+import { formToProgram, ProgramUI } from "@/lib/program/type";
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
@@ -17,102 +21,124 @@ const formSchema = z.object({
 const MUSCLE_GROUPS = [
 	{ id: "chest", label: "Chest", image: "/muscles/chest.webp" },
 	{ id: "back", label: "Back", image: "/muscles/back.webp" },
-	{ id: "legs", label: "Legs", image: "/muscles/legs.webp" },
-	{ id: "arms", label: "Arms", image: "/muscles/arms.webp" },
 	{ id: "shoulders", label: "Shoulders", image: "/muscles/shoulders.webp" },
-	{ id: "core", label: "Core", image: "/muscles/core.webp" },
-];
+
+	{ id: "biceps", label: "Biceps", image: "/muscles/biceps.webp" },
+	{ id: "triceps", label: "Triceps", image: "/muscles/triceps.webp" },
+	{ id: "forearms", label: "Forearms", image: "/muscles/forearms.webp" },
+
+	{ id: "quads", label: "Quadriceps", image: "/muscles/quads.webp" },
+	{ id: "hamstrings", label: "Hamstrings", image: "/muscles/hamstrings.webp" },
+	{ id: "glutes", label: "Glutes", image: "/muscles/glutes.webp" },
+	{ id: "calves", label: "Calves", image: "/muscles/calves.webp" },
+
+	{ id: "abs", label: "Abs", image: "/muscles/abs.webp" },
+	{ id: "traps", label: "Traps", image: "/muscles/traps.webp" },
+] as const;
 
 type ProgramFormProps = {
-	setOpen: (open: boolean) => void;
+	program: ProgramUI;
+	onClose: () => void;
 };
 
-export function ProgramForm({ setOpen }: ProgramFormProps) {
-	const [name, setName] = React.useState("");
-	const [selectedMuscles, setSelectedMuscles] = React.useState<string[]>([]);
-	const [errors, setErrors] = React.useState<{ name?: string; muscles?: string }>({});
+export function ProgramForm({ program, onClose }: ProgramFormProps) {
+	const { addItem, updateItem, deleteItem } = usePrograms();
+	const [errors, setErrors] = useState<{ name?: string; muscles?: string }>({});
+	const isEdit = !!program.id;
+	const [selectedMuscles, setSelectedMuscles] = useState<string[]>(program.muscles || []);
 
 	const toggleMuscle = (id: string) => {
 		setSelectedMuscles((prev) =>
 			prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id],
 		);
-		// Clear error when user makes a selection
 		if (errors.muscles) setErrors((prev) => ({ ...prev, muscles: undefined }));
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const formData = new FormData(e.currentTarget);
 
-		const result = formSchema.safeParse({ name, muscles: selectedMuscles });
+		const programData = formToProgram(formData);
 
+		const result = formSchema.safeParse(programData);
 		if (!result.success) {
-			const formattedErrors = result.error.flatten().fieldErrors;
-			setErrors({
-				name: formattedErrors.name?.[0],
-				muscles: formattedErrors.muscles?.[0],
-			});
+			const { fieldErrors } = z.flattenError(result.error);
+			setErrors({ name: fieldErrors.name?.[0], muscles: fieldErrors.muscles?.[0] });
 			return;
 		}
 
-		console.log("Form Data:", result.data);
+		const optimisticProduct: ProgramUI = {
+			...programData,
+			id: programData.id || crypto.randomUUID(),
+		};
 
-		setName("");
-		setSelectedMuscles([]);
-		setErrors({});
-		setOpen(false);
+		onClose();
+
+		startTransition(async () => {
+			// Apply UI changes immediately
+			if (isEdit) updateItem(optimisticProduct);
+			else addItem(optimisticProduct);
+
+			try {
+				await saveProgram(formData);
+				toast.success(isEdit ? "Program updated" : "Program created");
+			} catch (e) {
+				// Rollback on failure
+				if (isEdit) updateItem(program);
+				else deleteItem(optimisticProduct.id);
+
+				toast.error("An error occurred. Changes rolled back.");
+			}
+		});
 	};
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6 px-4">
-			{/* Program Name */}
+			{isEdit && <input type="hidden" name="id" value={program.id} />}
 			<div className="grid gap-2">
 				<Label htmlFor="name">Program Name</Label>
 				<Input
 					id="name"
-					value={name}
-					onChange={(e) => {
-						setName(e.target.value);
-						if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
-					}}
-					placeholder="e.g. Push Day"
+					name="name"
+					defaultValue={program.name}
+					placeholder="e.g. Strength Training"
 					className={errors.name ? "border-destructive" : ""}
 				/>
 				{errors.name && <p className="text-destructive text-sm">{errors.name}</p>}
 			</div>
-
-			{/* Muscle Selection */}
 			<div className="grid gap-3">
 				<Label>Target Muscle Groups</Label>
 				<div className="grid grid-cols-3 gap-3">
 					{MUSCLE_GROUPS.map((muscle) => {
 						const isSelected = selectedMuscles.includes(muscle.id);
 						return (
-							<button
-								key={muscle.id}
-								type="button"
-								onClick={() => toggleMuscle(muscle.id)}
-								className={cn(
-									"hover:bg-accent relative flex flex-col items-center gap-2 rounded-xl border-2 p-2 transition-all",
-									isSelected
-										? "border-orange-500 ring-2 ring-orange-500/20"
-										: "bg-muted/50 border-transparent",
-								)}
-							>
-								<div className="aspect-square w-full overflow-hidden rounded-lg bg-white">
-									<img
-										src={muscle.image}
-										alt={muscle.label}
-										className="h-full w-full object-cover"
-									/>
-								</div>
-								<span className="text-xs font-medium">{muscle.label}</span>
-
-								{isSelected && (
-									<div className="absolute top-1 right-1">
-										<CheckCircle2 className="h-4 w-4 fill-orange-500 text-white" />
+							<Fragment key={muscle.id}>
+								{isSelected && <input type="hidden" name="muscles" value={muscle.id} />}
+								<button
+									type="button"
+									onClick={() => toggleMuscle(muscle.id)}
+									className={cn(
+										"hover:bg-accent relative flex flex-col items-center gap-2 rounded-xl border-2 p-2 transition-all",
+										isSelected
+											? "border-orange-500 ring-2 ring-orange-500/20"
+											: "bg-muted/50 border-transparent",
+									)}
+								>
+									<div className="aspect-square w-full overflow-hidden rounded-lg bg-white">
+										<img
+											src={muscle.image}
+											alt={muscle.label}
+											className="h-full w-full object-cover"
+										/>
 									</div>
-								)}
-							</button>
+									<span className="text-xs font-medium">{muscle.label}</span>
+									{isSelected && (
+										<div className="absolute top-1 right-1">
+											<CheckCircle2 className="h-4 w-4 fill-orange-500 text-white" />
+										</div>
+									)}
+								</button>
+							</Fragment>
 						);
 					})}
 				</div>
@@ -121,7 +147,7 @@ export function ProgramForm({ setOpen }: ProgramFormProps) {
 
 			<DrawerFooter className="px-0">
 				<Button type="submit" className="w-full">
-					Create Program
+					{isEdit ? "Save Changes" : "Create Program"}
 				</Button>
 				<DrawerClose asChild>
 					<Button variant="outline" className="w-full">

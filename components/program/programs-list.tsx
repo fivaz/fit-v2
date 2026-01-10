@@ -7,9 +7,10 @@ import { ProgramFormButton } from "@/components/program/program-form-button";
 import { ProgramRow } from "@/components/program/program-row";
 import { Program } from "@/lib/generated/prisma/client";
 import { ProgramsProvider, usePrograms } from "@/lib/program/programs-context";
+import { ProgramUI } from "@/lib/program/type";
 
 type ProgramsListProps = {
-	initialPrograms: Program[];
+	initialPrograms: ProgramUI[];
 };
 
 export function ProgramsList({ initialPrograms }: ProgramsListProps) {

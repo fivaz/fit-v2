@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 
 import { ProgramForm } from "@/components/program/program-form";
 import { Button } from "@/components/ui/button";
@@ -12,9 +13,11 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
+import { buildEmptyProgram } from "@/lib/program/type";
 
 export function ProgramFormButton() {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
+	const program = buildEmptyProgram();
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
@@ -30,7 +33,7 @@ export function ProgramFormButton() {
 						</DrawerDescription>
 					</DrawerHeader>
 
-					<ProgramForm setOpen={setOpen} />
+					<ProgramForm program={program} onClose={() => setOpen(false)} />
 				</div>
 			</DrawerContent>
 		</Drawer>
