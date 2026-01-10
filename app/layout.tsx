@@ -3,6 +3,11 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { ModeToggle } from "@/components/mode-toggle";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { ConfirmProvider } from "@/hooks/confirm-provider";
+
 const geistSans = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
@@ -24,8 +29,26 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+		<html lang="en" suppressHydrationWarning>
+			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<ConfirmProvider>
+						<div className="bg-background min-h-svh">
+							{/* Main Content Area */}
+							<div className="absolute right-0 p-5">
+								<ModeToggle />
+							</div>
+							{children}
+						</div>
+					</ConfirmProvider>
+					<Toaster />
+				</ThemeProvider>
+			</body>
 		</html>
 	);
 }
