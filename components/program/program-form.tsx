@@ -25,7 +25,7 @@ type ProgramFormProps = {
 };
 
 export function ProgramForm({ program, onClose }: ProgramFormProps) {
-	const { addItem } = usePrograms();
+	const { addItem, updateItem } = usePrograms();
 	const [errors, setErrors] = useState<{ name?: string; muscles?: string }>({});
 	const isEdit = !!program.id;
 	const [selectedMuscles, setSelectedMuscles] = useState<string[]>(program.muscles || []);
@@ -57,7 +57,11 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 
 		onClose();
 
-		addItem(optimisticProgram);
+		if (isEdit) {
+			updateItem(optimisticProgram);
+		} else {
+			addItem(optimisticProgram);
+		}
 	};
 
 	return (

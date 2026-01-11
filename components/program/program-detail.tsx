@@ -44,9 +44,8 @@ export function ProgramDetail({ program }: ProgramDetailProps) {
 }
 
 export function ProgramDetailInternal() {
-	const { firstItem: program, addItem, deleteItem } = usePrograms();
+	const { firstItem: program } = usePrograms();
 	const confirm = useConfirm();
-	const router = useRouter();
 	const [showProgramForm, setShowProgramForm] = useState(false);
 
 	if (!program) return null;
@@ -59,24 +58,7 @@ export function ProgramDetailInternal() {
 
 		if (!confirmed) return;
 
-		const itemToRollback = { ...program };
-		startTransition(async () => {
-			deleteItem(program.id);
-
-			try {
-				await deleteProgram(program.id);
-				toast.success("Program deleted!");
-				router.push(ROUTES.PROGRAMS);
-			} catch (error) {
-				addItem(itemToRollback);
-
-				reportError(error, { extra: { programId: program.id, programName: program.name } });
-
-				toast.error("Failed to delete program", {
-					description: "Your changes were rolled back.",
-				});
-			}
-		});
+		await deleteProgram(program.id);
 	};
 
 	return (
