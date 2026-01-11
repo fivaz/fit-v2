@@ -1,47 +1,25 @@
-"use client";
-
 import { createContext, ReactNode, useContext } from "react";
 
-import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
+import {
+	type Identifiable,
+	useOptimisticList,
+	type UseOptimisticListOptions,
+	type UseOptimisticListReturn,
+} from "@/hooks/optimistic/use-optmistic-list";
 
-type Identifiable = { id: string };
+type CreateOptimisticContextProps<T> = Pick<UseOptimisticListOptions<T>, "sortFnc">;
 
-interface OptimisticContextProps<T> {
-	items: T[];
-	firstItem: T | undefined;
-	addItem: (item: T) => void;
-	updateItem: (item: T) => void;
-	deleteItem: (id: string) => void;
-	setItems: (items: T[]) => void;
-}
+export function createOptimisticContext<T extends Identifiable>({
+	sortFnc,
+}: CreateOptimisticContextProps<T>) {
+	const Context = createContext<UseOptimisticListReturn<T> | null>(null);
 
-export function createOptimisticContext<T extends Identifiable>(
-	defaultSortFn?: (items: T[]) => T[],
-) {
-	const Context = createContext<OptimisticContextProps<T> | null>(null);
-
-	function Provider({
-		children,
-		initialItems,
-		sortFn = defaultSortFn,
-	}: {
+	type ProviderProps = Pick<UseOptimisticListOptions<T>, "initialItems"> & {
 		children: ReactNode;
-		initialItems: T[];
-		sortFn?: (items: T[]) => T[];
-	}) {
-		const { optimisticItems, addItem, updateItem, deleteItem, setItems } = useOptimisticList<T>(
-			initialItems,
-			{ sortFn },
-		);
+	};
 
-		const value: OptimisticContextProps<T> = {
-			items: optimisticItems,
-			firstItem: optimisticItems[0],
-			addItem,
-			updateItem,
-			deleteItem,
-			setItems,
-		};
+	function Provider({ children, initialItems }: ProviderProps) {
+		const value = useOptimisticList<T>({ initialItems, sortFnc });
 
 		return <Context.Provider value={value}>{children}</Context.Provider>;
 	}

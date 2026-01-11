@@ -17,10 +17,12 @@ import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
+import { usePrograms } from "@/hooks/program/programs-context";
+import { ProgramsProvider } from "@/hooks/program/programs-context";
 import { ROUTES } from "@/lib/consts";
 import { reportError } from "@/lib/logger";
 import { deleteProgram } from "@/lib/program/actions";
-import { usePrograms } from "@/lib/program/programs-context";
+import { ProgramUI } from "@/lib/program/type";
 
 import {
 	DropdownMenu,
@@ -29,7 +31,19 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-export function ProgramDetail() {
+type ProgramDetailProps = {
+	program: ProgramUI;
+};
+
+export function ProgramDetail({ program }: ProgramDetailProps) {
+	return (
+		<ProgramsProvider initialItems={[program]}>
+			<ProgramDetailInternal />
+		</ProgramsProvider>
+	);
+}
+
+export function ProgramDetailInternal() {
 	const { firstItem: program, addItem, deleteItem } = usePrograms();
 	const confirm = useConfirm();
 	const router = useRouter();

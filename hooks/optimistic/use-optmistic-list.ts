@@ -1,6 +1,6 @@
 import { useOptimistic } from "react";
 
-type Identifiable = { id: string };
+export type Identifiable = { id: string };
 
 type Action<T> =
 	| { type: "add"; item: T }
@@ -8,16 +8,24 @@ type Action<T> =
 	| { type: "delete"; id: string }
 	| { type: "set"; items: T[] };
 
-interface UseOptimisticListOptions<T> {
-	sortFn?: (items: T[]) => T[];
-}
+export type UseOptimisticListOptions<T> = {
+	initialItems: T[];
+	sortFnc?: (items: T[]) => T[];
+};
 
-export function useOptimisticList<T extends Identifiable>(
-	initialItems: T[],
-	options: UseOptimisticListOptions<T> = {},
-) {
-	const { sortFn } = options;
+export type UseOptimisticListReturn<T> = {
+	items: T[];
+	firstItem: T | undefined;
+	addItem: (item: T) => void;
+	updateItem: (item: T) => void;
+	deleteItem: (id: string) => void;
+	setItems: (items: T[]) => void;
+};
 
+export function useOptimisticList<T extends Identifiable>({
+	initialItems,
+	sortFnc,
+}: UseOptimisticListOptions<T>): UseOptimisticListReturn<T> {
 	const [optimisticItems, dispatch] = useOptimistic(
 		initialItems,
 		(state: T[], action: Action<T>): T[] => {
@@ -46,7 +54,7 @@ export function useOptimisticList<T extends Identifiable>(
 					return state;
 			}
 
-			return sortFn ? sortFn(newState) : newState;
+			return sortFnc ? sortFnc(newState) : newState;
 		},
 	);
 
@@ -60,7 +68,8 @@ export function useOptimisticList<T extends Identifiable>(
 	const setItems = (items: T[]) => dispatch({ type: "set", items });
 
 	return {
-		optimisticItems,
+		items: optimisticItems,
+		firstItem: optimisticItems[0],
 		addItem,
 		updateItem,
 		deleteItem,

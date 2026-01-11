@@ -3,7 +3,6 @@ import * as React from "react";
 import { ProgramDetail } from "@/components/program/program-detail";
 import { ProgramNotFound } from "@/components/program/program-not-found";
 import { getProgramById } from "@/lib/program/actions";
-import { ProgramsProvider } from "@/lib/program/programs-context";
 
 type ProgramPageProps = {
 	params: Promise<{
@@ -20,9 +19,5 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 		return <ProgramNotFound />;
 	}
 
-	return (
-		<ProgramsProvider initialItems={[program]}>
-			<ProgramDetail />
-		</ProgramsProvider>
-	);
+	return <ProgramDetail program={program} />;
 }
