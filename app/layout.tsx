@@ -6,7 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { ConfirmProvider } from "@/hooks/confirm-provider";
+import { ConfirmProvider } from "@/hooks/confirm/confirm-provider";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",

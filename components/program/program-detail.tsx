@@ -1,12 +1,11 @@
 "use client";
 import { startTransition, useState } from "react";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import {
 	ArrowLeftIcon,
 	DumbbellIcon,
-	Edit,
 	EditIcon,
 	MoreVertical,
 	PlusIcon,
@@ -17,7 +16,7 @@ import { toast } from "sonner";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useConfirm } from "@/hooks/use-confirm";
+import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { ROUTES } from "@/lib/consts";
 import { reportError } from "@/lib/logger";
 import { deleteProgram } from "@/lib/program/actions";

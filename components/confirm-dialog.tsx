@@ -6,20 +6,12 @@ import { AlertTriangle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import {
 	Drawer,
 	DrawerContent,
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface ConfirmDialogProps {
 	isOpen: boolean;

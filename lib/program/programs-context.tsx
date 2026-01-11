@@ -1,6 +1,6 @@
 "use client";
 
-import { createOptimisticContext } from "@/hooks/create-optimistic-context";
+import { createOptimisticContext } from "@/hooks/optimistic/create-optimistic-context";
 import { ProgramUI } from "@/lib/program/type";
 
 export const [ProgramsProvider, usePrograms] = createOptimisticContext<ProgramUI>((items) =>

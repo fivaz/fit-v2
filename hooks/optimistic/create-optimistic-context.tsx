@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useContext } from "react";
 
-import { useOptimisticList } from "@/hooks/use-optmistic-list";
+import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
 
 type Identifiable = { id: string };
 
