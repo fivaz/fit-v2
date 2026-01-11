@@ -15,27 +15,41 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { buildEmptyProgram } from "@/lib/program/type";
+import { buildEmptyProgram, ProgramUI } from "@/lib/program/type";
 
-export function ProgramFormButton() {
+type ProgramFormButtonProps = React.ComponentProps<typeof Button> & {
+	program?: ProgramUI;
+};
+
+export function ProgramFormButton({
+	children,
+	program = buildEmptyProgram(),
+	...props
+}: ProgramFormButtonProps) {
 	const [open, setOpen] = useState(false);
-	const program = buildEmptyProgram();
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button>
-					<NotebookTabsIcon />
-					New Program
+				<Button {...props}>
+					{/* Fallback logic for children */}
+					{children || (
+						<>
+							<NotebookTabsIcon className="mr-2 h-4 w-4" />
+							New Program
+						</>
+					)}
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent className="max-h-[90vh]">
-				<div className="mx-auto w-full max-w-md overflow-y-auto">
+				<div className="mx-auto w-full max-w-md overflow-y-auto pb-6">
 					<DrawerHeader>
-						<DrawerTitle>Create Program</DrawerTitle>
-						<DrawerDescription>
-							Name your program and select target muscle groups.
-						</DrawerDescription>
+						<DrawerTitle>{program.id ? "Edit Program" : "Create Program"}</DrawerTitle>
+						{!program.id && (
+							<DrawerDescription>
+								Name your program and select target muscle groups.
+							</DrawerDescription>
+						)}
 					</DrawerHeader>
 
 					<ProgramForm program={program} onClose={() => setOpen(false)} />

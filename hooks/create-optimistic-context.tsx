@@ -8,6 +8,7 @@ type Identifiable = { id: string };
 
 interface OptimisticContextProps<T> {
 	items: T[];
+	firstItem: T | undefined;
 	addItem: (item: T) => void;
 	updateItem: (item: T) => void;
 	deleteItem: (id: string) => void;
@@ -34,6 +35,7 @@ export function createOptimisticContext<T extends Identifiable>(
 
 		const value: OptimisticContextProps<T> = {
 			items: optimisticItems,
+			firstItem: optimisticItems[0],
 			addItem: (item) => dispatch({ type: "add", item }),
 			updateItem: (item) => dispatch({ type: "update", item }),
 			deleteItem: (id) => dispatch({ type: "delete", id }),

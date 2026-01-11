@@ -90,3 +90,13 @@ export async function updateProgramOrder(sortedIds: string[]) {
 		return { success: false, error: "Database error" };
 	}
 }
+
+export async function deleteProgram(id: string) {
+	const userId = await getUserId();
+
+	await prisma.program.delete({
+		where: { id, userId },
+	});
+
+	revalidatePath(ROUTES.PROGRAMS);
+}
