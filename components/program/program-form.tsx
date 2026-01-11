@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { usePrograms } from "@/hooks/program/programs-context";
+import { usePrograms } from "@/hooks/program/programs-store-context";
 import { MUSCLE_GROUPS } from "@/lib/muscle/type";
 import { saveProgram } from "@/lib/program/actions";
 import { formToProgram, ProgramUI } from "@/lib/program/type";

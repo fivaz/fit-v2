@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import { ProgramEmptyState } from "@/components/program/program-empty-state";
 import { ProgramFormButton } from "@/components/program/program-form-button";
-import { ProgramsProvider, usePrograms } from "@/hooks/program/programs-context";
+import { ProgramsProvider, usePrograms } from "@/hooks/program/programs-store-context";
 import { updateProgramOrder } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 
