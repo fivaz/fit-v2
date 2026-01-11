@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@dnd-kit/helpers':
+        specifier: ^0.2.1
+        version: 0.2.1
+      '@dnd-kit/react':
+        specifier: ^0.2.1
+        version: 0.2.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@prisma/adapter-pg':
         specifier: ^7.2.0
         version: 7.2.0
@@ -83,6 +89,9 @@ importers:
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -360,6 +369,30 @@ packages:
   '@commitlint/types@20.3.1':
     resolution: {integrity: sha512-VmIFV/JkBRhDRRv7N5B7zEUkNZIx9Mp+8Pe65erz0rKycXLsi8Epcw0XJ+btSeRXgTzE7DyOyA9bkJ9mn/yqVQ==}
     engines: {node: '>=v18'}
+
+  '@dnd-kit/abstract@0.2.1':
+    resolution: {integrity: sha512-XpTZrpfR11elDDw1q4kgD6FV8SH/9rxZhCQcrDaqX9nkEmbaFjFxBFHDg+YK6PmdDp27vxCZXJGa7L7pddRWDw==}
+
+  '@dnd-kit/collision@0.2.1':
+    resolution: {integrity: sha512-PeykVocROa3TnntD9kIdAHEb2TBT+tyvAvrFDJyE50jDS12JZdMTgreCv02LofLvxdIn3sXEy2XAVuiX7zSJHA==}
+
+  '@dnd-kit/dom@0.2.1':
+    resolution: {integrity: sha512-L34SxATObmIvrp9D57iFVtg4rj/ejX/rnrBdbkXkhrnTMacZQXgCryeSlri59hKbSIGtdlzCOKCcBOOdi2PX3w==}
+
+  '@dnd-kit/geometry@0.2.1':
+    resolution: {integrity: sha512-uTbhKi36L3edAL/kUtIWF/xt1e3ivL3kf89qt6f6npU2vRsHyoKV/OaPK1ABZVQp1wBktfZAcG6wFiz67OfCqg==}
+
+  '@dnd-kit/helpers@0.2.1':
+    resolution: {integrity: sha512-xsmjBN1PdzHjtGE5x9US1w8ngHczK1Y/cjgRP+kl0tGqjPsoo4Q+d+nWbKmPA0dJAgfflqJCG0UozHaiWArRBA==}
+
+  '@dnd-kit/react@0.2.1':
+    resolution: {integrity: sha512-ixYC5ZXWDHGpK+09yOrmQrMkIY2f+ZFNsS9wM64xDkbydeoYuWfdwtFX97WhHTZvDavOcDG6zCK1QL/rVAHwTQ==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+
+  '@dnd-kit/state@0.2.1':
+    resolution: {integrity: sha512-7axA1ya4KJXxjaj/3hfN1x+jAYjJMzjPk49ZpyMVK/VFm7VJMRY0CN6NJYRmlDYYq1uiEHHNA6K5j6YzoE4/xw==}
 
   '@electric-sql/pglite-socket@0.0.6':
     resolution: {integrity: sha512-6RjmgzphIHIBA4NrMGJsjNWK4pu+bCWJlEWlwcxFTVY3WT86dFpKwbZaGWZV6C5Rd7sCk1Z0CI76QEfukLAUXw==}
@@ -916,6 +949,9 @@ packages:
   '@pnpm/npm-conf@2.3.1':
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
+
+  '@preact/signals-core@1.12.1':
+    resolution: {integrity: sha512-BwbTXpj+9QutoZLQvbttRg5x3l5468qaV2kufh+51yha1c53ep5dY4kTuZR35+3pAZxpfQerGJiQqg34ZNZ6uA==}
 
   '@prisma/adapter-pg@7.2.0':
     resolution: {integrity: sha512-euIdQ13cRB2wZ3jPsnDnFhINquo1PYFPCg6yVL8b2rp3EdinQHsX9EDdCtRr489D5uhphcRk463OdQAFlsCr0w==}
@@ -2692,6 +2728,11 @@ packages:
 
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
+
+  fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
@@ -4678,6 +4719,11 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
+  tsx@4.21.0:
+    resolution: {integrity: sha512-5C1sg4USs1lfG0GFb2RLXsdpXqBSEhAaA/0kPL01wxzpMqLILNxIxIOKiILz+cdg/pLnOUxFYOR5yhHU666wbw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   tunnel@0.0.6:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
@@ -5239,6 +5285,50 @@ snapshots:
       '@types/conventional-commits-parser': 5.0.2
       chalk: 5.6.2
 
+  '@dnd-kit/abstract@0.2.1':
+    dependencies:
+      '@dnd-kit/geometry': 0.2.1
+      '@dnd-kit/state': 0.2.1
+      tslib: 2.8.1
+
+  '@dnd-kit/collision@0.2.1':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.1
+      '@dnd-kit/geometry': 0.2.1
+      tslib: 2.8.1
+
+  '@dnd-kit/dom@0.2.1':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.1
+      '@dnd-kit/collision': 0.2.1
+      '@dnd-kit/geometry': 0.2.1
+      '@dnd-kit/state': 0.2.1
+      tslib: 2.8.1
+
+  '@dnd-kit/geometry@0.2.1':
+    dependencies:
+      '@dnd-kit/state': 0.2.1
+      tslib: 2.8.1
+
+  '@dnd-kit/helpers@0.2.1':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.1
+      tslib: 2.8.1
+
+  '@dnd-kit/react@0.2.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.1
+      '@dnd-kit/dom': 0.2.1
+      '@dnd-kit/state': 0.2.1
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      tslib: 2.8.1
+
+  '@dnd-kit/state@0.2.1':
+    dependencies:
+      '@preact/signals-core': 1.12.1
+      tslib: 2.8.1
+
   '@electric-sql/pglite-socket@0.0.6(@electric-sql/pglite@0.3.2)':
     dependencies:
       '@electric-sql/pglite': 0.3.2
@@ -5669,6 +5759,8 @@ snapshots:
       '@pnpm/config.env-replace': 1.1.0
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
+
+  '@preact/signals-core@1.12.1': {}
 
   '@prisma/adapter-pg@7.2.0':
     dependencies:
@@ -7651,6 +7743,9 @@ snapshots:
 
   fs.realpath@1.0.0: {}
 
+  fsevents@2.3.3:
+    optional: true
+
   function-bind@1.1.2: {}
 
   function-timeout@1.0.2: {}
@@ -9444,6 +9539,13 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@2.8.1: {}
+
+  tsx@4.21.0:
+    dependencies:
+      esbuild: 0.27.2
+      get-tsconfig: 4.13.0
+    optionalDependencies:
+      fsevents: 2.3.3
 
   tunnel@0.0.6: {}
 
