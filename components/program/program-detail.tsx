@@ -1,5 +1,5 @@
 "use client";
-import { startTransition } from "react";
+import { startTransition, useState } from "react";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 
@@ -34,6 +34,7 @@ export function ProgramDetail() {
 	const { firstItem: program, addItem, deleteItem } = usePrograms();
 	const confirm = useConfirm();
 	const router = useRouter();
+	const [showProgramForm, setShowProgramForm] = useState(false);
 
 	if (!program) return null;
 
@@ -66,67 +67,73 @@ export function ProgramDetail() {
 	};
 
 	return (
-		<div className="flex w-full flex-col pb-24">
-			{/* Header with back button */}
-			<div className="flex items-start justify-between px-6 pt-6 pb-4">
-				<div className="flex items-center gap-4">
-					<Button asChild variant="ghost" size="icon">
-						<Link href={ROUTES.PROGRAMS}>
-							<ArrowLeftIcon className="h-5 w-5" />
-						</Link>
-					</Button>
-					<div>
-						<h1 className="text-foreground text-2xl font-bold">{program.name}</h1>
-						<div className="mt-1 flex flex-wrap gap-1">
-							{program.muscles.map((muscle) => (
-								<Badge
-									key={muscle}
-									className="bg-chart-2 h-5 border-none px-2 py-0 text-[10px] text-orange-800 capitalize hover:bg-orange-600"
-								>
-									{muscle}
-								</Badge>
-							))}
+		<>
+			<div className="flex w-full flex-col pb-24">
+				{/* Header with back button */}
+				<div className="flex items-start justify-between px-6 pt-6 pb-4">
+					<div className="flex items-center gap-4">
+						<Button asChild variant="ghost" size="icon">
+							<Link href={ROUTES.PROGRAMS}>
+								<ArrowLeftIcon className="h-5 w-5" />
+							</Link>
+						</Button>
+						<div>
+							<h1 className="text-foreground text-2xl font-bold">{program.name}</h1>
+							<div className="mt-1 flex flex-wrap gap-1">
+								{program.muscles.map((muscle) => (
+									<Badge
+										key={muscle}
+										className="bg-chart-2 h-5 border-none px-2 py-0 text-[10px] text-orange-800 capitalize hover:bg-orange-600"
+									>
+										{muscle}
+									</Badge>
+								))}
+							</div>
 						</div>
+					</div>
+
+					<div className="flex gap-2">
+						<DropdownMenu modal={false}>
+							<DropdownMenuTrigger asChild>
+								<Button variant="ghost" size="icon" className="rounded-full">
+									<MoreVertical className="h-5 w-5" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end">
+								<DropdownMenuItem onClick={() => setShowProgramForm(true)}>
+									<EditIcon className="size-4" />
+									<span>Edit Program</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem variant="destructive" onClick={handleDelete}>
+									<Trash2 className="size-4" />
+									<span>Delete Program</span>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+
+						<Button>
+							<PlusIcon className="h-5 w-5" />
+							<DumbbellIcon className="h-5 w-5" />
+						</Button>
 					</div>
 				</div>
 
-				<div className="flex gap-2">
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" size="icon" className="rounded-full">
-								<MoreVertical className="h-5 w-5" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuItem asChild>
-								<ProgramFormButton program={program} variant="ghost" className="w-full text-left">
-									<EditIcon className="h-5 w-5" />
-									<span>Edit Program</span>
-								</ProgramFormButton>
-							</DropdownMenuItem>
-							<DropdownMenuItem variant="destructive" onClick={handleDelete}>
-								<Trash2 className="mr-2 h-4 w-4" />
-								<span>Delete Program</span>
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-
-					<Button>
-						<PlusIcon className="h-5 w-5" />
-						<DumbbellIcon className="h-5 w-5" />
-					</Button>
+				{/* Program background image */}
+				<div className="mx-6 mb-6 h-48 overflow-hidden rounded-2xl">
+					<div
+						className="h-full w-full bg-cover bg-center"
+						style={{
+							backgroundImage: `url('/exercise.jpg')`,
+						}}
+					/>
 				</div>
 			</div>
 
-			{/* Program background image */}
-			<div className="mx-6 mb-6 h-48 overflow-hidden rounded-2xl">
-				<div
-					className="h-full w-full bg-cover bg-center"
-					style={{
-						backgroundImage: `url('/exercise.jpg')`,
-					}}
-				/>
-			</div>
-		</div>
+			<ProgramFormButton
+				program={program}
+				open={showProgramForm}
+				onOpenChange={setShowProgramForm}
+			/>
+		</>
 	);
 }

@@ -19,28 +19,41 @@ import { buildEmptyProgram, ProgramUI } from "@/lib/program/type";
 
 type ProgramFormButtonProps = React.ComponentProps<typeof Button> & {
 	program?: ProgramUI;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
 };
 
 export function ProgramFormButton({
 	children,
 	program = buildEmptyProgram(),
+	open: externalOpen,
+	onOpenChange: externalOnOpenChange,
 	...props
 }: ProgramFormButtonProps) {
-	const [open, setOpen] = useState(false);
+	// Internal state management if external state isn't provided
+	const [internalOpen, setInternalOpen] = useState(false);
+
+	// Determine which state to use
+	const isControlled = externalOpen !== undefined;
+	const open = isControlled ? externalOpen : internalOpen;
+	const setOpen = isControlled ? externalOnOpenChange : setInternalOpen;
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
-			<DrawerTrigger asChild>
-				<Button {...props}>
-					{/* Fallback logic for children */}
-					{children || (
-						<>
-							<NotebookTabsIcon className="mr-2 h-4 w-4" />
-							New Program
-						</>
-					)}
-				</Button>
-			</DrawerTrigger>
+			{/* Omit Trigger if controlled externally */}
+			{!isControlled && (
+				<DrawerTrigger asChild>
+					<Button {...props}>
+						{children || (
+							<>
+								<NotebookTabsIcon className="mr-2 h-4 w-4" />
+								New Program
+							</>
+						)}
+					</Button>
+				</DrawerTrigger>
+			)}
+
 			<DrawerContent className="max-h-[90vh]">
 				<div className="mx-auto w-full max-w-md overflow-y-auto pb-6">
 					<DrawerHeader>
@@ -52,7 +65,7 @@ export function ProgramFormButton({
 						)}
 					</DrawerHeader>
 
-					<ProgramForm program={program} onClose={() => setOpen(false)} />
+					<ProgramForm program={program} onClose={() => setOpen?.(false)} />
 				</div>
 			</DrawerContent>
 		</Drawer>
