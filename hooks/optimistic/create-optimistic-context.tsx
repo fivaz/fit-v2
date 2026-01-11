@@ -29,17 +29,18 @@ export function createOptimisticContext<T extends Identifiable>(
 		initialItems: T[];
 		sortFn?: (items: T[]) => T[];
 	}) {
-		const { optimisticItems, dispatch } = useOptimisticList<T>(initialItems, {
-			sortFn,
-		});
+		const { optimisticItems, addItem, updateItem, deleteItem, setItems } = useOptimisticList<T>(
+			initialItems,
+			{ sortFn },
+		);
 
 		const value: OptimisticContextProps<T> = {
 			items: optimisticItems,
 			firstItem: optimisticItems[0],
-			addItem: (item) => dispatch({ type: "add", item }),
-			updateItem: (item) => dispatch({ type: "update", item }),
-			deleteItem: (id) => dispatch({ type: "delete", id }),
-			setItems: (items) => dispatch({ type: "set", items }),
+			addItem,
+			updateItem,
+			deleteItem,
+			setItems,
 		};
 
 		return <Context.Provider value={value}>{children}</Context.Provider>;

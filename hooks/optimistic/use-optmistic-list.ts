@@ -25,7 +25,7 @@ export function useOptimisticList<T extends Identifiable>(
 
 			switch (action.type) {
 				case "add":
-					newState = [...state, action.item as T];
+					newState = [...state, action.item];
 					break;
 
 				case "update":
@@ -46,13 +46,24 @@ export function useOptimisticList<T extends Identifiable>(
 					return state;
 			}
 
-			// Apply custom sort function if provided
 			return sortFn ? sortFn(newState) : newState;
 		},
 	);
 
+	// Intent-based helpers
+	const addItem = (item: T) => dispatch({ type: "add", item });
+
+	const updateItem = (item: T) => dispatch({ type: "update", item });
+
+	const deleteItem = (id: string) => dispatch({ type: "delete", id });
+
+	const setItems = (items: T[]) => dispatch({ type: "set", items });
+
 	return {
 		optimisticItems,
-		dispatch,
+		addItem,
+		updateItem,
+		deleteItem,
+		setItems,
 	};
 }
