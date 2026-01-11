@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MUSCLE_GROUPS } from "@/lib/muscle/type";
 import { saveProgram } from "@/lib/program/actions";
 import { usePrograms } from "@/lib/program/programs-context";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
@@ -17,24 +18,6 @@ const formSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters"),
 	muscles: z.array(z.string()).min(1, "Select at least one muscle group"),
 });
-
-const MUSCLE_GROUPS = [
-	{ id: "chest", label: "Chest", image: "/muscles/chest.webp" },
-	{ id: "back", label: "Back", image: "/muscles/back.webp" },
-	{ id: "shoulders", label: "Shoulders", image: "/muscles/shoulders.webp" },
-
-	{ id: "biceps", label: "Biceps", image: "/muscles/biceps.webp" },
-	{ id: "triceps", label: "Triceps", image: "/muscles/triceps.webp" },
-	{ id: "forearms", label: "Forearms", image: "/muscles/forearms.webp" },
-
-	{ id: "quads", label: "Quadriceps", image: "/muscles/quads.webp" },
-	{ id: "hamstrings", label: "Hamstrings", image: "/muscles/hamstrings.webp" },
-	{ id: "glutes", label: "Glutes", image: "/muscles/glutes.webp" },
-	{ id: "calves", label: "Calves", image: "/muscles/calves.webp" },
-
-	{ id: "abs", label: "Abs", image: "/muscles/abs.webp" },
-	{ id: "traps", label: "Traps", image: "/muscles/traps.webp" },
-] as const;
 
 type ProgramFormProps = {
 	program: ProgramUI;
