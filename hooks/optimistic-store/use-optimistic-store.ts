@@ -10,11 +10,10 @@ import { reportError } from "@/lib/logger";
 export function useOptimisticStore<T extends Identifiable>({
 	initialItems,
 	sortFnc,
-	add,
-	update,
-	delete: deleteConfig,
+	addConfig,
+	updateConfig,
+	deleteConfig,
 }: UseOptimisticStoreProps<T>): UseOptimisticStoreReturn<T> {
-	const router = useRouter();
 	const {
 		addItem: optimisticAddItem,
 		updateItem: optimisticUpdateItem,
@@ -25,14 +24,14 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	// ---- ADD ----
 	function addItem(item: T) {
-		mutateOptimistically({
+		return mutateOptimistically({
 			optimistic: () => optimisticAddItem(item),
-			persist: () => add.function(item),
+			persist: () => addConfig.function(item),
 			rollback: () => optimisticDeleteItem(item.id),
-			onSuccess: () => toast.success(add.onSuccessMessage),
+			onSuccess: () => toast.success(addConfig.onSuccessMessage),
 			onError: (error) => {
 				reportError(error, { extra: { context: "Optimistic Add Item Failed", item } });
-				toast.error(add.onErrorMessage, {
+				toast.error(addConfig.onErrorMessage, {
 					description: "Your changes were rolled back. Please try again.",
 				});
 			},
@@ -46,14 +45,14 @@ export function useOptimisticStore<T extends Identifiable>({
 
 		if (!prevItem) return;
 
-		mutateOptimistically({
+		return mutateOptimistically({
 			optimistic: () => optimisticUpdateItem(item),
-			persist: () => update.function(item),
+			persist: () => updateConfig.function(item),
 			rollback: () => optimisticUpdateItem(prevItem),
-			onSuccess: () => toast.success(update.onSuccessMessage),
+			onSuccess: () => toast.success(updateConfig.onSuccessMessage),
 			onError: (error) => {
 				reportError(error, { extra: { context: "Optimistic Update Item Failed", item } });
-				toast.error(update.onErrorMessage, {
+				toast.error(updateConfig.onErrorMessage, {
 					description: "Your changes were rolled back. Please try again.",
 				});
 			},
@@ -66,14 +65,11 @@ export function useOptimisticStore<T extends Identifiable>({
 
 		if (!prevItem) return;
 
-		mutateOptimistically({
+		return mutateOptimistically({
 			optimistic: () => optimisticDeleteItem(id),
 			persist: () => deleteConfig.function(id),
 			rollback: () => optimisticAddItem(prevItem),
-			onSuccess: () => {
-				toast.success(deleteConfig.onSuccessMessage);
-				router.push(ROUTES.PROGRAMS);
-			},
+			onSuccess: () => toast.success(deleteConfig.onSuccessMessage),
 			onError: (error) => {
 				reportError(error, { extra: { context: "Optimistic Delete Item Failed", id } });
 				toast.error(deleteConfig.onErrorMessage, {
@@ -83,11 +79,9 @@ export function useOptimisticStore<T extends Identifiable>({
 		});
 	}
 
-	const firstItem = items[0];
-
 	return {
 		items,
-		firstItem,
+		firstItem: items[0],
 		addItem,
 		updateItem,
 		deleteItem,
@@ -99,7 +93,7 @@ export type Identifiable = { id: string };
 
 type OptimisticMutationParams = {
 	optimistic: () => void;
-	persist: () => Promise<void>;
+	persist: () => Promise<void> | void;
 	rollback: () => void;
 	onSuccess: () => void;
 	onError: (error: unknown) => void;
@@ -128,17 +122,17 @@ function mutateOptimistically({
 export type UseOptimisticStoreProps<T> = {
 	initialItems: T[];
 	sortFnc?: (items: T[]) => T[];
-	add: {
+	addConfig: {
 		function: (item: T) => Promise<void>;
 		onSuccessMessage: string;
 		onErrorMessage: string;
 	};
-	update: {
+	updateConfig: {
 		function: (item: T) => Promise<void>;
 		onSuccessMessage: string;
 		onErrorMessage: string;
 	};
-	delete: {
+	deleteConfig: {
 		function: (id: string) => Promise<void>;
 		onSuccessMessage: string;
 		onErrorMessage: string;

@@ -6,9 +6,12 @@ import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/lib/consts";
 import { prisma } from "@/lib/prisma";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
+import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 
 export async function getPrograms(): Promise<ProgramUI[]> {
+	await devDelay();
+
 	const userId = await getUserId();
 
 	return prisma.program.findMany({
@@ -36,11 +39,15 @@ const _getProgramById = cache(async (id: string, userId: string): Promise<Progra
 });
 
 export async function getProgramById(id: string): Promise<ProgramUI | null> {
+	await devDelay();
+
 	const userId = await getUserId();
 	return _getProgramById(id, userId);
 }
 
 export async function saveProgram({ id, name, muscles }: ProgramUI) {
+	await devDelay();
+
 	const userId = await getUserId();
 
 	try {
@@ -69,6 +76,8 @@ export async function saveProgram({ id, name, muscles }: ProgramUI) {
  * @param sortedIds An array of program IDs in their new order.
  */
 export async function updateProgramOrder(sortedIds: string[]) {
+	await devDelay();
+
 	try {
 		// Perform all updates in one atomic transaction
 		await prisma.$transaction(
@@ -90,6 +99,8 @@ export async function updateProgramOrder(sortedIds: string[]) {
 }
 
 export async function deleteProgram(id: string) {
+	await devDelay();
+
 	const userId = await getUserId();
 
 	await prisma.program.delete({

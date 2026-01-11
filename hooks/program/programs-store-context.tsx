@@ -1,28 +1,30 @@
 "use client";
 
+import { redirect } from "next/navigation";
+
 import { createOptimisticStoreContext } from "@/hooks/optimistic-store/create-optimistic-store-context";
+import { ROUTES } from "@/lib/consts";
 import { deleteProgram, saveProgram } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 
 export const [ProgramsProvider, usePrograms] = createOptimisticStoreContext<ProgramUI>({
 	sortFnc: (items) => items.sort((a, b) => a.order - b.order),
-
 	// ---- ADD ----
-	add: {
+	addConfig: {
 		function: saveProgram,
 		onSuccessMessage: "Program created successfully.",
 		onErrorMessage: "Failed to create program.",
 	},
 
 	// ---- UPDATE ----
-	update: {
+	updateConfig: {
 		function: saveProgram,
 		onSuccessMessage: "Program updated successfully.",
 		onErrorMessage: "Failed to update program.",
 	},
 
 	// ---- DELETE ----
-	delete: {
+	deleteConfig: {
 		function: deleteProgram,
 		onSuccessMessage: "Program deleted successfully.",
 		onErrorMessage: "Failed to delete program.",

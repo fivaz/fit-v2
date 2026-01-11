@@ -21,7 +21,6 @@ import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
 import { reportError } from "@/lib/logger";
-import { deleteProgram } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 
 import {
@@ -44,10 +43,10 @@ export function ProgramDetail({ program }: ProgramDetailProps) {
 }
 
 export function ProgramDetailInternal() {
-	const { firstItem: program } = usePrograms();
+	const { firstItem: program, deleteItem } = usePrograms();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
-
+	const router = useRouter();
 	if (!program) return null;
 
 	const handleDelete = async () => {
@@ -58,7 +57,8 @@ export function ProgramDetailInternal() {
 
 		if (!confirmed) return;
 
-		await deleteProgram(program.id);
+		deleteItem(program.id);
+		router.push(ROUTES.PROGRAMS);
 	};
 
 	return (
