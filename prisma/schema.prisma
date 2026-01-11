@@ -14,16 +14,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
   programs      Program[]
+  exercises     Exercise[]
 
   @@unique([email])
   @@map("user")
@@ -45,17 +46,43 @@ enum MuscleGroup {
 }
 
 model Program {
-  id        String        @id @default(uuid())
-  name      String
-  muscles   MuscleGroup[]
-  userId    String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  order     Int           @default(0)
+  id      String        @id @default(uuid())
+  name    String
+  muscles MuscleGroup[]
+  order   Int           @default(0)
+
+  // Association with User
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Many-to-many relationship with Exercise
+  exercises Exercise[] @relation("ProgramToExercise")
 
   @@index([userId])
   @@map("program")
+}
+
+model Exercise {
+  id       String        @id @default(uuid())
+  name     String
+  imageUrl String?
+  muscles  MuscleGroup[]
+
+  // Association with User
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Many-to-many relationship with Program
+  programs Program[] @relation("ProgramToExercise")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("exercise")
 }
 
 model Session {
