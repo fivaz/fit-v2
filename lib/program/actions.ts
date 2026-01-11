@@ -40,9 +40,8 @@ export async function getProgramById(id: string): Promise<ProgramUI | null> {
 	return _getProgramById(id, userId);
 }
 
-export async function saveProgram(formData: FormData) {
+export async function saveProgram({ id, name, muscles }: ProgramUI) {
 	const userId = await getUserId();
-	const { id, name, muscles } = formToProgram(formData);
 
 	try {
 		await prisma.program.upsert({
@@ -59,7 +58,6 @@ export async function saveProgram(formData: FormData) {
 		});
 
 		revalidatePath(ROUTES.PROGRAMS);
-		return { success: true };
 	} catch (error) {
 		console.error("Database error:", error);
 		throw new Error("Failed to save program");

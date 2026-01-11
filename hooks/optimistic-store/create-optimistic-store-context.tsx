@@ -7,19 +7,22 @@ import {
 	type UseOptimisticStoreReturn,
 } from "@/hooks/optimistic-store/use-optimistic-store";
 
-type CreateOptimisticStoreContextProps<T> = Pick<UseOptimisticStoreProps<T>, "sortFnc">;
+// get the same props from hook, except initial items as it will be provided by the Provider
+type CreateOptimisticStoreContextProps<T> = Omit<UseOptimisticStoreProps<T>, "initialItems">;
 
-export function createOptimisticStoreContext<T extends Identifiable>({
-	sortFnc,
-}: CreateOptimisticStoreContextProps<T>) {
+export function createOptimisticStoreContext<T extends Identifiable>(
+	optimisticStoreProps: CreateOptimisticStoreContextProps<T>,
+) {
 	const Context = createContext<UseOptimisticStoreReturn<T> | null>(null);
 
+	// get only initialItems from the hook props
 	type ProviderProps = Pick<UseOptimisticStoreProps<T>, "initialItems"> & {
 		children: ReactNode;
 	};
 
 	function Provider({ children, initialItems }: ProviderProps) {
-		const value = useOptimisticStore<T>({ initialItems, sortFnc });
+		// combine all props to pass to the hook
+		const value = useOptimisticStore<T>({ initialItems, ...optimisticStoreProps });
 
 		return <Context.Provider value={value}>{children}</Context.Provider>;
 	}

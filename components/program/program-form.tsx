@@ -25,7 +25,7 @@ type ProgramFormProps = {
 };
 
 export function ProgramForm({ program, onClose }: ProgramFormProps) {
-	const { addItem, updateItem, deleteItem } = usePrograms();
+	const { addItem } = usePrograms();
 	const [errors, setErrors] = useState<{ name?: string; muscles?: string }>({});
 	const isEdit = !!program.id;
 	const [selectedMuscles, setSelectedMuscles] = useState<string[]>(program.muscles || []);
@@ -50,29 +50,14 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 			return;
 		}
 
-		const optimisticProduct: ProgramUI = {
+		const optimisticProgram: ProgramUI = {
 			...programData,
 			id: programData.id || crypto.randomUUID(),
 		};
 
 		onClose();
 
-		startTransition(async () => {
-			// Apply UI changes immediately
-			if (isEdit) updateItem(optimisticProduct);
-			else addItem(optimisticProduct);
-
-			try {
-				await saveProgram(formData);
-				toast.success(isEdit ? "Program updated" : "Program created");
-			} catch (e) {
-				// Rollback on failure
-				if (isEdit) updateItem(program);
-				else deleteItem(optimisticProduct.id);
-
-				toast.error("An error occurred. Changes rolled back.");
-			}
-		});
+		addItem(optimisticProgram);
 	};
 
 	return (
