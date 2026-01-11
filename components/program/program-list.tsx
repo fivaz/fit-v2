@@ -22,8 +22,8 @@ type ProgramsListProps = {
 export function ProgramList({ initialPrograms }: ProgramsListProps) {
 	return (
 		<ProgramsProvider initialItems={initialPrograms}>
-			<div className="px-4">
-				<div className="absolute top-3.5 right-4">
+			<div className="">
+				<div className="absolute top-0 right-0">
 					<ProgramFormButton />
 				</div>
 
