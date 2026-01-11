@@ -1,11 +1,8 @@
 import * as React from "react";
 import { Suspense } from "react";
 
-import { Plus } from "lucide-react";
-
 import { ProgramList } from "@/components/program/program-list";
 import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
-import { Button } from "@/components/ui/button";
 import { getPrograms } from "@/lib/program/actions";
 
 export default function ProgramPage() {

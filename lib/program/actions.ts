@@ -1,10 +1,9 @@
 "use server";
 
+import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
-import { Program } from "@/lib/generated/prisma/client";
-import { MuscleGroup } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
 import { getUserId } from "@/lib/utils-server";
@@ -21,6 +20,24 @@ export async function getPrograms(): Promise<ProgramUI[]> {
 			order: true,
 		},
 	});
+}
+
+// Cached helper: memoized by (id, userId)
+const _getProgramById = cache(async (id: string, userId: string): Promise<ProgramUI | null> => {
+	return prisma.program.findFirst({
+		where: { id, userId },
+		select: {
+			id: true,
+			name: true,
+			muscles: true,
+			order: true,
+		},
+	});
+});
+
+export async function getProgramById(id: string): Promise<ProgramUI | null> {
+	const userId = await getUserId();
+	return _getProgramById(id, userId);
 }
 
 export async function saveProgram(formData: FormData) {

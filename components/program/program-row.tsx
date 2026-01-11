@@ -8,7 +8,6 @@ import { GripVertical } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { ROUTES } from "@/lib/consts";
 import { ProgramUI } from "@/lib/program/type";
 import { cn } from "@/lib/utils";
 
