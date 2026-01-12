@@ -4,6 +4,7 @@ import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
+import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
 import { devDelay } from "@/lib/utils";
@@ -66,7 +67,9 @@ export async function saveProgram({ id, name, muscles }: ProgramUI) {
 
 		revalidatePath(ROUTES.PROGRAMS);
 	} catch (error) {
-		console.error("Database error:", error);
+		logError(error, {
+			extra: { context: "error saving program", id, name, muscles, userId },
+		});
 		throw new Error("Failed to save program");
 	}
 }

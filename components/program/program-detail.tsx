@@ -20,7 +20,7 @@ import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
-import { reportError } from "@/lib/logger";
+import { logError } from "@/lib/logger";
 import { ProgramUI } from "@/lib/program/type";
 
 import {
