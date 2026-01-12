@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
 import { ExerciseUI } from "@/lib/exercise/type";
-import { MuscleGroup, Prisma } from "@/lib/generated/prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
@@ -107,24 +107,24 @@ export async function deleteExercise(id: string) {
 }
 
 /**
- * Fetch exercises for the current user filtered by muscles
+ * Reorders exercises in a program based on the order of the array.
+ * @param programId The program to update
+ * @param exerciseIds Array of exercise IDs in the new order
  */
-export async function getExercisesByMuscles(muscles: MuscleGroup[]): Promise<ExerciseUI[]> {
-	const userId = await getUserId();
-
-	return prisma.exercise.findMany({
-		where: {
-			userId,
-			muscles: {
-				hasSome: muscles,
-			},
-		},
-		select: {
-			id: true,
-			name: true,
-			muscles: true,
-			imageUrl: true,
-		},
-		orderBy: { name: "asc" },
-	});
+export async function reorderProgramExercises(exerciseIds: string[], programId: string) {
+	try {
+		await prisma.$transaction(
+			exerciseIds.map((exerciseId, index) =>
+				prisma.programToExercise.update({
+					where: {
+						programId_exerciseId: { programId, exerciseId },
+					},
+					data: { order: index },
+				}),
+			),
+		);
+	} catch (error) {
+		console.error("Failed to reorder program exercises:", error);
+		throw new Error("Failed to reorder program exercises");
+	}
 }

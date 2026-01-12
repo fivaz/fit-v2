@@ -74,7 +74,7 @@ export function useOptimisticStore<T extends Identifiable>({
 		});
 	}
 
-	function reorderItems(nextItems: T[]) {
+	function reorderItems(nextItems: T[], parentId?: string) {
 		const prevItems = lastStableItemsRef.current;
 
 		const nextIds = nextItems.map((i) => i.id);
@@ -95,7 +95,7 @@ export function useOptimisticStore<T extends Identifiable>({
 			mutateOptimistically({
 				//optimistic already applied
 				persist: async () => {
-					await reorderConfig.function(nextIds);
+					await reorderConfig.function(nextIds, parentId);
 					lastStableItemsRef.current = nextItems;
 				},
 				rollback: () => {
@@ -168,7 +168,7 @@ export type UseOptimisticStoreProps<T> = {
 		onErrorMessage: string;
 	};
 	reorderConfig?: {
-		function: (ids: string[]) => Promise<void>;
+		function: (ids: string[], parentId?: string) => Promise<void>;
 		onSuccessMessage?: string;
 		onErrorMessage: string;
 		debounceMs?: number;
@@ -181,5 +181,5 @@ export type UseOptimisticStoreReturn<T> = {
 	addItem: (item: T) => void;
 	updateItem: (item: T) => void;
 	deleteItem: (id: string) => void;
-	reorderItems: (items: T[]) => void;
+	reorderItems: (items: T[], parentId?: string) => void;
 };

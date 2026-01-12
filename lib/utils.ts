@@ -10,3 +10,8 @@ export async function devDelay(ms: number = 0) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 }
+
+export function sameOrder<T extends { id: string }>(a: T[], b: T[]) {
+	if (a.length !== b.length) return false;
+	return a.every((item, i) => item.id === b[i]?.id);
+}

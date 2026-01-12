@@ -34,14 +34,24 @@ export async function getPrograms(): Promise<ProgramUI[]> {
  */
 const _getProgramById = cache(
 	async (id: string, userId: string): Promise<ProgramWithExercises | null> => {
-		return prisma.program.findFirst({
+		// First, get the program itself
+		const program = await prisma.program.findFirst({
 			where: { id, userId },
 			select: {
 				id: true,
 				name: true,
 				muscles: true,
 				order: true,
-				exercises: {
+			},
+		});
+
+		if (!program) return null;
+
+		// Then, get the exercises via the join table, ordered by "order"
+		const exercises = await prisma.programToExercise.findMany({
+			where: { programId: id },
+			select: {
+				exercise: {
 					select: {
 						id: true,
 						name: true,
@@ -50,7 +60,18 @@ const _getProgramById = cache(
 					},
 				},
 			},
+			orderBy: {
+				order: "asc",
+			},
 		});
+
+		// Map the join table to a simple array of exercises
+		const exercisesList = exercises.map((pe) => pe.exercise);
+
+		return {
+			...program,
+			exercises: exercisesList,
+		};
 	},
 );
 
@@ -149,14 +170,24 @@ export async function updateProgramExercises(programId: string, exerciseIds: str
 	const userId = await getUserId();
 
 	try {
-		await prisma.program.update({
+		const program = await prisma.program.findFirst({
 			where: { id: programId, userId },
-			data: {
-				exercises: {
-					set: exerciseIds.map((id) => ({ id })),
-				},
-			},
 		});
+
+		if (!program) throw new Error("Program not found or not owned by user");
+
+		await prisma.$transaction([
+			// Delete existing relations
+			prisma.programToExercise.deleteMany({ where: { programId } }),
+			// Insert new relations with order
+			prisma.programToExercise.createMany({
+				data: exerciseIds.map((exerciseId, index) => ({
+					programId,
+					exerciseId,
+					order: index,
+				})),
+			}),
+		]);
 
 		revalidatePath(`${ROUTES.PROGRAMS}/${programId}`);
 	} catch (error) {

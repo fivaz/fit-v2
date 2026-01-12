@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { ArrowLeftIcon, DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
 
 import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
-import { ProgramExerciseRow } from "@/components/exercise/program–exercise-row";
+import { ProgramExerciseList } from "@/components/exercise/program-exercise-list";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
+import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
@@ -106,9 +107,9 @@ export function ProgramDetailInternal() {
 					</div>
 				</div>
 
-				{program.exercises.map((exercise) => (
-					<ProgramExerciseRow key={exercise.id} exercise={exercise} />
-				))}
+				<ExercisesProvider initialItems={program.exercises}>
+					<ProgramExerciseList programId={program.id} />
+				</ExercisesProvider>
 
 				<AddExerciseForm
 					program={program}

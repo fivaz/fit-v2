@@ -9,17 +9,13 @@ import { ProgramEmptyState } from "@/components/program/program-empty-state";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { ProgramsProvider, usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramUI } from "@/lib/program/type";
+import { sameOrder } from "@/lib/utils";
 
 import { ProgramRow } from "./program-row";
 
 type ProgramsListProps = {
 	initialPrograms: ProgramUI[];
 };
-
-function sameOrder<T extends { id: string }>(a: T[], b: T[]) {
-	if (a.length !== b.length) return false;
-	return a.every((item, i) => item.id === b[i]?.id);
-}
 
 export function ProgramList({ initialPrograms }: ProgramsListProps) {
 	return (
