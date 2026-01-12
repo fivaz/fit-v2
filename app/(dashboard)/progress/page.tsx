@@ -94,9 +94,9 @@ export default function Progress() {
 	const selectedDateLogs = getLogsForDay(selectedDate);
 
 	return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+		<>
 			{/* Header */}
-			<div className="px-5 pt-12 pb-6">
+			<div className="pb-6">
 				<div className="mb-6 flex items-center justify-between">
 					<div>
 						<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Progress</h1>
@@ -218,7 +218,7 @@ export default function Progress() {
 			</div>
 
 			{/* Selected Day Logs */}
-			<div className="px-5 pb-8">
+			<div>
 				<h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
 					{format(selectedDate, "EEEE, MMMM d")}
 				</h3>
@@ -285,6 +285,6 @@ export default function Progress() {
 					</div>
 				)}
 			</div>
-		</div>
+		</>
 	);
 }
