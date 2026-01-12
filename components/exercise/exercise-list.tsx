@@ -13,17 +13,19 @@ import { Input } from "@/components/ui/input";
 import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroup } from "@/lib/generated/prisma/enums";
+import { ProgramUI } from "@/lib/program/type";
 import { cn } from "@/lib/utils";
 
 type ExercisesListProps = {
 	initialExercises: ExerciseUI[];
+	program?: ProgramUI;
 };
 
-export function ExerciseList({ initialExercises }: ExercisesListProps) {
+export function ExerciseList({ program, initialExercises }: ExercisesListProps) {
 	return (
 		<ExercisesProvider initialItems={initialExercises}>
 			<div>
-				<div className="absolute top-0 right-0">
+				<div className={cn("absolute top-0 right-0", { "mt-4": program?.id })}>
 					<ExerciseFormButton />
 				</div>
 

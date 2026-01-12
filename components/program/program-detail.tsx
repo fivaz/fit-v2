@@ -12,6 +12,7 @@ import {
 	Trash2,
 } from "lucide-react";
 
+import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -104,10 +105,7 @@ export function ProgramDetailInternal() {
 							</DropdownMenuContent>
 						</DropdownMenu>
 
-						<Button>
-							<PlusIcon className="h-5 w-5" />
-							<DumbbellIcon className="h-5 w-5" />
-						</Button>
+						<AddExerciseForm program={program} />
 					</div>
 				</div>
 
