@@ -1,12 +1,8 @@
 import * as React from "react";
 import { Suspense } from "react";
 
-import { Search } from "lucide-react";
-
 import { ExerciseLibraryList } from "@/components/exercise/exercise-library-list";
 import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { getExercises } from "@/lib/exercise/actions";
 
 export default async function ExercisesPage() {

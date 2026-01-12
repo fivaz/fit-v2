@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/drawer";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
-import { ROUTES } from "@/lib/consts";
 import { buildEmptyExercise, ExerciseUI } from "@/lib/exercise/type";
 
 type ExerciseFormButtonProps = React.ComponentProps<typeof Button> & {

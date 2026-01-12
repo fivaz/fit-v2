@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 
 import {
 	ArrowLeftIcon,
-	DumbbellIcon,
 	EditIcon,
 	MoreVertical,
-	PlusIcon,
 	Trash2,
 } from "lucide-react";
 
@@ -20,7 +18,7 @@ import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
-import { ProgramUI, ProgramWithExercises } from "@/lib/program/type";
+import { ProgramWithExercises } from "@/lib/program/type";
 
 import {
 	DropdownMenu,

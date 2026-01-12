@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { Button } from "@/components/ui/button";
 import { ExerciseUI } from "@/lib/exercise/type";
 
 type ExerciseRowProps = {
