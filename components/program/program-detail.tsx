@@ -20,7 +20,7 @@ import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
-import { ProgramUI } from "@/lib/program/type";
+import { ProgramUI, ProgramWithExercises } from "@/lib/program/type";
 
 import {
 	DropdownMenu,
@@ -30,7 +30,7 @@ import {
 } from "../ui/dropdown-menu";
 
 type ProgramDetailProps = {
-	program: ProgramUI;
+	program: ProgramWithExercises;
 };
 
 export function ProgramDetail({ program }: ProgramDetailProps) {
@@ -42,7 +42,7 @@ export function ProgramDetail({ program }: ProgramDetailProps) {
 }
 
 export function ProgramDetailInternal() {
-	const { firstItem: program, deleteItem } = usePrograms();
+	const { firstItem: program, deleteItem } = usePrograms<ProgramWithExercises>();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const router = useRouter();

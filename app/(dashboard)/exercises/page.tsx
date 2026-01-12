@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 import { Search } from "lucide-react";
 
-import { ExerciseList } from "@/components/exercise/exercise-list";
+import { ExerciseLibraryList } from "@/components/exercise/exercise-library-list";
 import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,5 +32,5 @@ export default async function ExercisesPage() {
 async function ExerciseContent() {
 	const exercises = await getExercises();
 
-	return <ExerciseList initialExercises={exercises} />;
+	return <ExerciseLibraryList initialExercises={exercises} />;
 }

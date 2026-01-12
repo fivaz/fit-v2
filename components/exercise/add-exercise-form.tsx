@@ -1,7 +1,14 @@
-import { PlusIcon } from "lucide-react";
+"use client";
 
-import { ExerciseList } from "@/components/exercise/exercise-list";
-import { ProgramUI } from "@/lib/program/type";
+import { useState } from "react";
+
+import { Loader2, PlusIcon } from "lucide-react";
+import useSWR from "swr";
+
+import { ExerciseSelectorList } from "@/components/exercise/exercise-selector-list";
+import { getExercises } from "@/lib/exercise/actions";
+import { updateProgramExercises } from "@/lib/program/actions";
+import { ProgramWithExercises } from "@/lib/program/type";
 
 import { Button } from "../ui/button";
 import {
@@ -16,29 +23,67 @@ import {
 } from "../ui/drawer";
 
 type AddExerciseFormProps = {
-	program: ProgramUI;
+	program: ProgramWithExercises;
 };
 
 export function AddExerciseForm({ program }: AddExerciseFormProps) {
+	const { data: exercises, isLoading, error } = useSWR("exercises", () => getExercises());
+
+	// Initialize selection with exercises already in the program
+	const [selectedIds, setSelectedIds] = useState<string[]>(
+		program.exercises?.map((e) => e.id) || [],
+	);
+
+	const toggleExercise = (id: string) => {
+		setSelectedIds((prev) =>
+			prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id],
+		);
+	};
+
+	const handleConfirm = async () => {
+		await updateProgramExercises(program.id, selectedIds);
+	};
+
 	return (
 		<Drawer>
 			<DrawerTrigger asChild>
 				<Button variant="outline">
-					<PlusIcon />
+					<PlusIcon className="mr-2 h-4 w-4" />
 					Add exercises
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent>
-				<div className="relative mx-auto w-full max-w-sm">
+			<DrawerContent className="max-h-[90vh]">
+				<div className="relative mx-auto flex h-full w-full max-w-md flex-col overflow-hidden">
 					<DrawerHeader>
 						<DrawerTitle>Add Exercises</DrawerTitle>
-						<DrawerDescription>Set the exercises for this program.</DrawerDescription>
+						<DrawerDescription>
+							Select exercises to add to <strong>{program.name}</strong>.
+						</DrawerDescription>
 					</DrawerHeader>
 
-					<ExerciseList program={program} initialExercises={[]} />
+					<div className="flex-1 overflow-y-auto px-4 pb-20">
+						{" "}
+						{/* Bottom padding so items aren't hidden by footer */}
+						{isLoading ? (
+							<div className="flex h-40 items-center justify-center">
+								<Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
+							</div>
+						) : error ? (
+							<div className="text-destructive p-4 text-center">Failed to load exercises.</div>
+						) : (
+							<ExerciseSelectorList
+								initialExercises={exercises || []}
+								selectedIds={selectedIds}
+								onToggle={toggleExercise}
+							/>
+						)}
+					</div>
 
-					<DrawerFooter>
-						<Button>Add exercises</Button>
+					{/* Fixed Footer */}
+					<DrawerFooter className="bg-background border-t pt-4">
+						<Button disabled={isLoading || !!error} onClick={handleConfirm}>
+							Confirm ({selectedIds.length}) exercises
+						</Button>
 						<DrawerClose asChild>
 							<Button variant="outline">Cancel</Button>
 						</DrawerClose>
