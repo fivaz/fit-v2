@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/lib/consts";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
-import { formToProgram, ProgramUI } from "@/lib/program/type";
+import { ProgramUI } from "@/lib/program/type";
 import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 

@@ -1,10 +1,8 @@
 import { startTransition } from "react";
-import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 
 import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
-import { ROUTES } from "@/lib/consts";
 import { logError } from "@/lib/logger";
 
 export function useOptimisticStore<T extends Identifiable>({

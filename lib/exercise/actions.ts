@@ -4,7 +4,7 @@ import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
-import { ExerciseUI, formToExercise } from "@/lib/exercise/type";
+import { ExerciseUI } from "@/lib/exercise/type";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";

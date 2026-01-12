@@ -1,9 +1,7 @@
 "use client";
 
-import { redirect } from "next/navigation";
 
 import { createOptimisticStoreContext } from "@/hooks/optimistic-store/create-optimistic-store-context";
-import { ROUTES } from "@/lib/consts";
 import { deleteProgram, saveProgram } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 

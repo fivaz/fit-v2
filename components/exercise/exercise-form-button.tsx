@@ -3,14 +3,13 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { NotebookTabsIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { ExerciseForm } from "@/components/exercise/exercise-form";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerContent,
-	DrawerDescription,
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
@@ -57,11 +56,6 @@ export function ExerciseFormButton({
 				<div className="mx-auto w-full max-w-md overflow-y-auto pb-6">
 					<DrawerHeader>
 						<DrawerTitle>{exercise.id ? "Edit Exercise" : "Create Exercise"}</DrawerTitle>
-						{!exercise.id && (
-							<DrawerDescription>
-								Name your exercise and select target muscle groups.
-							</DrawerDescription>
-						)}
 					</DrawerHeader>
 
 					<ExerciseForm exercise={exercise} onClose={() => setOpen?.(false)} />

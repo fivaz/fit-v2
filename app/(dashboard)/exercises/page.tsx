@@ -1,16 +1,13 @@
 import * as React from "react";
 import { Suspense } from "react";
 
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { ExerciseList } from "@/components/exercise/exercise-list";
-import { ExerciseRow } from "@/components/exercise/exercise-row";
-import { ProgramList } from "@/components/program/program-list";
 import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getExercises } from "@/lib/exercise/actions";
-import { getPrograms } from "@/lib/program/actions";
 
 const categories = ["All", "Chest", "Back", "Shoulders", "Biceps"];
 
