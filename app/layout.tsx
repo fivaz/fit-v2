@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 }: Readonly<{
-	children: React.ReactNode;
+	children: ReactNode;
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
@@ -38,7 +39,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<ConfirmProvider>
-						<div className="bg-background min-h-svh">
+						<div className="min-h-svh bg-gray-50 dark:bg-gray-900">
 							{/* Main Content Area */}
 							<div className="absolute right-0 p-5">
 								<ModeToggle />

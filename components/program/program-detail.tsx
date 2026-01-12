@@ -58,9 +58,9 @@ export function ProgramDetailInternal() {
 
 	return (
 		<>
-			<div className="flex w-full flex-col pb-24">
+			<div className="flex w-full flex-col px-6 pb-24">
 				{/* Header with back button */}
-				<div className="flex items-start justify-between px-6 pt-6 pb-4">
+				<div className="flex items-start justify-between pt-6 pb-4">
 					<div className="flex items-center gap-4">
 						<Button asChild variant="ghost" size="icon">
 							<Link href={ROUTES.PROGRAMS}>
@@ -82,6 +82,7 @@ export function ProgramDetailInternal() {
 						</div>
 					</div>
 
+					<Button>start workout</Button>
 					<div className="flex gap-2">
 						<DropdownMenu modal={false}>
 							<DropdownMenuTrigger asChild>
