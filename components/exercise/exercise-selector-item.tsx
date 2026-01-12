@@ -2,13 +2,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { cn } from "@/lib/utils";
 
-type ProgramExerciseRowProps = {
+type ExerciseSelectorItemProps = {
 	exercise: ExerciseUI;
 	isSelected: boolean;
 	onToggle: () => void;
 };
 
-export function ProgramExerciseRow({ exercise, isSelected, onToggle }: ProgramExerciseRowProps) {
+export function ExerciseSelectorItem({
+	exercise,
+	isSelected,
+	onToggle,
+}: ExerciseSelectorItemProps) {
 	return (
 		<div
 			onClick={onToggle}

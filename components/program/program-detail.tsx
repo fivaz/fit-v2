@@ -3,14 +3,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import {
-	ArrowLeftIcon,
-	EditIcon,
-	MoreVertical,
-	Trash2,
-} from "lucide-react";
+import { ArrowLeftIcon, DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
 
 import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
+import { ProgramExerciseRow } from "@/components/exercise/program–exercise-row";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +39,7 @@ export function ProgramDetailInternal() {
 	const { firstItem: program, deleteItem } = usePrograms<ProgramWithExercises>();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
+	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
 	if (!program) return null;
 
@@ -100,29 +97,26 @@ export function ProgramDetailInternal() {
 									<Trash2 className="size-4" />
 									<span>Delete Program</span>
 								</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => setShowAddExerciseForm(true)}>
+									<DumbbellIcon className="size-4" />
+									<span>Add Exercises</span>
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
-
-						<AddExerciseForm program={program} />
 					</div>
 				</div>
 
-				{/* Program background image */}
-				<div className="mx-6 mb-6 h-48 overflow-hidden rounded-2xl">
-					<div
-						className="h-full w-full bg-cover bg-center"
-						style={{
-							backgroundImage: `url('/exercise.jpg')`,
-						}}
-					/>
-				</div>
-			</div>
+				{program.exercises.map((exercise) => (
+					<ProgramExerciseRow key={exercise.id} exercise={exercise} />
+				))}
 
-			<ProgramFormButton
-				program={program}
-				open={showProgramForm}
-				onOpenChange={setShowProgramForm}
-			/>
+				<AddExerciseForm
+					program={program}
+					open={showAddExerciseForm}
+					setOpen={setShowAddExerciseForm}
+				/>
+				<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
+			</div>
 		</>
 	);
 }

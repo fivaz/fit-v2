@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ProgramExerciseRow } from "@/components/exercise/program-exercise-row";
+import { ExerciseSelectorItem } from "@/components/exercise/exercise-selector-item";
 import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
@@ -57,7 +57,7 @@ function SelectorInternal({
 			<div className="flex flex-col gap-3">
 				{filteredExercises.length > 0 ? (
 					filteredExercises.map((exercise) => (
-						<ProgramExerciseRow
+						<ExerciseSelectorItem
 							key={exercise.id}
 							exercise={exercise}
 							isSelected={selectedIds.includes(exercise.id)}

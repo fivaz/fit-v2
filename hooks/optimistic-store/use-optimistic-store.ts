@@ -3,7 +3,6 @@ import { startTransition, useRef } from "react";
 import { toast } from "sonner";
 
 import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
-import { logError } from "@/lib/logger";
 
 export function useOptimisticStore<T extends Identifiable>({
 	initialItems,

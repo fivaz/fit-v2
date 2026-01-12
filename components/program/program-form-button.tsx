@@ -20,14 +20,14 @@ import { buildEmptyProgram, ProgramUI } from "@/lib/program/type";
 type ProgramFormButtonProps = React.ComponentProps<typeof Button> & {
 	program?: ProgramUI;
 	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
+	setOpen?: (open: boolean) => void;
 };
 
 export function ProgramFormButton({
 	children,
 	program = buildEmptyProgram(),
 	open: externalOpen,
-	onOpenChange: externalOnOpenChange,
+	setOpen: externalOnOpenChange,
 	...props
 }: ProgramFormButtonProps) {
 	// Internal state management if external state isn't provided

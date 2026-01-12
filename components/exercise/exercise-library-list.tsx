@@ -18,14 +18,12 @@ type ExerciseLibraryListProps = {
 export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListProps) {
 	return (
 		<ExercisesProvider initialItems={initialExercises}>
-			<div className="relative">
-				<div className="absolute top-0 right-0">
-					<ExerciseFormButton />
-				</div>
+			<div className="absolute top-0 right-0">
+				<ExerciseFormButton />
+			</div>
 
-				<div className="space-y-4">
-					<LibraryInternal />
-				</div>
+			<div className="space-y-4">
+				<LibraryInternal />
 			</div>
 		</ExercisesProvider>
 	);
@@ -34,7 +32,6 @@ export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListPro
 function LibraryInternal() {
 	const { items: exercises } = useExercises();
 
-	// Shared logic hook
 	const filterData = useExerciseFilters(exercises);
 	const { filteredExercises } = filterData;
 

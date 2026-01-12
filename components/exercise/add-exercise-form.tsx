@@ -1,8 +1,7 @@
-"use client";
-
 import { useState } from "react";
+import * as React from "react";
 
-import { Loader2, PlusIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import useSWR from "swr";
 
 import { ExerciseSelectorList } from "@/components/exercise/exercise-selector-list";
@@ -19,15 +18,25 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
-	DrawerTrigger,
 } from "../ui/drawer";
 
 type AddExerciseFormProps = {
 	program: ProgramWithExercises;
+	open?: boolean;
+	setOpen?: (open: boolean) => void;
 };
 
-export function AddExerciseForm({ program }: AddExerciseFormProps) {
-	const { data: exercises, isLoading, error } = useSWR("exercises", () => getExercises());
+export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps) {
+	// TODO fix that this function doesn't update if I change program.muscles
+	const {
+		data: exercises,
+		isLoading,
+		error,
+	} = useSWR("exercises", () =>
+		getExercises({
+			muscles: { hasSome: program.muscles },
+		}),
+	);
 
 	// Initialize selection with exercises already in the program
 	const [selectedIds, setSelectedIds] = useState<string[]>(
@@ -45,13 +54,8 @@ export function AddExerciseForm({ program }: AddExerciseFormProps) {
 	};
 
 	return (
-		<Drawer>
-			<DrawerTrigger asChild>
-				<Button variant="outline">
-					<PlusIcon className="mr-2 h-4 w-4" />
-					Add exercises
-				</Button>
-			</DrawerTrigger>
+		<Drawer open={open} onOpenChange={setOpen}>
+			{/* Omit Trigger if controlled externally */}
 			<DrawerContent className="max-h-[90vh]">
 				<div className="relative mx-auto flex h-full w-full max-w-md flex-col overflow-hidden">
 					<DrawerHeader>
@@ -62,7 +66,6 @@ export function AddExerciseForm({ program }: AddExerciseFormProps) {
 					</DrawerHeader>
 
 					<div className="flex-1 overflow-y-auto px-4 pb-20">
-						{" "}
 						{/* Bottom padding so items aren't hidden by footer */}
 						{isLoading ? (
 							<div className="flex h-40 items-center justify-center">

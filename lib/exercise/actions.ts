@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { MuscleGroup, Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
@@ -12,11 +13,11 @@ import { getUserId } from "@/lib/utils-server";
 /**
  * Fetches all exercises for the current user.
  */
-export async function getExercises(): Promise<ExerciseUI[]> {
+export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<ExerciseUI[]> {
 	const userId = await getUserId();
 
 	return prisma.exercise.findMany({
-		where: { userId },
+		where: { userId, ...filter },
 		select: {
 			id: true,
 			name: true,
@@ -103,4 +104,27 @@ export async function deleteExercise(id: string) {
 		});
 		throw new Error("Deletion failed");
 	}
+}
+
+/**
+ * Fetch exercises for the current user filtered by muscles
+ */
+export async function getExercisesByMuscles(muscles: MuscleGroup[]): Promise<ExerciseUI[]> {
+	const userId = await getUserId();
+
+	return prisma.exercise.findMany({
+		where: {
+			userId,
+			muscles: {
+				hasSome: muscles,
+			},
+		},
+		select: {
+			id: true,
+			name: true,
+			muscles: true,
+			imageUrl: true,
+		},
+		orderBy: { name: "asc" },
+	});
 }
