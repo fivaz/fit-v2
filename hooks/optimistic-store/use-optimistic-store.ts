@@ -1,8 +1,9 @@
-import { startTransition } from "react";
+import { startTransition, useRef } from "react";
 
 import { toast } from "sonner";
 
 import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
+import { logError } from "@/lib/logger";
 
 export function useOptimisticStore<T extends Identifiable>({
 	initialItems,
@@ -19,6 +20,9 @@ export function useOptimisticStore<T extends Identifiable>({
 		setItems: optimisticSetItems,
 		items,
 	} = useOptimisticList({ initialItems, sortFnc });
+
+	const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const lastStableItemsRef = useRef<T[]>(items);
 
 	// ---- ADD ----
 	function addItem(item: T) {
@@ -72,24 +76,38 @@ export function useOptimisticStore<T extends Identifiable>({
 	}
 
 	function reorderItems(nextItems: T[]) {
-		const prevItems = items;
+		const prevItems = lastStableItemsRef.current;
 
-		if (!reorderConfig) {
-			optimisticSetItems(nextItems);
-			return;
+		const nextIds = nextItems.map((i) => i.id);
+
+		// Always update UI immediately
+		optimisticSetItems(nextItems);
+
+		// No persistence configured → stop here
+		if (!reorderConfig) return;
+
+		// Clear previous debounce
+		if (debounceTimeoutRef.current) {
+			clearTimeout(debounceTimeoutRef.current);
 		}
 
-		return mutateOptimistically({
-			optimistic: () => optimisticSetItems(nextItems),
-			persist: () => reorderConfig.function(nextItems.map((i) => i.id)),
-			rollback: () => optimisticSetItems(prevItems),
-			onSuccess: () =>
-				reorderConfig.onSuccessMessage && toast.success(reorderConfig.onSuccessMessage),
-			onError: () =>
-				toast.error(reorderConfig.onErrorMessage, {
-					description: "Your changes were rolled back. Please try again.",
-				}),
-		});
+		// Schedule persistence
+		debounceTimeoutRef.current = setTimeout(() => {
+			mutateOptimistically({
+				//optimistic already applied
+				persist: async () => {
+					await reorderConfig.function(nextIds);
+					lastStableItemsRef.current = nextItems;
+				},
+				rollback: () => {
+					optimisticSetItems(prevItems);
+				},
+				onError: () =>
+					toast.error(reorderConfig.onErrorMessage, {
+						description: "Your changes were rolled back. Please try again.",
+					}),
+			});
+		}, reorderConfig.debounceMs ?? 500);
 	}
 
 	return {
@@ -105,10 +123,10 @@ export function useOptimisticStore<T extends Identifiable>({
 export type Identifiable = { id: string };
 
 type OptimisticMutationParams = {
-	optimistic: () => void;
+	optimistic?: () => void;
 	persist: () => Promise<void> | void;
 	rollback: () => void;
-	onSuccess: () => void;
+	onSuccess?: () => void;
 	onError: (error: unknown) => void;
 };
 
@@ -120,7 +138,7 @@ function mutateOptimistically({
 	onError,
 }: OptimisticMutationParams) {
 	startTransition(async () => {
-		optimistic();
+		optimistic?.();
 
 		try {
 			await persist();
@@ -154,6 +172,7 @@ export type UseOptimisticStoreProps<T> = {
 		function: (ids: string[]) => Promise<void>;
 		onSuccessMessage?: string;
 		onErrorMessage: string;
+		debounceMs?: number;
 	};
 };
 

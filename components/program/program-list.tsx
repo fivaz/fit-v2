@@ -16,6 +16,11 @@ type ProgramsListProps = {
 	initialPrograms: ProgramUI[];
 };
 
+function sameOrder<T extends { id: string }>(a: T[], b: T[]) {
+	if (a.length !== b.length) return false;
+	return a.every((item, i) => item.id === b[i]?.id);
+}
+
 export function ProgramList({ initialPrograms }: ProgramsListProps) {
 	return (
 		<ProgramsProvider initialItems={initialPrograms}>
@@ -35,14 +40,16 @@ export function ProgramList({ initialPrograms }: ProgramsListProps) {
 export function ProgramsListInternal() {
 	const { items: programs, reorderItems } = usePrograms();
 
-	if (programs.length === 0) {
-		return <ProgramEmptyState />;
-	}
+	if (programs.length === 0) return <ProgramEmptyState />;
 
 	return (
 		<DragDropProvider
 			onDragEnd={(event) => {
-				reorderItems(move(programs, event));
+				const nextItems = move(programs, event);
+
+				if (sameOrder(programs, nextItems)) return;
+
+				reorderItems(nextItems);
 			}}
 		>
 			<div className="flex flex-col gap-3">
