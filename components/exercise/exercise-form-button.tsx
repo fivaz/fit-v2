@@ -56,13 +56,7 @@ export function ExerciseFormButton({
 			{/* Omit Trigger if controlled externally */}
 			{!isControlled && (
 				<DrawerTrigger asChild>
-					<Button {...props}>
-						{children || (
-							<>
-								<PlusIcon size="icon" className="size-5" />
-							</>
-						)}
-					</Button>
+					<Button {...props}>{children || <PlusIcon className="size-5" />}</Button>
 				</DrawerTrigger>
 			)}
 

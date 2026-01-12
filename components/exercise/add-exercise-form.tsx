@@ -81,9 +81,11 @@ export function AddExerciseForm({ program }: AddExerciseFormProps) {
 
 					{/* Fixed Footer */}
 					<DrawerFooter className="bg-background border-t pt-4">
-						<Button disabled={isLoading || !!error} onClick={handleConfirm}>
-							Confirm ({selectedIds.length}) exercises
-						</Button>
+						<DrawerClose asChild>
+							<Button type="submit" disabled={isLoading || !!error} onClick={handleConfirm}>
+								Confirm ({selectedIds.length}) exercises
+							</Button>
+						</DrawerClose>
 						<DrawerClose asChild>
 							<Button variant="outline">Cancel</Button>
 						</DrawerClose>
