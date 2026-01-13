@@ -4,11 +4,13 @@ import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
-import { ExerciseUI } from "@/lib/exercise/type";
+import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
+
+import "server-only";
 
 /**
  * Fetches all exercises for the current user.
@@ -18,12 +20,7 @@ export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<
 
 	return prisma.exercise.findMany({
 		where: { userId, ...filter },
-		select: {
-			id: true,
-			name: true,
-			muscles: true,
-			imageUrl: true,
-		},
+		...exerciseUIArgs,
 		orderBy: {
 			name: "asc",
 		},
