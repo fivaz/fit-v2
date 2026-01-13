@@ -27,7 +27,7 @@ export function ExerciseFilterShell({
 	return (
 		<>
 			{/* Search Section */}
-			<div className="mb-4 px-1">
+			<div className="mb-4">
 				<div className="relative">
 					<Search className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
 					<Input
@@ -41,7 +41,7 @@ export function ExerciseFilterShell({
 			</div>
 
 			{/* Filter Section */}
-			<div className="scrollbar-hide mb-6 flex gap-3 overflow-x-auto px-1 pb-2">
+			<div className="scrollbar-hide mb-6 flex gap-3 overflow-x-auto pb-2">
 				{availableMuscles.map((muscle) => (
 					<Button
 						key={muscle}

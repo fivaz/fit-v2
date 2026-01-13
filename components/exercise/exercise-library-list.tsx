@@ -19,7 +19,7 @@ export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListPro
 	return (
 		<ExercisesProvider initialItems={initialExercises}>
 			<div className="absolute top-0 right-0">
-				<ExerciseFormButton />
+				<ExerciseFormButton size="icon-lg" />
 			</div>
 
 			<div className="space-y-4">

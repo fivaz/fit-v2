@@ -33,9 +33,9 @@ export default function ExercisesClient({ exercises }: { exercises: ExerciseUI[]
 	}, [search, selectedMuscle, exercises]);
 
 	return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+		<div>
 			{/* Header */}
-			<div className="sticky top-0 z-10 bg-gray-50/80 px-5 pb-4 backdrop-blur-lg dark:bg-gray-900/80">
+			<div className="sticky top-0 z-10 bg-gray-50/80 pb-4 backdrop-blur-lg dark:bg-gray-900/80">
 				<div className="mb-4 flex items-center justify-between">
 					<div>
 						<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Exercises</h1>
