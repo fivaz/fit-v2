@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { AppLayout } from "@/components/app-layout";
 import { ROUTES } from "@/lib/consts";
+import { cn } from "@/lib/utils";
 
 type DashboardLayoutType = {
 	children: ReactNode;
@@ -15,9 +16,5 @@ export default function DashboardLayout({ children }: DashboardLayoutType) {
 
 	const isWorkoutPage = pathname?.startsWith(ROUTES.WORKOUT);
 
-	if (isWorkoutPage) {
-		return <>{children}</>;
-	}
-
-	return <AppLayout>{children}</AppLayout>;
+	return <AppLayout className={cn({ "px-5 pt-12": !isWorkoutPage })}>{children}</AppLayout>;
 }

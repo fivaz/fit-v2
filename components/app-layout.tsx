@@ -13,12 +13,14 @@ import {
 } from "lucide-react";
 
 import { ROUTES } from "@/lib/consts";
+import { cn } from "@/lib/utils";
 
 type AppLayoutProps = {
 	children: ReactNode;
+	className?: string;
 };
 
-export function AppLayout({ children }: AppLayoutProps) {
+export function AppLayout({ children, className }: AppLayoutProps) {
 	const pathname = usePathname();
 
 	const navItems = [
@@ -31,7 +33,12 @@ export function AppLayout({ children }: AppLayoutProps) {
 
 	return (
 		<>
-			<main className="min-h-svh bg-gray-50 px-5 pt-12 pb-20 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-white">
+			<main
+				className={cn(
+					className,
+					"min-h-svh bg-gray-50 pb-20 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-white",
+				)}
+			>
 				{children}
 			</main>
 
