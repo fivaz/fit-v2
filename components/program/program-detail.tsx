@@ -3,10 +3,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { ArrowLeftIcon, DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
+import {
+	ArrowLeftIcon,
+	DumbbellIcon,
+	EditIcon,
+	MoreVertical,
+	Timer,
+	TimerIcon,
+	Trash2,
+} from "lucide-react";
 
 import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
 import { ProgramExerciseList } from "@/components/exercise/program-exercise-list";
+import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -58,39 +67,28 @@ export function ProgramDetailInternal() {
 
 	return (
 		<>
-			<div className="flex w-full flex-col px-6 pb-24">
+			<div className="flex w-full flex-col">
 				{/* Header with back button */}
-				<div className="flex items-start justify-between pt-6 pb-4">
-					<div className="flex items-center gap-4">
-						<Button asChild variant="ghost" size="icon">
-							<Link href={ROUTES.PROGRAMS}>
-								<ArrowLeftIcon className="h-5 w-5" />
-							</Link>
-						</Button>
+				<div className="flex items-start pb-4">
+					<div className="flex flex-1 items-start gap-4">
 						<div>
 							<h1 className="text-foreground text-2xl font-bold">{program.name}</h1>
-							<div className="mt-1 flex flex-wrap gap-1">
-								{program.muscles.map((muscle) => (
-									<Badge
-										key={muscle}
-										className="bg-chart-2 h-5 border-none px-2 py-0 text-[10px] text-orange-800 capitalize hover:bg-orange-600"
-									>
-										{muscle}
-									</Badge>
-								))}
-							</div>
+							<MuscleBadges muscles={program.muscles} />
 						</div>
 					</div>
 
-					<Button>start workout</Button>
-					<div className="flex gap-2">
+					<div className="flex gap-3">
 						<DropdownMenu modal={false}>
 							<DropdownMenuTrigger asChild>
-								<Button variant="ghost" size="icon" className="rounded-full">
+								<Button variant="outline" size="icon">
 									<MoreVertical className="h-5 w-5" />
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
+								<DropdownMenuItem onClick={() => setShowAddExerciseForm(true)}>
+									<DumbbellIcon className="size-4" />
+									<span>Add Exercises</span>
+								</DropdownMenuItem>
 								<DropdownMenuItem onClick={() => setShowProgramForm(true)}>
 									<EditIcon className="size-4" />
 									<span>Edit Program</span>
@@ -98,10 +96,6 @@ export function ProgramDetailInternal() {
 								<DropdownMenuItem variant="destructive" onClick={handleDelete}>
 									<Trash2 className="size-4" />
 									<span>Delete Program</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem onClick={() => setShowAddExerciseForm(true)}>
-									<DumbbellIcon className="size-4" />
-									<span>Add Exercises</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

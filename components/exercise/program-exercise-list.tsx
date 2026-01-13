@@ -27,7 +27,7 @@ export function ProgramExerciseList({ programId }: ProgramExerciseListProps) {
 				reorderItems(nextItems, programId);
 			}}
 		>
-			<div className="flex flex-col gap-3">
+			<div className="flex flex-col gap-4">
 				{exercises.map((exercise, index) => (
 					<ProgramExerciseRow key={exercise.id} exercise={exercise} index={index} />
 				))}
