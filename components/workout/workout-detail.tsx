@@ -8,24 +8,16 @@ import { CheckCircle, Clock, Loader2, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProgramWithExercises } from "@/lib/program/type";
-
-const DUMMY_SETS = {
-	ex_1: [
-		{ reps: 10, weight: 30, time: "01:30" },
-		{ reps: 8, weight: 30, time: "" },
-	],
-	ex_2: [{ reps: 15, weight: 10, time: "00:45" }],
-	ex_3: [], // Empty state for testing
-};
+import { WorkoutWithExercises } from "@/lib/workout/type";
 
 type WorkoutDetailProps = {
-	program: ProgramWithExercises;
+	initialWorkout: WorkoutWithExercises;
 };
 
-export function WorkoutDetail({ program: a }: WorkoutDetailProps) {
+export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 	// Using dummy data instead of props/loading states for design check
-	const [program] = useState<ProgramWithExercises>(a);
-	const [exerciseSets, setExerciseSets] = useState(DUMMY_SETS);
+	const [workout] = useState<WorkoutWithExercises>(initialWorkout);
+	const [exerciseSets, setExerciseSets] = useState([]);
 	const [startTime] = useState(new Date());
 
 	// Mocking mutation/loading states
@@ -46,9 +38,11 @@ export function WorkoutDetail({ program: a }: WorkoutDetailProps) {
 			<div className="sticky top-0 z-10 border-b border-gray-200 bg-white px-5 py-4 dark:border-gray-700 dark:bg-gray-800">
 				<div className="flex items-center justify-between">
 					<div className="flex-1">
-						<h1 className="text-lg font-bold text-gray-900 dark:text-white">{program?.name}</h1>
+						<h1 className="text-lg font-bold text-gray-900 dark:text-white">
+							{workout?.program?.name}
+						</h1>
 						<p className="text-sm text-gray-500 dark:text-gray-400">
-							{program.exercises.length} exercises • {format(startTime, "HH:mm")}
+							{workout.exercises.length} exercises • {format(startTime, "HH:mm")}
 						</p>
 					</div>
 					<Button className="bg-green-500 text-white hover:bg-green-600">
@@ -69,12 +63,12 @@ export function WorkoutDetail({ program: a }: WorkoutDetailProps) {
 
 			{/* Exercises */}
 			<div className="space-y-6 px-5 py-6">
-				{program.exercises.map((ex, exIdx) => {
-					const sets = exerciseSets[ex.id] || [];
+				{workout.exercises.map((workoutExercise, exIdx) => {
+					const sets = exerciseSets[workoutExercise.exercise.id] || [];
 
 					return (
 						<motion.div
-							key={ex.id}
+							key={workoutExercise.id}
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: exIdx * 0.1 }}
@@ -83,13 +77,15 @@ export function WorkoutDetail({ program: a }: WorkoutDetailProps) {
 							{/* Exercise Header */}
 							<div className="relative h-24 overflow-hidden">
 								<img
-									src={ex.imageUrl || "/exercise.jpg"}
-									alt={ex.name}
+									src={workoutExercise.exercise.imageUrl || "/exercise.jpg"}
+									alt={workoutExercise.exercise.name}
 									className="h-full w-full object-cover"
 								/>
 								<div className="absolute inset-0 bg-linear-to-t from-black/80 to-black/20" />
 								<div className="absolute bottom-3 left-4">
-									<h3 className="text-lg font-semibold text-white">{ex.name}</h3>
+									<h3 className="text-lg font-semibold text-white">
+										{workoutExercise.exercise.name}
+									</h3>
 								</div>
 							</div>
 
@@ -116,7 +112,7 @@ export function WorkoutDetail({ program: a }: WorkoutDetailProps) {
 								<AnimatePresence>
 									{sets.map((set, setIdx) => (
 										<motion.div
-											key={`${ex.id}-${setIdx}`}
+											key={`${workoutExercise.id}-${setIdx}`}
 											initial={{ opacity: 0, height: 0 }}
 											animate={{ opacity: 1, height: "auto" }}
 											exit={{ opacity: 0, height: 0 }}

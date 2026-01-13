@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -7,6 +8,9 @@ import {
 	ArrowLeftIcon,
 	DumbbellIcon,
 	EditIcon,
+	Loader2,
+	Loader2Icon,
+	LoaderCircleIcon,
 	MoreVertical,
 	Timer,
 	TimerIcon,
@@ -25,6 +29,7 @@ import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
 import { ProgramWithExercises } from "@/lib/program/type";
+import { handleStartWorkout } from "@/lib/workout/actions";
 
 import {
 	DropdownMenu,
@@ -51,7 +56,9 @@ export function ProgramDetailInternal() {
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
+	const { pending } = useFormStatus();
 	if (!program) return null;
+	const handleStart = handleStartWorkout.bind(null, program.id);
 
 	const handleDelete = async () => {
 		const confirmed = await confirm({
@@ -105,14 +112,17 @@ export function ProgramDetailInternal() {
 				</ExercisesProvider>
 
 				<div className="fixed bottom-20 left-1/2 z-20 w-full max-w-md -translate-x-1/2 px-6">
-					<Button
-						size="lg"
-						disabled={!program.exercises.length}
-						className="h-12 w-full rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-lg font-semibold text-white shadow-xl shadow-orange-500/40 transition-transform hover:from-orange-600 hover:to-orange-700 active:scale-[0.98]"
-					>
-						<TimerIcon className="size-6" />
-						Start Workout
-					</Button>
+					<form action={handleStart}>
+						<Button
+							size="lg"
+							type="submit"
+							disabled={pending || !program.exercises.length}
+							className="h-12 w-full rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-lg font-semibold text-white shadow-xl shadow-orange-500/40 transition-transform hover:from-orange-600 hover:to-orange-700 active:scale-[0.98]"
+						>
+							{pending ? <LoaderCircleIcon className="size-6" /> : <TimerIcon className="size-6" />}
+							Start Workout
+						</Button>
+					</form>
 				</div>
 			</div>
 
