@@ -67,7 +67,7 @@ export function ProgramDetailInternal() {
 
 	return (
 		<>
-			<div className="flex w-full flex-col">
+			<div className="relative flex w-full flex-col">
 				{/* Header with back button */}
 				<div className="flex items-start pb-4">
 					<div className="flex flex-1 items-start gap-4">
@@ -77,42 +77,52 @@ export function ProgramDetailInternal() {
 						</div>
 					</div>
 
-					<div className="flex gap-3">
-						<DropdownMenu modal={false}>
-							<DropdownMenuTrigger asChild>
-								<Button variant="outline" size="icon">
-									<MoreVertical className="h-5 w-5" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem onClick={() => setShowAddExerciseForm(true)}>
-									<DumbbellIcon className="size-4" />
-									<span>Add Exercises</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem onClick={() => setShowProgramForm(true)}>
-									<EditIcon className="size-4" />
-									<span>Edit Program</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem variant="destructive" onClick={handleDelete}>
-									<Trash2 className="size-4" />
-									<span>Delete Program</span>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
+					<DropdownMenu modal={false}>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" size="icon">
+								<MoreVertical className="size-5" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuItem onClick={() => setShowAddExerciseForm(true)}>
+								<DumbbellIcon className="size-4" />
+								<span>Add Exercises</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setShowProgramForm(true)}>
+								<EditIcon className="size-4" />
+								<span>Edit Program</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem variant="destructive" onClick={handleDelete}>
+								<Trash2 className="size-4" />
+								<span>Delete Program</span>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</div>
 
 				<ExercisesProvider initialItems={program.exercises}>
 					<ProgramExerciseList programId={program.id} />
 				</ExercisesProvider>
 
-				<AddExerciseForm
-					program={program}
-					open={showAddExerciseForm}
-					setOpen={setShowAddExerciseForm}
-				/>
-				<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
+				<div className="fixed bottom-20 left-1/2 z-20 w-full max-w-md -translate-x-1/2 px-6">
+					<Button
+						size="lg"
+						disabled={!program.exercises.length}
+						className="h-12 w-full rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-lg font-semibold text-white shadow-xl shadow-orange-500/40 transition-transform hover:from-orange-600 hover:to-orange-700 active:scale-[0.98]"
+					>
+						<TimerIcon className="size-6" />
+						Start Workout
+					</Button>
+				</div>
 			</div>
+
+			<AddExerciseForm
+				program={program}
+				open={showAddExerciseForm}
+				setOpen={setShowAddExerciseForm}
+			/>
+
+			<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
 		</>
 	);
 }

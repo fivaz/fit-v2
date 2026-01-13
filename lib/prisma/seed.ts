@@ -76,6 +76,7 @@ async function main() {
 		data: {
 			name: "Push Day",
 			userId: user.id,
+			imageUrl: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=800&q=80",
 			muscles: [MuscleGroup.chest, MuscleGroup.shoulders, MuscleGroup.triceps],
 		},
 	});
@@ -88,6 +89,7 @@ async function main() {
 		data: {
 			name: "Pull Day",
 			userId: user.id,
+			imageUrl: "https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?w=800&q=80",
 			muscles: [MuscleGroup.back, MuscleGroup.biceps, MuscleGroup.forearms],
 		},
 	});
@@ -100,6 +102,7 @@ async function main() {
 		data: {
 			name: "Leg Day",
 			userId: user.id,
+			imageUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80",
 			muscles: [MuscleGroup.quads, MuscleGroup.hamstrings, MuscleGroup.glutes],
 		},
 	});
