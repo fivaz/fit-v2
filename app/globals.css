@@ -114,3 +114,21 @@
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.408 0.123 38.172);
 }
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground font-semibold;
+	}
+
+	/* Ensure inputs and buttons inherit it correctly if they don't by default */
+	input,
+	button,
+	textarea,
+	select {
+		font-family: inherit;
+		font-weight: inherit;
+	}
+}

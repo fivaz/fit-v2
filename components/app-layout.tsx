@@ -31,11 +31,13 @@ export function AppLayout({ children }: AppLayoutProps) {
 
 	return (
 		<>
-			<main className="mx-auto max-w-md px-5 pt-12 pb-24">{children}</main>
+			<main className="min-h-svh bg-gray-50 px-5 pt-12 pb-20 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-white">
+				{children}
+			</main>
 
 			{/* Persistent Bottom Navigation */}
-			<nav className="safe-area-bottom fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/80">
-				<div className="mx-auto flex max-w-md items-center justify-between px-2 py-2">
+			<nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-200 bg-white px-2 py-2 transition-colors duration-300 dark:border-gray-700 dark:bg-gray-800">
+				<div className="mx-auto flex max-w-md items-center justify-around">
 					{navItems.map((item) => {
 						const isActive = pathname === item.href;
 						const Icon = item.icon;
@@ -45,14 +47,14 @@ export function AppLayout({ children }: AppLayoutProps) {
 								key={item.href}
 								href={item.href}
 								aria-current={isActive ? "page" : undefined}
-								className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-all active:scale-90 ${
+								className={`flex flex-col items-center justify-center rounded-xl px-3 py-1.5 transition-all duration-200 ${
 									isActive
-										? "text-orange-500"
-										: "text-gray-600 hover:text-gray-700 dark:text-gray-400"
+										? "bg-orange-50 text-orange-500 dark:bg-orange-500/10"
+										: "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
 								}`}
 							>
-								<Icon className={`size-6 ${isActive ? "text-orange-500" : ""}`} />
-								<span className="text-xs">{item.label}</span>
+								<Icon className={`h-5 w-5 ${isActive ? "stroke-[2.5]" : ""}`} />
+								<span className="mt-0.5 text-[10px] font-medium">{item.label}</span>
 							</Link>
 						);
 					})}
