@@ -32,11 +32,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 		data: exercises,
 		isLoading,
 		error,
-	} = useSWR("exercises", () =>
-		getExercises({
-			muscles: { hasSome: program.muscles },
-		}),
-	);
+	} = useSWR("exercises", () => getExercises({ muscles: { hasSome: program.muscles } }));
 
 	// Initialize selection with exercises already in the program
 	const [selectedIds, setSelectedIds] = useState<string[]>(

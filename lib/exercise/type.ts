@@ -10,7 +10,6 @@ export const exerciseUIArgs = {
 	},
 } satisfies Prisma.ExerciseDefaultArgs;
 
-// 2. Extract the type from that shape
 export type ExerciseUI = Prisma.ExerciseGetPayload<typeof exerciseUIArgs>;
 
 export function buildEmptyExercise(): ExerciseUI {

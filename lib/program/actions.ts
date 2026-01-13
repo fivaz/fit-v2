@@ -35,13 +35,18 @@ export async function getPrograms(): Promise<ProgramUI[]> {
  */
 const _getProgramById = cache(
 	async (id: string, userId: string): Promise<ProgramWithExercises | null> => {
-		return prisma.program.findFirst({
-			where: {
-				id,
-				userId,
-			},
+		const program = await prisma.program.findFirst({
+			where: { id, userId },
 			...programWithExercisesArgs,
 		});
+
+		if (!program) return null;
+
+		// Mapping the nested 'exercise' objects into a flat array
+		return {
+			...program,
+			exercises: program.exercises.map((item) => item.exercise),
+		};
 	},
 );
 

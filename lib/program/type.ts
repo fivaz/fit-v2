@@ -7,21 +7,27 @@ export const programUISelect = {
 		id: true,
 		name: true,
 		muscles: true,
-		order: true,
 		imageUrl: true,
+		order: true,
 	},
 } satisfies Prisma.ProgramDefaultArgs;
 
 export type ProgramUI = Prisma.ProgramGetPayload<typeof programUISelect>;
 
 export const programWithExercisesArgs = {
-	include: {
+	select: {
+		id: true,
+		name: true,
+		imageUrl: true,
+		muscles: true,
+		order: true,
+
 		exercises: {
 			orderBy: {
-				order: "asc",
+				order: "asc" as const,
 			},
 			select: {
-				order: true, // Keep the order from the join table
+				order: true,
 				exercise: {
 					select: {
 						id: true,
@@ -35,7 +41,12 @@ export const programWithExercisesArgs = {
 	},
 } satisfies Prisma.ProgramDefaultArgs;
 
-export type ProgramWithExercises = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
+type ProgramRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
+
+// The Flattened type for UI
+export type ProgramWithExercises = Omit<ProgramRaw, "exercises"> & {
+	exercises: ProgramRaw["exercises"][number]["exercise"][];
+};
 
 export function buildEmptyProgram(): ProgramUI {
 	return {
