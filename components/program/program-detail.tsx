@@ -1,18 +1,13 @@
 "use client";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
-	ArrowLeftIcon,
 	DumbbellIcon,
 	EditIcon,
-	Loader2,
-	Loader2Icon,
 	LoaderCircleIcon,
 	MoreVertical,
-	Timer,
 	TimerIcon,
 	Trash2,
 } from "lucide-react";
@@ -21,7 +16,6 @@ import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
 import { ProgramExerciseList } from "@/components/exercise/program-exercise-list";
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";

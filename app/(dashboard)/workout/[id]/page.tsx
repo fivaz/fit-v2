@@ -1,10 +1,7 @@
 import * as React from "react";
 
-import { ProgramDetail } from "@/components/program/program-detail";
-import { ProgramNotFound } from "@/components/program/program-not-found";
 import { WorkoutDetail } from "@/components/workout/workout-detail";
 import { WorkoutNotFound } from "@/components/workout/workout-not-found";
-import { getProgramById } from "@/lib/program/actions";
 import { getWorkoutById } from "@/lib/workout/actions";
 
 type ProgramPageProps = {

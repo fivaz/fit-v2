@@ -3,8 +3,6 @@ import * as React from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { GripVertical } from "lucide-react";
 
-import { MuscleBadges } from "@/components/muscle-badges";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { cn } from "@/lib/utils";

@@ -1,4 +1,4 @@
-import { Exercise, Prisma } from "@/lib/generated/prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { type MuscleGroup } from "@/lib/generated/prisma/client";
 
 export const exerciseUIArgs = {

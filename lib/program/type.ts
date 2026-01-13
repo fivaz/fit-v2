@@ -1,5 +1,4 @@
-import { ExerciseUI } from "@/lib/exercise/type";
-import { Prisma, Program } from "@/lib/generated/prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { MuscleGroup } from "@/lib/generated/prisma/client";
 
 export const programUISelect = {

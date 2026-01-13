@@ -1,11 +1,9 @@
 "use client";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { ArrowLeftIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ROUTES } from "@/lib/consts";
 
 export function WorkoutNotFound() {
 	const router = useRouter();

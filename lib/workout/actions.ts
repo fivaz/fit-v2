@@ -1,24 +1,69 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { ROUTES } from "@/lib/consts";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
-import { WorkoutWithExercises, workoutWithExercisesAndSets } from "@/lib/workout/type";
+import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
+
+export async function syncWorkoutSets(workoutId: string, exerciseSetsMap: WorkoutSetMap) {
+	// 1. Flatten the map into an array compatible with createMany
+	const allSets = Object.entries(exerciseSetsMap).flatMap(([workoutExerciseId, sets]) =>
+		sets.map((set, index) => ({
+			id: set.id, // Using the client-generated UUID
+			reps: set.reps,
+			weight: set.weight,
+			order: index,
+			workoutExerciseId,
+		})),
+	);
+
+	await prisma.$transaction(async (tx) => {
+		// 2. Wipe all existing sets for this workout
+		await tx.set.deleteMany({
+			where: { workoutExercise: { workoutId: workoutId } },
+		});
+
+		// 3. Bulk insert everything from the client
+		if (allSets.length > 0) {
+			await tx.set.createMany({ data: allSets });
+		}
+	});
+
+	revalidatePath(`${ROUTES.WORKOUT}/${workoutId}`);
+
+	return exerciseSetsMap;
+}
 
 /**
  * Fetches a complete workout session including the program details,
  * all exercises performed, and the individual sets for each exercise.
  */
-export async function getWorkoutById(id: string): Promise<WorkoutWithExercises | null> {
+export async function getWorkoutById(id: string) {
 	const userId = await getUserId();
 
-	return prisma.workout.findUnique({
+	const workout = await prisma.workout.findUnique({
 		where: { id, userId },
 		...workoutWithExercisesAndSets,
 	});
+
+	if (!workout) return null;
+
+	const exerciseSets: WorkoutSetMap = {};
+
+	workout.exercises.forEach((workoutExercise) => {
+		exerciseSets[workoutExercise.id] = workoutExercise.sets;
+	});
+
+	return {
+		...workout,
+		exerciseSets,
+	};
 }
+
+export type WorkoutWithMappedSets = Awaited<ReturnType<typeof getWorkoutById>>;
 
 export async function handleStartWorkout(programId: string) {
 	const userId = await getUserId();

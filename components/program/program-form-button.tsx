@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { NotebookTabsIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { ProgramForm } from "@/components/program/program-form";
 import { Button } from "@/components/ui/button";

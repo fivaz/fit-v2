@@ -1,6 +1,7 @@
-import { ExerciseUI } from "@/lib/exercise/type";
-import { Prisma, Workout, WorkoutExercise } from "@/lib/generated/prisma/client";
-import { MuscleGroup } from "@/lib/generated/prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
+import { Set } from "@/lib/generated/prisma/client";
+
+export type SetUI = Pick<Set, "id" | "reps" | "weight" | "order" | "time">;
 
 export const workoutWithExercisesAndSets = {
 	select: {
@@ -44,3 +45,16 @@ export const workoutWithExercisesAndSets = {
 } satisfies Prisma.WorkoutDefaultArgs;
 
 export type WorkoutWithExercises = Prisma.WorkoutGetPayload<typeof workoutWithExercisesAndSets>;
+
+// The Map type for your sync function
+export type WorkoutSetMap = Record<string, SetUI[]>;
+
+export function getEmptySet(order: number): SetUI {
+	return {
+		id: crypto.randomUUID(),
+		reps: 0,
+		weight: 0,
+		order,
+		time: null,
+	};
+}
