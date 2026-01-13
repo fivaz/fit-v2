@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { NotebookTabsIcon } from "lucide-react";
+import { NotebookTabsIcon, PlusIcon } from "lucide-react";
 
 import { ProgramForm } from "@/components/program/program-form";
 import { Button } from "@/components/ui/button";
@@ -43,14 +43,7 @@ export function ProgramFormButton({
 			{/* Omit Trigger if controlled externally */}
 			{!isControlled && (
 				<DrawerTrigger asChild>
-					<Button {...props}>
-						{children || (
-							<>
-								<NotebookTabsIcon className="mr-2 h-4 w-4" />
-								New Program
-							</>
-						)}
-					</Button>
+					<Button {...props}>{children || <PlusIcon className="size-5" />}</Button>
 				</DrawerTrigger>
 			)}
 
