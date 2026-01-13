@@ -25,6 +25,7 @@ export async function getPrograms(): Promise<ProgramUI[]> {
 			name: true,
 			muscles: true,
 			order: true,
+			imageUrl: true,
 		},
 	});
 }
@@ -42,6 +43,7 @@ const _getProgramById = cache(
 				name: true,
 				muscles: true,
 				order: true,
+				imageUrl: true,
 			},
 		});
 

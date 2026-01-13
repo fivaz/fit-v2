@@ -46,10 +46,11 @@ enum MuscleGroup {
 }
 
 model Program {
-  id      String        @id @default(uuid())
-  name    String
-  muscles MuscleGroup[]
-  order   Int           @default(0)
+  id       String        @id @default(uuid())
+  name     String
+  muscles  MuscleGroup[]
+  order    Int           @default(0)
+  imageUrl String?
 
   // Association with User
   userId String

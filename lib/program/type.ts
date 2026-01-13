@@ -10,6 +10,7 @@ export function buildEmptyProgram(): ProgramUI {
 		name: "",
 		muscles: [],
 		order: 0,
+		imageUrl: null,
 	};
 }
 
@@ -19,5 +20,6 @@ export function formToProgram(formData: FormData): ProgramUI {
 		name: (formData.get("name") as string) || "",
 		muscles: formData.getAll("muscles") as MuscleGroup[],
 		order: 0,
+		imageUrl: null,
 	};
 }
