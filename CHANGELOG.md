@@ -1,3 +1,11 @@
+## [1.10.0](https://github.com/fivaz/fit-v2/compare/v1.9.0...v1.10.0) (2026-01-14)
+
+### ✨ Features
+
+* add a redirect in home page back to the active workout ([526251c](https://github.com/fivaz/fit-v2/commit/526251cc5956167f0101651c2c55acddc504d13d))
+* add a timer for workout ([47fe32d](https://github.com/fivaz/fit-v2/commit/47fe32de0d054460f9d115bb2f453c800690fbd5))
+* add confirm prompts to delete set and end workout ([2a09b33](https://github.com/fivaz/fit-v2/commit/2a09b338b841055df67ee40cc28d41f1625b78fd))
+
 ## [1.9.0](https://github.com/fivaz/fit-v2/compare/v1.8.0...v1.9.0) (2026-01-14)
 
 ### ✨ Features
