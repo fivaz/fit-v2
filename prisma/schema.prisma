@@ -48,8 +48,11 @@ model BodyMetric {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, date])
+  @@unique([userId, date], name: "userId_date")
   @@index([userId, date])
+  // This tells Prisma: "Call the model 'BodyMetric' in TS,
+  // but call the table 'body_metrics' in the DB."
+  @@map("body_metrics")
 }
 
 enum MuscleGroup {
