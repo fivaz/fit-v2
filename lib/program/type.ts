@@ -7,6 +7,7 @@ export function buildEmptyProgram(): ProgramUI {
 		id: "",
 		name: "",
 		muscles: [],
+		order: 0,
 	};
 }
 
@@ -17,5 +18,6 @@ export function formToProgram(formData: FormData): ProgramUI {
 		id: (formData.get("id") as string) || "",
 		name: (formData.get("name") as string) || "",
 		muscles: formData.getAll("muscles") as MuscleGroup[],
+		order: 0,
 	};
 }

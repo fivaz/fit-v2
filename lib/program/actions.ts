@@ -6,14 +6,20 @@ import { ROUTES } from "@/lib/consts";
 import { Program } from "@/lib/generated/prisma/client";
 import { MuscleGroup } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { formToProgram } from "@/lib/program/type";
+import { formToProgram, ProgramUI } from "@/lib/program/type";
 import { getUserId } from "@/lib/utils-server";
 
-export async function getPrograms(): Promise<Program[]> {
+export async function getPrograms(): Promise<ProgramUI[]> {
 	const userId = await getUserId();
 
 	return prisma.program.findMany({
 		where: { userId },
+		select: {
+			id: true,
+			name: true,
+			muscles: true,
+			order: true,
+		},
 	});
 }
 
@@ -40,5 +46,30 @@ export async function saveProgram(formData: FormData) {
 	} catch (error) {
 		console.error("Database error:", error);
 		throw new Error("Failed to save program");
+	}
+}
+
+/**
+ * Updates the order of programs in the database.
+ * @param sortedIds An array of program IDs in their new order.
+ */
+export async function updateProgramOrder(sortedIds: string[]) {
+	try {
+		// Perform all updates in one atomic transaction
+		await prisma.$transaction(
+			sortedIds.map((id, index) =>
+				prisma.program.update({
+					where: { id },
+					data: { order: index },
+				}),
+			),
+		);
+
+		revalidatePath(ROUTES.PROGRAMS);
+		return { success: true };
+	} catch (error) {
+		console.error("Database reorder failed:", error);
+		// Return a structured error so the client knows to rollback
+		return { success: false, error: "Database error" };
 	}
 }
