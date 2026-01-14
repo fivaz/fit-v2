@@ -1,3 +1,23 @@
+## [1.2.0](https://github.com/fivaz/fit-v2/compare/v1.1.0...v1.2.0) (2026-01-14)
+
+### ✨ Features
+
+* implement add program ([c2cffaa](https://github.com/fivaz/fit-v2/commit/c2cffaa4070bcafbb97f2803e758d123d0135f59))
+
+### ♻️ Refactoring
+
+* run prettier ([afc07b1](https://github.com/fivaz/fit-v2/commit/afc07b1c97806f3bd43ce0ac65b6eaa053a79d86))
+
+### 👷 CI
+
+* fix ci by updating pnpm-lock ([6168813](https://github.com/fivaz/fit-v2/commit/6168813608f9e9d8b8ba441fd9a83431ad16ceb9))
+
+### 🧹 Chores
+
+* add muscles images to program form ([91cdb04](https://github.com/fivaz/fit-v2/commit/91cdb04a9037092a7d04e065a213e4b501fd4931))
+* add optimistic list, program table and fetch programs ([822d2c7](https://github.com/fivaz/fit-v2/commit/822d2c7cdfd004ba24ed1161d4282b6b55ca0ef2))
+* add program form ([90fb10f](https://github.com/fivaz/fit-v2/commit/90fb10f93f1dcd1c2b22a3d0bdc9c7481052d2d5))
+
 ## [1.1.0](https://github.com/fivaz/fit-v2/compare/v1.0.0...v1.1.0) (2026-01-14)
 
 ### ✨ Features
