@@ -1,8 +1,18 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "🔍 Check for missing dependencies..."
+# 1️⃣ Check for uncommitted pnpm-lock.yaml
+if git diff --quiet pnpm-lock.yaml && git diff --cached --quiet pnpm-lock.yaml; then
+  echo "🔍 No changes in pnpm-lock.yaml, continuing..."
+else
+  echo "❌ pnpm-lock.yaml has uncommitted changes! Commit them before pushing."
+  exit 1
+fi
+
+# 2️⃣ Install dependencies (safe step)
+echo "🔍 Installing dependencies..."
 pnpm install
 
+# 3️⃣ Build
 echo "🔍 Running local build before push..."
 pnpm build
