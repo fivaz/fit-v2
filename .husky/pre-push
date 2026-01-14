@@ -1,5 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo "🔍 Check for missing dependencies..."
+pnpm install
+
 echo "🔍 Running local build before push..."
 pnpm build
