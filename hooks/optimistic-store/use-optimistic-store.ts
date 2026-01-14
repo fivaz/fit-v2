@@ -1,11 +1,9 @@
 import { startTransition } from "react";
-import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 
 import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
-import { ROUTES } from "@/lib/consts";
-import { reportError } from "@/lib/logger";
+import { logError } from "@/lib/logger";
 
 export function useOptimisticStore<T extends Identifiable>({
 	initialItems,
@@ -30,7 +28,7 @@ export function useOptimisticStore<T extends Identifiable>({
 			rollback: () => optimisticDeleteItem(item.id),
 			onSuccess: () => toast.success(addConfig.onSuccessMessage),
 			onError: (error) => {
-				reportError(error, { extra: { context: "Optimistic Add Item Failed", item } });
+				logError(error, { extra: { context: "Optimistic Add Item Failed", item } });
 				toast.error(addConfig.onErrorMessage, {
 					description: "Your changes were rolled back. Please try again.",
 				});
@@ -51,7 +49,7 @@ export function useOptimisticStore<T extends Identifiable>({
 			rollback: () => optimisticUpdateItem(prevItem),
 			onSuccess: () => toast.success(updateConfig.onSuccessMessage),
 			onError: (error) => {
-				reportError(error, { extra: { context: "Optimistic Update Item Failed", item } });
+				logError(error, { extra: { context: "Optimistic Update Item Failed", item } });
 				toast.error(updateConfig.onErrorMessage, {
 					description: "Your changes were rolled back. Please try again.",
 				});
@@ -71,7 +69,7 @@ export function useOptimisticStore<T extends Identifiable>({
 			rollback: () => optimisticAddItem(prevItem),
 			onSuccess: () => toast.success(deleteConfig.onSuccessMessage),
 			onError: (error) => {
-				reportError(error, { extra: { context: "Optimistic Delete Item Failed", id } });
+				logError(error, { extra: { context: "Optimistic Delete Item Failed", id } });
 				toast.error(deleteConfig.onErrorMessage, {
 					description: "Your changes were rolled back. Please try again.",
 				});

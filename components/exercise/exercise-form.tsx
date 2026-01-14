@@ -7,25 +7,25 @@ import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { usePrograms } from "@/hooks/program/programs-store-context";
-import { formToProgram, ProgramUI } from "@/lib/program/type";
+import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { ExerciseUI, formToExercise } from "@/lib/exercise/type";
 
 const formSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters"),
 	muscles: z.array(z.string()).min(1, "Select at least one muscle group"),
 });
 
-type ProgramFormProps = {
-	program: ProgramUI;
+type ExerciseFormProps = {
+	exercise: ExerciseUI;
 	onClose: () => void;
 };
 
-export function ProgramForm({ program, onClose }: ProgramFormProps) {
-	const { addItem, updateItem } = usePrograms();
+export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
+	const { addItem, updateItem } = useExercises();
 	const [errors, setErrors] = useState<{ name?: string; muscles?: string }>({});
-	const isEdit = !!program.id;
+	const isEdit = !!exercise.id;
 
-	const validateFields = (data: ProgramUI) => {
+	const validateFields = (data: ExerciseUI) => {
 		const result = formSchema.safeParse(data);
 		if (!result.success) {
 			const { fieldErrors } = z.flattenError(result.error);
@@ -38,33 +38,34 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 
-		const programData = formToProgram(formData);
+		const exerciseData = formToExercise(formData);
 
-		validateFields(programData);
+		validateFields(exerciseData);
 
-		const optimisticProgram: ProgramUI = {
-			...programData,
-			id: programData.id || crypto.randomUUID(),
+		const optimisticExercise: ExerciseUI = {
+			...exerciseData,
+			id: exerciseData.id || crypto.randomUUID(),
 		};
 
 		onClose();
 
 		if (isEdit) {
-			updateItem(optimisticProgram);
+			updateItem(optimisticExercise);
 		} else {
-			addItem(optimisticProgram);
+			addItem(optimisticExercise);
 		}
 	};
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6 px-4">
-			{isEdit && <input type="hidden" name="id" value={program.id} />}
+			{isEdit && <input type="hidden" name="id" value={exercise.id} />}
+
 			<div className="grid gap-2">
-				<Label htmlFor="name">Program Name</Label>
+				<Label htmlFor="name">Exercise Name</Label>
 				<Input
 					id="name"
 					name="name"
-					defaultValue={program.name}
+					defaultValue={exercise.name}
 					placeholder="e.g. Strength Training"
 					className={errors.name ? "border-destructive" : ""}
 				/>
@@ -72,13 +73,13 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 			</div>
 
 			<div>
-				<SelectMuscles defaultValue={program.muscles} />
+				<SelectMuscles defaultValue={exercise.muscles} />
 				{errors.muscles && <p className="text-destructive text-sm">{errors.muscles}</p>}
 			</div>
 
 			<DrawerFooter className="px-0">
 				<Button type="submit" className="w-full">
-					{isEdit ? "Save Changes" : "Create Program"}
+					{isEdit ? "Save Changes" : "Create Exercise"}
 				</Button>
 				<DrawerClose asChild>
 					<Button variant="outline" className="w-full">

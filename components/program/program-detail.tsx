@@ -1,5 +1,5 @@
 "use client";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +11,6 @@ import {
 	PlusIcon,
 	Trash2,
 } from "lucide-react";
-import { toast } from "sonner";
 
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +19,6 @@ import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
-import { reportError } from "@/lib/logger";
 import { ProgramUI } from "@/lib/program/type";
 
 import {

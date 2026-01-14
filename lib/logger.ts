@@ -8,7 +8,7 @@ interface LogOptions {
 	extra?: Record<string, any>;
 }
 
-export function reportError(error: unknown, options: LogOptions = {}) {
+export function logError(error: unknown, options: LogOptions = {}) {
 	const { level = "error", extra } = options;
 	const message = error instanceof Error ? error.message : String(error);
 

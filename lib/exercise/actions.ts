@@ -4,7 +4,8 @@ import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
-import { ExerciseUI, formToExercise } from "@/lib/exercise/type";
+import { ExerciseUI } from "@/lib/exercise/type";
+import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
 
@@ -54,10 +55,8 @@ export async function getExerciseById(id: string): Promise<ExerciseUI | null> {
 /**
  * Saves or updates an exercise from FormData.
  */
-export async function saveExercise(formData: FormData) {
+export async function saveExercise({ id, name, muscles, imageUrl }: ExerciseUI) {
 	const userId = await getUserId();
-	const { id, name, muscles, imageUrl } = formToExercise(formData);
-
 	try {
 		await prisma.exercise.upsert({
 			where: { id: id || "new-id" }, // Ensure your mapper returns empty string for new items
@@ -77,10 +76,10 @@ export async function saveExercise(formData: FormData) {
 		// Revalidate exercise list and programs (in case they display these exercises)
 		revalidatePath(ROUTES.EXERCISES);
 		revalidatePath(ROUTES.PROGRAMS);
-
-		return { success: true };
 	} catch (error) {
-		console.error("Database error:", error);
+		logError(error, {
+			extra: { context: "error saving exercise", id, name, muscles, imageUrl, userId },
+		});
 		throw new Error("Failed to save exercise");
 	}
 }
@@ -98,9 +97,10 @@ export async function deleteExercise(id: string) {
 
 		revalidatePath(ROUTES.EXERCISES);
 		revalidatePath(ROUTES.PROGRAMS);
-		return { success: true };
 	} catch (error) {
-		console.error("Failed to delete exercise:", error);
+		logError(error, {
+			extra: { context: "error deleting exercise", id, userId },
+		});
 		throw new Error("Deletion failed");
 	}
 }
