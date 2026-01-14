@@ -1,3 +1,21 @@
+## [1.6.0](https://github.com/fivaz/fit-v2/compare/v1.5.0...v1.6.0) (2026-01-14)
+
+### ✨ Features
+
+* implement create exercise ([217f1b6](https://github.com/fivaz/fit-v2/commit/217f1b69e6f398fe22fed43d59841779a65b63dc))
+* implement exercise search and filtering ([34145a7](https://github.com/fivaz/fit-v2/commit/34145a7a07842dc3d63faef030485daf408c5172))
+* implement update and delete exercise ([2bf1ac3](https://github.com/fivaz/fit-v2/commit/2bf1ac3f2526198e5a7214e43a74e27c6603808d))
+
+### 🏗️ Build
+
+* improve detection of out of sync pnpm-lock ([36fbcf8](https://github.com/fivaz/fit-v2/commit/36fbcf8d2cbf09be7cb6190859fb11c3a0285544))
+* modify script to check the pnpm-lock after installing dependencies ([8616111](https://github.com/fivaz/fit-v2/commit/8616111e55ca9eaae6d234d0e45459ade723cef8))
+
+### 🧹 Chores
+
+* move exercise search and muscle filtering to client component ([2420f72](https://github.com/fivaz/fit-v2/commit/2420f7265586ba7df9c4ea2bfef3c9f5f773d644))
+* wip - creat exercise components ([1b80878](https://github.com/fivaz/fit-v2/commit/1b80878b496b125b47dce5c2f3f06050e27928e5))
+
 ## [1.5.0](https://github.com/fivaz/fit-v2/compare/v1.4.0...v1.5.0) (2026-01-14)
 
 ### ✨ Features
