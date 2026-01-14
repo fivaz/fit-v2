@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -14,13 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function UserForm({ isOpen, onClose, initialData, onSave }: any) {
-	const [formData, setFormData] = useState(initialData);
-
-	useEffect(() => {
-		if (isOpen) setFormData(initialData);
-	}, [initialData, isOpen]);
-
+type UserFormProps = {
+	isOpen: boolean;
+	onClose: () => void;
+	user: { name: string; email: string };
+};
+export function UserForm({ isOpen, onClose, user }: UserFormProps) {
 	return (
 		<Drawer open={isOpen} onOpenChange={(val) => !val && onClose()}>
 			<DrawerContent className="px-5 pb-10">
@@ -33,8 +30,7 @@ export function UserForm({ isOpen, onClose, initialData, onSave }: any) {
 					<div>
 						<Label className="text-xs font-semibold text-gray-400 uppercase">Full Name</Label>
 						<Input
-							value={formData.full_name}
-							onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+							defaultValue={user.name}
 							className="mt-1.5 h-12 border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
 						/>
 					</div>
@@ -42,8 +38,7 @@ export function UserForm({ isOpen, onClose, initialData, onSave }: any) {
 						<Label className="text-xs font-semibold text-gray-400 uppercase">Email Address</Label>
 						<Input
 							type="email"
-							value={formData.email}
-							onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+							defaultValue={user.email}
 							className="mt-1.5 h-12 border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
 						/>
 					</div>
@@ -54,12 +49,14 @@ export function UserForm({ isOpen, onClose, initialData, onSave }: any) {
 								Cancel
 							</Button>
 						</DrawerClose>
-						<Button
-							onClick={() => onSave(formData)}
-							className="h-12 flex-1 rounded-xl bg-orange-500 font-bold text-white shadow-md shadow-orange-200 dark:shadow-none"
-						>
-							Save Account
-						</Button>
+						<DrawerClose asChild>
+							<Button
+								onClick={() => onClose}
+								className="h-12 flex-1 rounded-xl bg-orange-500 font-bold text-white shadow-md shadow-orange-200 dark:shadow-none"
+							>
+								Save Account
+							</Button>
+						</DrawerClose>
 					</div>
 				</div>
 			</DrawerContent>

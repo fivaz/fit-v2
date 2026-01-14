@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
+import { User } from "better-auth";
 import { motion } from "framer-motion";
 import { Activity, ChevronRight, Dumbbell, LogOut, Palette, Scale, Zap } from "lucide-react";
+import { toast } from "sonner";
 
 import { MetricsForm } from "@/components/settings/metrics-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
@@ -13,10 +16,10 @@ import {
 	BodyMetricsProvider,
 	useBodyMetrics,
 } from "@/hooks/body-metrics/body-metrics-store-context";
+import { authClient } from "@/lib/auth-client";
 import { BodyMetricsUI } from "@/lib/body-metrics/type";
+import { ROUTES } from "@/lib/consts";
 import { cn } from "@/lib/utils";
-
-const VERSION = "1.0.42-beta";
 
 type SettingsDetailProps = {
 	bodyMetrics: BodyMetricsUI;
@@ -31,17 +34,25 @@ export function SettingsDetail({ bodyMetrics }: SettingsDetailProps) {
 }
 
 export function SettingsDetailInternal() {
-	// Hardcoded for now
-	const [userData, setUserData] = useState({
-		full_name: "John Doe",
-		email: "john@example.com",
-	});
+	const [isPendingSignOut, setIsPendingSignOut] = useState(false);
+	const { data: session } = authClient.useSession();
 
 	const [isUserOpen, setIsUserOpen] = useState(false);
 	const [isMetricsOpen, setIsMetricsOpen] = useState(false);
-
+	const router = useRouter();
 	const { firstItem: bodyMetrics } = useBodyMetrics();
-	if (!bodyMetrics) return null;
+	if (!bodyMetrics || !session) return null;
+
+	const handleSignOut = async () => {
+		setIsPendingSignOut(true);
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					router.push(ROUTES.LOGIN);
+				},
+			},
+		});
+	};
 
 	const metricsDisplay = [
 		{
@@ -75,13 +86,13 @@ export function SettingsDetailInternal() {
 					className="flex w-full items-center gap-4 rounded-2xl bg-white p-5 text-left shadow-sm transition-transform active:scale-[0.98] dark:bg-gray-800"
 				>
 					<div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-inner">
-						{userData.full_name.charAt(0)}
+						{session.user.name.charAt(0)}
 					</div>
 					<div className="flex-1">
 						<h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-							{userData.full_name}
+							{session.user.name}
 						</h2>
-						<p className="text-sm text-gray-500 dark:text-gray-400">{userData.email}</p>
+						<p className="text-sm text-gray-500 dark:text-gray-400">{session.user.email}</p>
 					</div>
 					<ChevronRight className="h-5 w-5 text-gray-300" />
 				</motion.button>
@@ -141,6 +152,8 @@ export function SettingsDetailInternal() {
 				{/* Version & Logout */}
 				<div className="pt-2 text-center">
 					<Button
+						onClick={handleSignOut}
+						disabled={isPendingSignOut}
 						variant="outline"
 						className="mb-6 h-12 w-full rounded-xl border-red-100 text-red-500 hover:bg-red-50 dark:border-red-900/30"
 					>
@@ -159,12 +172,11 @@ export function SettingsDetailInternal() {
 
 			<UserForm
 				isOpen={isUserOpen}
-				onClose={() => setIsUserOpen(false)}
-				initialData={{ ...userData, ...bodyMetrics }}
-				onSave={(data: any) => {
-					setUserData({ full_name: data.full_name, email: data.email });
+				onClose={() => {
+					toast.error("User update is not implemented yet.");
 					setIsUserOpen(false);
 				}}
+				user={session.user}
 			/>
 
 			<MetricsForm
