@@ -54,7 +54,7 @@
 	--card-foreground: oklch(0.141 0.005 285.823);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.141 0.005 285.823);
-	--primary: oklch(0.646 0.222 41.116);
+	--primary: oklch(0.705 0.213 47.604);
 	--primary-foreground: oklch(0.98 0.016 73.684);
 	--secondary: oklch(0.967 0.001 286.375);
 	--secondary-foreground: oklch(0.21 0.006 285.885);
@@ -113,4 +113,22 @@
 	--sidebar-accent-foreground: oklch(0.985 0 0);
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.408 0.123 38.172);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground font-semibold;
+	}
+
+	/* Ensure inputs and buttons inherit it correctly if they don't by default */
+	input,
+	button,
+	textarea,
+	select {
+		font-family: inherit;
+		font-weight: inherit;
+	}
 }

@@ -14,7 +14,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 		<>
 			<button
 				onClick={() => setShowForm(true)}
-				className="group ring-chart-1 relative h-40 cursor-pointer overflow-hidden rounded-2xl text-left hover:ring-2 focus:ring-2 focus:outline-none"
+				className="group ring-chart-1 relative h-24 cursor-pointer overflow-hidden rounded-2xl text-left hover:ring-2 focus:ring-2 focus:outline-none"
 			>
 				<img
 					src={exercise.imageUrl || "/exercise.jpg"}

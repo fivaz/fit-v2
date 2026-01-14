@@ -89,7 +89,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<ConfirmProvider>
-						<div className="bg-background min-h-svh">
+						<div className="mx-auto min-h-svh max-w-md border bg-gray-50 dark:bg-gray-900">
 							{/* Main Content Area */}
 							<div className="absolute right-0 p-5">
 								<ModeToggle />

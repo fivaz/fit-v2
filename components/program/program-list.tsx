@@ -20,14 +20,12 @@ type ProgramsListProps = {
 export function ProgramList({ initialPrograms }: ProgramsListProps) {
 	return (
 		<ProgramsProvider initialItems={initialPrograms}>
-			<div className="">
-				<div className="absolute top-0 right-0">
-					<ProgramFormButton />
-				</div>
+			<div className="absolute top-0 right-0">
+				<ProgramFormButton size="icon-lg" />
+			</div>
 
-				<div className="space-y-4">
-					<ProgramsListInternal />
-				</div>
+			<div className="space-y-4">
+				<ProgramsListInternal />
 			</div>
 		</ProgramsProvider>
 	);
@@ -48,7 +46,7 @@ export function ProgramsListInternal() {
 				reorderItems(nextItems);
 			}}
 		>
-			<div className="flex flex-col gap-3">
+			<div className="flex flex-col gap-4">
 				{programs.map((program, index) => (
 					<ProgramRow key={program.id} program={program} index={index} />
 				))}
