@@ -1,3 +1,12 @@
+## [1.4.0](https://github.com/fivaz/fit-v2/compare/v1.3.0...v1.4.0) (2026-01-14)
+
+### ✨ Features
+
+* add exercise page ([385213f](https://github.com/fivaz/fit-v2/commit/385213f0285738db14b781e7fece7daa36820346))
+* add icons for pwa ([be2cc89](https://github.com/fivaz/fit-v2/commit/be2cc8943fd22ee8b1e0bcf325ef493a4217d4e8))
+* add program page ([a68eb05](https://github.com/fivaz/fit-v2/commit/a68eb05be28276405a128a005a28586ace22134c))
+* recreate design for programs list ([2ec4e28](https://github.com/fivaz/fit-v2/commit/2ec4e286d4f43333145b147cfd80e6b71ba38beb))
+
 ## [1.3.0](https://github.com/fivaz/fit-v2/compare/v1.2.0...v1.3.0) (2026-01-14)
 
 ### ✨ Features
