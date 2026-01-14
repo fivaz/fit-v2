@@ -150,7 +150,9 @@ export function SettingsDetailInternal() {
 						<span className="text-[10px] font-bold tracking-widest uppercase dark:text-white">
 							Build with Passion
 						</span>
-						<p className="text-xs font-medium dark:text-white">Version {VERSION}</p>
+						<p className="text-xs font-medium dark:text-white">
+							Version {process.env.NEXT_PUBLIC_APP_VERSION}
+						</p>
 					</div>
 				</div>
 			</div>
