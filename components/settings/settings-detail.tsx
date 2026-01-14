@@ -5,41 +5,56 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Activity, ChevronRight, Dumbbell, LogOut, Palette, Scale, Zap } from "lucide-react";
 
-import { MetricsDrawer } from "@/components/settings/metrics-drawer";
+import { MetricsForm } from "@/components/settings/metrics-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
-import { UserDrawer } from "@/components/settings/user-drawer";
+import { UserForm } from "@/components/settings/user-form";
 import { Button } from "@/components/ui/button";
+import { BodyMetricsUI } from "@/lib/body-metrics/type";
+import { cn } from "@/lib/utils";
 
 const VERSION = "1.0.42-beta";
 
-export function SettingsDetail() {
+type SettingsDetailProps = {
+	bodyMetrics: BodyMetricsUI;
+};
+
+export function SettingsDetail({ bodyMetrics }: SettingsDetailProps) {
+	// Hardcoded for now
 	const [userData, setUserData] = useState({
 		full_name: "John Doe",
 		email: "john@example.com",
-		weight: "82.5",
-		bodyFat: "18.2",
-		muscleMass: "42.5",
-		visceralFat: "7",
 	});
 
 	const [isUserOpen, setIsUserOpen] = useState(false);
 	const [isMetricsOpen, setIsMetricsOpen] = useState(false);
 
-	const bodyMetrics = [
-		{ icon: Scale, label: "Weight", value: `${userData.weight} kg` },
-		{ icon: Activity, label: "Body Fat", value: `${userData.bodyFat}%` },
-		{ icon: Dumbbell, label: "Muscle Mass", value: `${userData.muscleMass}%` },
-		{ icon: Zap, label: "Visceral Fat", value: `Lvl ${userData.visceralFat}` },
+	const metricsDisplay = [
+		{
+			icon: Scale,
+			label: "Weight",
+			value: bodyMetrics.weight ? `${bodyMetrics.weight} kg` : "--",
+		},
+		{
+			icon: Activity,
+			label: "Body Fat",
+			value: bodyMetrics.bodyFat ? `${bodyMetrics.bodyFat}%` : "--",
+		},
+		{
+			icon: Dumbbell,
+			label: "Muscle Mass",
+			value: bodyMetrics.muscleMass ? `${bodyMetrics.muscleMass}%` : "--",
+		},
+		{
+			icon: Zap,
+			label: "Visceral Fat",
+			value: bodyMetrics.visceralFat ? `Lvl ${bodyMetrics.visceralFat}` : "--",
+		},
 	];
 
 	return (
-		<div className="min-h-screen bg-gray-50 pb-12 dark:bg-gray-900">
-			<div className="px-5 pt-12 pb-6">
-				<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
-			</div>
-
+		<>
 			{/* Account Row */}
-			<div className="mb-6 px-5">
+			<div className="mb-6">
 				<motion.button
 					onClick={() => setIsUserOpen(true)}
 					className="flex w-full items-center gap-4 rounded-2xl bg-white p-5 text-left shadow-sm transition-transform active:scale-[0.98] dark:bg-gray-800"
@@ -57,18 +72,21 @@ export function SettingsDetail() {
 				</motion.button>
 			</div>
 
-			<div className="space-y-6 px-5 pb-8">
-				{/* Body Composition Row */}
+			<div className="space-y-6 pb-8">
+				{/* Body Composition Group */}
 				<div>
 					<h3 className="mb-2 text-sm font-semibold tracking-wider text-gray-500 uppercase">
 						Body Stats
 					</h3>
 					<div className="overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-gray-800">
-						{bodyMetrics.map((item, idx) => (
+						{metricsDisplay.map((item, idx) => (
 							<div
 								key={item.label}
 								onClick={() => setIsMetricsOpen(true)}
-								className={`flex cursor-pointer items-center justify-between p-4 transition-colors active:bg-gray-50 dark:active:bg-gray-700/50 ${idx < bodyMetrics.length - 1 ? "border-b border-gray-50 dark:border-gray-700" : ""}`}
+								className={cn(
+									"flex cursor-pointer items-center justify-between p-4 transition-colors active:bg-gray-50 dark:active:bg-gray-700/50",
+									idx < metricsDisplay.length - 1 && "border-b border-gray-50 dark:border-gray-700",
+								)}
 							>
 								<div className="flex items-center gap-3">
 									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-900/20">
@@ -122,25 +140,22 @@ export function SettingsDetail() {
 				</div>
 			</div>
 
-			{/* Specialized Drawers */}
-			<UserDrawer
+			<UserForm
 				isOpen={isUserOpen}
 				onClose={() => setIsUserOpen(false)}
-				initialData={userData}
+				initialData={{ ...userData, ...bodyMetrics }}
 				onSave={(data: any) => {
-					setUserData({ ...userData, ...data });
+					setUserData({ full_name: data.full_name, email: data.email });
 					setIsUserOpen(false);
 				}}
 			/>
-			<MetricsDrawer
+
+			<MetricsForm
 				isOpen={isMetricsOpen}
 				onClose={() => setIsMetricsOpen(false)}
-				initialData={userData}
-				onSave={(data: any) => {
-					setUserData({ ...userData, ...data });
-					setIsMetricsOpen(false);
-				}}
+				initialData={{ ...userData, ...bodyMetrics }}
+				onSave={() => setIsMetricsOpen(false)}
 			/>
-		</div>
+		</>
 	);
 }

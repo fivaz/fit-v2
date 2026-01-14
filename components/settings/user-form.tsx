@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 
-import { Loader2, Save, User } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -16,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function UserDrawer({ isOpen, onClose, initialData, onSave }: any) {
+export function UserForm({ isOpen, onClose, initialData, onSave }: any) {
 	const [formData, setFormData] = useState(initialData);
 
 	useEffect(() => {
@@ -33,7 +31,7 @@ export function UserDrawer({ isOpen, onClose, initialData, onSave }: any) {
 
 				<div className="space-y-4 pt-4">
 					<div>
-						<Label className="text-xs font-semibold text-gray-400">Full Name</Label>
+						<Label className="text-xs font-semibold text-gray-400 uppercase">Full Name</Label>
 						<Input
 							value={formData.full_name}
 							onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
@@ -41,7 +39,7 @@ export function UserDrawer({ isOpen, onClose, initialData, onSave }: any) {
 						/>
 					</div>
 					<div>
-						<Label className="text-xs font-semibold text-gray-400">Email Address</Label>
+						<Label className="text-xs font-semibold text-gray-400 uppercase">Email Address</Label>
 						<Input
 							type="email"
 							value={formData.email}
@@ -58,7 +56,7 @@ export function UserDrawer({ isOpen, onClose, initialData, onSave }: any) {
 						</DrawerClose>
 						<Button
 							onClick={() => onSave(formData)}
-							className="h-12 flex-1 rounded-xl bg-orange-500 font-bold text-white"
+							className="h-12 flex-1 rounded-xl bg-orange-500 font-bold text-white shadow-md shadow-orange-200 dark:shadow-none"
 						>
 							Save Account
 						</Button>
