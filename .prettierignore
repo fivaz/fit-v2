@@ -1,0 +1,9 @@
+# Ignore artifacts:
+build
+coverage
+.next
+node_modules
+.idea
+pnpm-lock.yaml
+*.hbs
+CHANGELOG.md
