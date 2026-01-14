@@ -7,6 +7,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
 	const { theme, setTheme } = useTheme();
+	//TODO this will cause a hydration mismatch warning if the theme is set to 'system' on initial load
 
 	const themes = [
 		{ value: "light", icon: Sun },
