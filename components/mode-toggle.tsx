@@ -18,7 +18,7 @@ export function ModeToggle() {
 	const { setTheme } = useTheme();
 	const { data: session } = authClient.useSession();
 
-	if (session?.user.email !== process.env.NEXT_PUBLIC_DEMO_USER_EMAIL) return;
+	if (session?.user.email !== process.env.NEXT_PUBLIC_DEMO_USER_EMAIL) return null;
 
 	const themes = [
 		{ label: "light", value: "light", icon: Sun },

@@ -15,7 +15,7 @@ export type BodyMetricsUI = Prisma.BodyMetricGetPayload<typeof latestBodyMetric>
 export function getEmptyBodyMetrics(): BodyMetricsUI {
 	return {
 		id: "",
-		weight: 0,
+		weight: null,
 		bodyFat: null,
 		muscleMass: null,
 		visceralFat: null,
