@@ -1,7 +1,7 @@
 import { Prisma } from "@/lib/generated/prisma/client";
 import { Set } from "@/lib/generated/prisma/client";
 
-export type SetUI = Pick<Set, "id" | "reps" | "weight" | "order" | "time">;
+export type SetUI = Pick<Set, "id" | "reps" | "weight" | "order"> & { time: string | null };
 
 export const workoutWithExercisesAndSets = {
 	select: {
