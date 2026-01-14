@@ -25,9 +25,9 @@ export async function getBodyMetrics(): Promise<BodyMetricsUI> {
  */
 export async function saveBodyMetrics(metrics: BodyMetricsUI) {
 	const userId = await getUserId();
-	// Normalize date to 00:00:00.000 to hit the daily unique constraint
+	// Normalize date to 00:00:00.000 UTC to hit the daily unique constraint
 	const today = new Date();
-	today.setHours(0, 0, 0, 0);
+	today.setUTCHours(0, 0, 0, 0);
 
 	await prisma.bodyMetric.upsert({
 		where: {
