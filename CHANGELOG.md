@@ -1,3 +1,28 @@
+## [1.12.0](https://github.com/fivaz/fit-v2/compare/v1.11.0...v1.12.0) (2026-01-14)
+
+### ✨ Features
+
+* add error handling for logout button ([180dfb6](https://github.com/fivaz/fit-v2/commit/180dfb61440d2183be94379c4c74ed96e313d5a9))
+* add more space for the navigation buttons ([52ed6ce](https://github.com/fivaz/fit-v2/commit/52ed6ce42b8335f936d6258796bf53be6ef948b8))
+* show mode toggle only for the demo user ([ccdfe98](https://github.com/fivaz/fit-v2/commit/ccdfe98d68b8480a726960d1b5aabcb35ef4c734))
+
+### 🐛 Bug Fixes
+
+* hydration mismatch ([8b0700a](https://github.com/fivaz/fit-v2/commit/8b0700a11a583ad385251ea21f24fa53e196b5cd))
+* set body metrics date to midnight in UTC timezone ([4a906d2](https://github.com/fivaz/fit-v2/commit/4a906d24f95070818f743e2e24a40bc3f7e11eff))
+* typo in onClose invocation ([f1f582f](https://github.com/fivaz/fit-v2/commit/f1f582f76832008272ffd16fba62d725187fbc6d))
+
+### ♻️ Refactoring
+
+* fix semantics of empty weight ([6c59679](https://github.com/fivaz/fit-v2/commit/6c596797f9068d44a1ee348c69982ef180340873))
+* make weight nullable in db ([1c650de](https://github.com/fivaz/fit-v2/commit/1c650dedae90672491bfab31ba15b3dfe4a9b200))
+* remove unnecessary lib ([db83082](https://github.com/fivaz/fit-v2/commit/db830822a19c0b4d70db267f66b935a899f039c5))
+
+### 📝 Documentation
+
+* add TODO ([43f5df8](https://github.com/fivaz/fit-v2/commit/43f5df8c175a08a939e922fa7ad06959b77e525e))
+* update docs ([7de7d09](https://github.com/fivaz/fit-v2/commit/7de7d09d196d018b7c1a4f9b5e1f4a83930a0521))
+
 ## [1.11.0](https://github.com/fivaz/fit-v2/compare/v1.10.0...v1.11.0) (2026-01-14)
 
 ### ✨ Features
