@@ -1,3 +1,16 @@
+## [1.1.0](https://github.com/fivaz/fit-v2/compare/v1.0.0...v1.1.0) (2026-01-14)
+
+### ✨ Features
+
+* add complete authentication ([a5e883b](https://github.com/fivaz/fit-v2/commit/a5e883b0de57ef1bdf23bd1bf87fbfba4eb7a74f))
+
+### 🧹 Chores
+
+* add dashboard navigation ([44ee226](https://github.com/fivaz/fit-v2/commit/44ee2262118d604afb7bc1addc8fcfcf95724c13))
+* add prisma and better auth ([b458f27](https://github.com/fivaz/fit-v2/commit/b458f2768716379b85ce37de19e45acf706e9039))
+* add shadcn with theme ([46001b7](https://github.com/fivaz/fit-v2/commit/46001b737efc6fcbcfff9410ec3517ed27f3e1ed))
+* add theme provider, confirm-dialog and mode-toggle ([99e8e51](https://github.com/fivaz/fit-v2/commit/99e8e51c7a0beb4a5ceda44c7c2657c9c2502193))
+
 ## 1.0.0 (2026-01-14)
 
 ### 🏗️ Build
