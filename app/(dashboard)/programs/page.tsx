@@ -5,16 +5,21 @@ import { ProgramList } from "@/components/program/program-list";
 import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
 import { getPrograms } from "@/lib/program/actions";
 
-export default function Programs() {
+export default function ProgramPage() {
 	return (
-		<div className="relative p-4">
-			<div className="relative mb-4">
-				<h1 className="text-2xl font-semibold">Workout Programs</h1>
-			</div>
+		<div className="px-6 pt-8">
+			<div className="relative">
+				<div className="flex items-start justify-between pb-2">
+					<div>
+						<h1 className="text-foreground text-2xl font-bold">Programs</h1>
+						<p className="text-muted-foreground mt-1 text-sm">{4} workout programs</p>
+					</div>
+				</div>
 
-			<Suspense fallback={<ProgramsSkeleton />}>
-				<ProgramsContent />
-			</Suspense>
+				<Suspense fallback={<ProgramsSkeleton />}>
+					<ProgramsContent />
+				</Suspense>
+			</div>
 		</div>
 	);
 }

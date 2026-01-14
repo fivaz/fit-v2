@@ -1,6 +1,6 @@
 import { type FormEvent, Fragment, startTransition, useState } from "react";
 
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import * as z from "zod";
 

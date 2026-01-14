@@ -3,6 +3,8 @@
 import * as React from "react";
 import { useState } from "react";
 
+import { NotebookTabsIcon } from "lucide-react";
+
 import { ProgramForm } from "@/components/program/program-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +24,10 @@ export function ProgramFormButton() {
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button>New Program</Button>
+				<Button>
+					<NotebookTabsIcon />
+					New Program
+				</Button>
 			</DrawerTrigger>
 			<DrawerContent className="max-h-[90vh]">
 				<div className="mx-auto w-full max-w-md overflow-y-auto">
