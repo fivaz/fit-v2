@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import * as React from "react";
 
-import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
 import { SettingsDetail } from "@/components/settings/settings-detail";
 import { getBodyMetrics } from "@/lib/body-metrics/actions";
 

@@ -100,6 +100,7 @@ export default function Progress() {
 				<div className="mb-6 flex items-center justify-between">
 					<div>
 						<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Progress</h1>
+						<small className="text-red-500">(not implemented yet)</small>
 						<p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
 							Track your fitness journey
 						</p>

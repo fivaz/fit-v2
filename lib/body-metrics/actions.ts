@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 
 import { BodyMetricsUI, getEmptyBodyMetrics, latestBodyMetric } from "@/lib/body-metrics/type";
 import { ROUTES } from "@/lib/consts";
-import { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
 
