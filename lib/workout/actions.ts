@@ -189,3 +189,22 @@ export async function finishWorkout(workoutId: string) {
 	revalidatePath(ROUTES.PROGRESS);
 	redirect(ROUTES.PROGRESS);
 }
+
+export async function redirectToActiveWorkout() {
+	const userId = await getUserId();
+
+	const activeWorkout = await prisma.workout.findFirst({
+		where: {
+			userId,
+			endDate: null, // This is the "active" criteria
+		},
+		select: { id: true },
+	});
+
+	if (activeWorkout) {
+		// If found, move the user immediately
+		redirect(`${ROUTES.WORKOUT}/${activeWorkout.id}`);
+	}
+
+	return null;
+}
