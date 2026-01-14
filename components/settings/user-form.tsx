@@ -51,7 +51,7 @@ export function UserForm({ isOpen, onClose, user }: UserFormProps) {
 						</DrawerClose>
 						<DrawerClose asChild>
 							<Button
-								onClick={() => onClose}
+								onClick={onClose}
 								className="h-12 flex-1 rounded-xl bg-orange-500 font-bold text-white shadow-md shadow-orange-200 dark:shadow-none"
 							>
 								Save Account
