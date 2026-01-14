@@ -1,10 +1,18 @@
 module.exports = {
-	branches: ["main"],
+	branches: ["main", "master"],
 	plugins: [
 		[
 			"@semantic-release/commit-analyzer",
 			{
 				preset: "conventionalcommits",
+				// ADD THIS SECTION:
+				releaseRules: [
+					{ type: "chore", release: "patch" },
+					{ type: "docs", release: "patch" },
+					{ type: "style", release: "patch" },
+					{ type: "ci", release: "patch" },
+					{ type: "refactor", release: "patch" },
+				],
 			},
 		],
 		[
