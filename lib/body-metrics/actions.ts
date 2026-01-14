@@ -7,6 +7,10 @@ import { ROUTES } from "@/lib/consts";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
 
+/**
+ * Retrieves the most recent body metrics for the current user.
+ * Returns an empty body metrics object if no metrics exist yet.
+ */
 export async function getBodyMetrics(): Promise<BodyMetricsUI> {
 	const userId = await getUserId();
 
@@ -21,13 +25,13 @@ export async function getBodyMetrics(): Promise<BodyMetricsUI> {
 
 /**
  * Upserts body metrics for a specific user.
- * Expects a partial BodyMetric object containing the measurements.
+ * Expects a complete BodyMetricsUI object containing the measurements.
  */
 export async function saveBodyMetrics(metrics: BodyMetricsUI) {
 	const userId = await getUserId();
-	// Normalize date to 00:00:00.000 to hit the daily unique constraint
+	// Normalize date to 00:00:00.000 UTC to hit the daily unique constraint
 	const today = new Date();
-	today.setHours(0, 0, 0, 0);
+	today.setUTCHours(0, 0, 0, 0);
 
 	await prisma.bodyMetric.upsert({
 		where: {

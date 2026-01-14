@@ -34,7 +34,7 @@ model User {
 
 model BodyMetric {
   id          String @id @default(cuid())
-  weight      Float
+  weight      Float?
   bodyFat     Float?
   muscleMass  Float?
   visceralFat Int?

@@ -18,6 +18,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { BodyMetricsUI } from "@/lib/body-metrics/type";
 import { ROUTES } from "@/lib/consts";
+import { logError } from "@/lib/logger";
 import { cn } from "@/lib/utils";
 
 type SettingsDetailProps = {
@@ -44,13 +45,15 @@ export function SettingsDetailInternal() {
 
 	const handleSignOut = async () => {
 		setIsPendingSignOut(true);
-		await authClient.signOut({
-			fetchOptions: {
-				onSuccess: () => {
-					router.push(ROUTES.LOGIN);
-				},
-			},
-		});
+		try {
+			await authClient.signOut();
+			router.push(ROUTES.LOGIN);
+		} catch (err) {
+			logError(err, { extra: { context: "handleSignOut failed" } });
+			toast.error("Failed to sign out. Please try again.");
+		} finally {
+			setIsPendingSignOut(false);
+		}
 	};
 
 	const metricsDisplay = [
@@ -85,7 +88,7 @@ export function SettingsDetailInternal() {
 					className="flex w-full items-center gap-4 rounded-2xl bg-white p-5 text-left shadow-sm transition-transform active:scale-[0.98] dark:bg-gray-800"
 				>
 					<div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-inner">
-						{session.user.name.charAt(0)}
+						{session.user.name?.charAt(0) || "?"}
 					</div>
 					<div className="flex-1">
 						<h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -160,7 +163,7 @@ export function SettingsDetailInternal() {
 					</Button>
 					<div className="opacity-30">
 						<span className="text-[10px] font-bold tracking-widest uppercase dark:text-white">
-							Build with Passion
+							Built with Passion
 						</span>
 						<p className="text-xs font-medium dark:text-white">
 							Version {process.env.NEXT_PUBLIC_APP_VERSION}
