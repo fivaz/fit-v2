@@ -1,3 +1,18 @@
+## [1.3.0](https://github.com/fivaz/fit-v2/compare/v1.2.0...v1.3.0) (2026-01-14)
+
+### ✨ Features
+
+* implement sort programs ([cd64da2](https://github.com/fivaz/fit-v2/commit/cd64da293392f76bdce7d83e607039da1cc98539))
+
+### 🏗️ Build
+
+* sync pnpm-lock before push ([6a38164](https://github.com/fivaz/fit-v2/commit/6a381642778b8752846704b4e4136545003b37de))
+* try to build app locally before pushing it ([290d789](https://github.com/fivaz/fit-v2/commit/290d7896f170fd30abad4dc91b9b906f1cb46d9c))
+
+### 🧹 Chores
+
+* add seed ([e9e25f2](https://github.com/fivaz/fit-v2/commit/e9e25f26de81d0936320008b7505404c641f16bc))
+
 ## [1.2.0](https://github.com/fivaz/fit-v2/compare/v1.1.0...v1.2.0) (2026-01-14)
 
 ### ✨ Features
