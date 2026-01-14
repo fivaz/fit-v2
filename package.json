@@ -14,7 +14,8 @@
 		"db:seed": "prisma db seed",
 		"db:generate": "prisma generate",
 		"postinstall": "prisma generate",
-		"prepare": "husky"
+		"prepare": "husky",
+		"test:release": "act"
 	},
 	"dependencies": {
 		"@dnd-kit/helpers": "^0.2.1",
