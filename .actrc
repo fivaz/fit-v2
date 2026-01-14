@@ -1,17 +1,18 @@
 # Use a medium image with most tools
 -P ubuntu-latest=catthehacker/ubuntu:act-latest
 
+# Docker privileges (Updated syntax)
 --container-options "--cap-add=SYS_ADMIN"
 
 # Architecture
 --container-architecture linux/amd64
 
 # Local pnpm cache
---env PNPM_HOME=/root/.pnpm-shared
+# --env PNPM_HOME=/root/.pnpm-shared
 
 # Run releases in dry-run mode by default
 --env DRY_RUN=1
---env GITHUB_REF=refs/heads/main
+--env GITHUB_REF=refs/heads/master
 
 # Secrets file
 --secret-file .secrets
