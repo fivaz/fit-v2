@@ -7,6 +7,10 @@ import { ROUTES } from "@/lib/consts";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
 
+/**
+ * Retrieves the most recent body metrics for the current user.
+ * Returns an empty body metrics object if no metrics exist yet.
+ */
 export async function getBodyMetrics(): Promise<BodyMetricsUI> {
 	const userId = await getUserId();
 
@@ -21,7 +25,7 @@ export async function getBodyMetrics(): Promise<BodyMetricsUI> {
 
 /**
  * Upserts body metrics for a specific user.
- * Expects a partial BodyMetric object containing the measurements.
+ * Expects a complete BodyMetricsUI object containing the measurements.
  */
 export async function saveBodyMetrics(metrics: BodyMetricsUI) {
 	const userId = await getUserId();
