@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { ROUTES } from "@/lib/consts";
+import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
 import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
@@ -54,9 +55,11 @@ export async function getWorkoutById(id: string) {
 	const exerciseSets: WorkoutSetMap = {};
 
 	workout.exercises.forEach((workoutExercise) => {
-		exerciseSets[workoutExercise.id] = workoutExercise.sets;
+		exerciseSets[workoutExercise.id] = workoutExercise.sets.map((set) => ({
+			...set,
+			time: set.time ? set.time.toISOString() : null,
+		}));
 	});
-
 	return {
 		...workout,
 		exerciseSets,
@@ -166,4 +169,42 @@ export async function startWorkout(userId: string, programId: string) {
 	});
 
 	return newWorkout.id;
+}
+
+export async function finishWorkout(workoutId: string) {
+	try {
+		await prisma.workout.update({
+			where: { id: workoutId },
+			data: {
+				endDate: new Date(),
+				// You could also calculate total volume here if you have a field for it
+			},
+		});
+	} catch (error) {
+		logError(error, { extra: { context: "finishWorkout", workoutId } });
+		throw new Error("Could not complete workout");
+	}
+
+	// Clear cache and move the user
+	revalidatePath(ROUTES.PROGRESS);
+	redirect(ROUTES.PROGRESS);
+}
+
+export async function redirectToActiveWorkout() {
+	const userId = await getUserId();
+
+	const activeWorkout = await prisma.workout.findFirst({
+		where: {
+			userId,
+			endDate: null, // This is the "active" criteria
+		},
+		select: { id: true },
+	});
+
+	if (activeWorkout) {
+		// If found, move the user immediately
+		redirect(`${ROUTES.WORKOUT}/${activeWorkout.id}`);
+	}
+
+	return null;
 }

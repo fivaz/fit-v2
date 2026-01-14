@@ -5,20 +5,32 @@ import { motion } from "framer-motion";
 import { Clock, Trash2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { cn } from "@/lib/utils";
 import { SetUI, WorkoutSetMap } from "@/lib/workout/type";
 
 type SetRowProps = {
 	exerciseId: string;
 	set: SetUI;
+	isPending: boolean;
 	setExerciseSets: Dispatch<SetStateAction<WorkoutSetMap>>;
 };
 
-export function SetRow({ setExerciseSets, exerciseId, set }: SetRowProps) {
+export function SetRow({ isPending, setExerciseSets, exerciseId, set }: SetRowProps) {
 	const [editingTimeSetId, setEditingTimeSetId] = useState<string | null>(null);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
+	const confirm = useConfirm();
 
-	function removeSet(exerciseId: string, setId: string) {
+	async function handleRemoveSet(exerciseId: string, setId: string) {
+		if (set.time || set.reps || set.weight) {
+			const confirmed = await confirm({
+				title: "Delete Set",
+				message: "This set has data. Are you sure you want to delete it?",
+			});
+
+			if (!confirmed) return;
+		}
+
 		setExerciseSets((map) => {
 			const current = map[exerciseId] ?? [];
 			return { ...map, [exerciseId]: current.filter((set) => set.id !== setId) };
@@ -127,7 +139,8 @@ export function SetRow({ setExerciseSets, exerciseId, set }: SetRowProps) {
 
 			{/* Delete Button */}
 			<button
-				onClick={() => removeSet(exerciseId, set.id)}
+				disabled={isPending}
+				onClick={() => handleRemoveSet(exerciseId, set.id)}
 				className="flex items-center justify-center rounded-lg text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
 			>
 				<Trash2 className="h-4 w-4" />

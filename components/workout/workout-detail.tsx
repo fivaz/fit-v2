@@ -4,14 +4,16 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle, CloudCheck, CloudUpload, Plus } from "lucide-react";
+import { CheckCircle, CloudCheck, CloudUpload, Loader2Icon, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useDebounceValue } from "usehooks-ts";
 
+import { WorkoutTimer } from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import { SetRow } from "@/components/workout/set-row";
+import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { logError } from "@/lib/logger";
-import { syncWorkoutSets, WorkoutWithMappedSets } from "@/lib/workout/actions";
+import { finishWorkout, syncWorkoutSets, WorkoutWithMappedSets } from "@/lib/workout/actions";
 import { getEmptySet, WorkoutSetMap } from "@/lib/workout/type";
 
 type WorkoutDetailProps = {
@@ -23,7 +25,10 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 
 	const [debouncedSets] = useDebounceValue(exerciseSets, 1800);
 	const [isSyncing, setIsSyncing] = useState(false);
+	const [isPending, setIsPending] = useState(false);
 	const isFirstRender = useRef(true);
+
+	const confirm = useConfirm();
 
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -59,6 +64,20 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 		});
 	}
 
+	async function handleFinish() {
+		const confirmed = await confirm({
+			title: "Finish Workout",
+			message: `Are you sure you want to finish this workout?`,
+		});
+
+		if (!confirmed) return;
+
+		setIsPending(true);
+		await finishWorkout(initialWorkout.id);
+		setIsPending(false);
+		toast.success(`Workout finished on ${format(new Date(), "PPpp")}`);
+	}
+
 	return (
 		<div className="pb-20">
 			{/* Header with Sync Status */}
@@ -75,13 +94,24 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 								<CloudCheck className="h-4 w-4 text-green-500" />
 							)}
 						</div>
-						<p className="text-sm text-gray-500 dark:text-gray-400">
-							{initialWorkout.exercises.length} exercises •{" "}
-							{format(initialWorkout.startDate, "HH:mm")}
-						</p>
+						<div className="flex items-center gap-2 text-sm">
+							<span className="text-gray-500 dark:text-gray-400">
+								{initialWorkout.exercises.length} exercises
+							</span>
+							<span className="text-gray-300 dark:text-gray-600">•</span>
+							<WorkoutTimer startDate={initialWorkout.startDate} />
+						</div>
 					</div>
-					<Button className="bg-green-500 text-white hover:bg-green-600">
-						<CheckCircle className="mr-2 h-4 w-4" />
+					<Button
+						disabled={isPending}
+						className="bg-green-500 text-white hover:bg-green-600"
+						onClick={handleFinish}
+					>
+						{isPending ? (
+							<Loader2Icon className="size-4 animate-spin" />
+						) : (
+							<CheckCircle className="mr-2 h-4 w-4" />
+						)}
 						Finish
 					</Button>
 				</div>
@@ -140,6 +170,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 											set={set}
 											setExerciseSets={setExerciseSets}
 											exerciseId={exercise.id}
+											isPending={isPending}
 										/>
 									))}
 								</AnimatePresence>
@@ -149,6 +180,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 									variant="outline"
 									onClick={() => addSet(exercise.id)}
 									className="mt-2 w-full border-2 border-dashed border-gray-300 text-gray-600 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-600 dark:border-gray-600 dark:text-gray-400 dark:hover:border-orange-500 dark:hover:bg-orange-900/20 dark:hover:text-orange-400"
+									disabled={isPending}
 								>
 									<Plus className="mr-2 h-4 w-4" />
 									Add Set
