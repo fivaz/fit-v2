@@ -1,3 +1,28 @@
+## [1.11.0](https://github.com/fivaz/fit-v2/compare/v1.10.0...v1.11.0) (2026-01-14)
+
+### ✨ Features
+
+* add settings page with 3 theme modes options ([d20fa34](https://github.com/fivaz/fit-v2/commit/d20fa34baac3c416a4ad9c8b98c313cd9d9d4c4e))
+* implement log out ([729138f](https://github.com/fivaz/fit-v2/commit/729138f4fd8efafa7b555ed1925c616c9e83757e))
+* implement update body stats in settings ([d28e4c4](https://github.com/fivaz/fit-v2/commit/d28e4c4229c2030f7134bf8866a1f67dbe90a637))
+* make settings-detail fetch current body metrics ([48295a6](https://github.com/fivaz/fit-v2/commit/48295a683b040d729691f6b9e446cb22816a1418))
+* replace version hard coded with true value ([55bdb34](https://github.com/fivaz/fit-v2/commit/55bdb342f26802892575160d199a737b82142f42))
+* separate user and metrics forms in settings ([0a025bf](https://github.com/fivaz/fit-v2/commit/0a025bf7c82b5fc13d287e2812efb6b19bcbb849))
+
+### ♻️ Refactoring
+
+* remove unnecessary imports ([0e53a8d](https://github.com/fivaz/fit-v2/commit/0e53a8db1eceb2c9d2970bd558c5309be7a0c7d0))
+
+### 🧹 Chores
+
+* add body metrics table ([9af6535](https://github.com/fivaz/fit-v2/commit/9af65354d1140f6e30abaa98725fa72f752794b3))
+* add settings page ([4496cf0](https://github.com/fivaz/fit-v2/commit/4496cf077487eed32b44417eea2482d1a47163c4))
+* log errors in use-optimistic-store, and allow optional update and delete ([db1c8fe](https://github.com/fivaz/fit-v2/commit/db1c8fe56042dd083965831295fc09c4f2ae4df9))
+* modify user and body stats form ([afc4282](https://github.com/fivaz/fit-v2/commit/afc4282704079a5a4219560ead5e9031e53cccc2))
+* remove any type ([5297800](https://github.com/fivaz/fit-v2/commit/529780075122f2fe6da34b7263df705714d4f0a7))
+* rename body metrics table ([aa637f6](https://github.com/fivaz/fit-v2/commit/aa637f619910a899bbbac2de891a529bd49153e9))
+* update files to test release locally ([e2178e5](https://github.com/fivaz/fit-v2/commit/e2178e57313c823848124a73e0f6b7ac38151e28))
+
 ## [1.10.0](https://github.com/fivaz/fit-v2/compare/v1.9.0...v1.10.0) (2026-01-14)
 
 ### ✨ Features
