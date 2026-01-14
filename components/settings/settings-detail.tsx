@@ -38,10 +38,11 @@ export function SettingsDetail() {
 
 			{/* User Card */}
 			<div className="mb-6 px-5">
-				<motion.div
+				<motion.button
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
-					className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm dark:bg-gray-800"
+					onClick={() => setShowDrawer(true)}
+					className="flex w-full items-center gap-4 rounded-2xl bg-white p-5 text-left shadow-sm transition-transform active:scale-[0.98] dark:bg-gray-800"
 				>
 					<div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-inner">
 						{MOCK_USER.full_name.charAt(0)}
@@ -52,7 +53,8 @@ export function SettingsDetail() {
 						</h2>
 						<p className="text-sm text-gray-500 dark:text-gray-400">{MOCK_USER.email}</p>
 					</div>
-				</motion.div>
+					<ChevronRight className="h-5 w-5 text-gray-300" />
+				</motion.button>
 			</div>
 
 			<div className="space-y-6 px-5 pb-8">
