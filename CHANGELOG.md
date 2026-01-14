@@ -1,3 +1,25 @@
+## [1.9.0](https://github.com/fivaz/fit-v2/compare/v1.8.0...v1.9.0) (2026-01-14)
+
+### ✨ Features
+
+* implement workout page ([d270a51](https://github.com/fivaz/fit-v2/commit/d270a51a45016d84c8077112565ff6ee1f46d26d))
+
+### ♻️ Refactoring
+
+* replace hardcoded types with prisma generated types ([0c66add](https://github.com/fivaz/fit-v2/commit/0c66addea9bd4867c5dced55a88beff213f0c047))
+* simplify conditional layout ([2971e35](https://github.com/fivaz/fit-v2/commit/2971e351a2112f25345d6685f99e5c890d81c3be))
+
+### ⚡ Performance
+
+* reduce the number of attributes sent from the db ([c107b4b](https://github.com/fivaz/fit-v2/commit/c107b4b4a6d822678702d1737c5d7f84d06d9c62))
+
+### 🧹 Chores
+
+* add functions to create and fetch workout ([738915d](https://github.com/fivaz/fit-v2/commit/738915d9821c1638686ee7d150a29f2a5af00786))
+* add imageUrl to program ([56de60c](https://github.com/fivaz/fit-v2/commit/56de60c58e65e4fb5935c27d9f21211685edf042))
+* add workout and related tables ([29d4cb1](https://github.com/fivaz/fit-v2/commit/29d4cb1dbe1b5ad9edda8f6c1f0a6947e9740a79))
+* create design for workout page ([0482600](https://github.com/fivaz/fit-v2/commit/0482600cb085ac4afd48cc3410196b16f7a2d20f))
+
 ## [1.8.0](https://github.com/fivaz/fit-v2/compare/v1.7.0...v1.8.0) (2026-01-14)
 
 ### ✨ Features
