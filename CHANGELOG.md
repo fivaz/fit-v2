@@ -1,3 +1,33 @@
+## [1.5.0](https://github.com/fivaz/fit-v2/compare/v1.4.0...v1.5.0) (2026-01-14)
+
+### ✨ Features
+
+* add delete program ([5cff15c](https://github.com/fivaz/fit-v2/commit/5cff15ccad8336d4330e2448172ede9dde411e91))
+* add edit program ([fe61ec3](https://github.com/fivaz/fit-v2/commit/fe61ec3206385fbdd6346aec3df3604868f6058f))
+* add images for each muscle in program form ([cb22991](https://github.com/fivaz/fit-v2/commit/cb22991f89fdf45498914568dedfe0e09af33dc4))
+* return user to programs page after deleting the current program ([5417157](https://github.com/fivaz/fit-v2/commit/54171578d8512c7de6bd411955cad75a34091749))
+
+### 🐛 Bug Fixes
+
+* assets were not appearing ([28085f5](https://github.com/fivaz/fit-v2/commit/28085f5ce8cde579e8b50ce7731a6447725f85ec))
+
+### ♻️ Refactoring
+
+* move hooks, context and provider entangled to specific folders ([710ad5d](https://github.com/fivaz/fit-v2/commit/710ad5def01d6f9dd53f802c9ee71926729f9fc5))
+* simplify hook create-optimistic-list ([cdda70a](https://github.com/fivaz/fit-v2/commit/cdda70af6d544cd70092b1ee7b6f73a21a23ded2))
+* simplify program add using optimistic store hook ([30229b6](https://github.com/fivaz/fit-v2/commit/30229b6b29efe2cd0c2512e9024beb3a43283294))
+* simplify program update and delete using optimistic store hook ([a980b23](https://github.com/fivaz/fit-v2/commit/a980b238de4ba9b03e5ca016ee150450665ed4a7))
+* simplify types of use optimistic list ([b61edbe](https://github.com/fivaz/fit-v2/commit/b61edbe80ea63b29c3351d6124745a4b722a791a))
+
+### 🏗️ Build
+
+* sync pnpm-lock ([42564db](https://github.com/fivaz/fit-v2/commit/42564db1d53dd988414f2650b553acef907502f9))
+
+### 🧹 Chores
+
+* centralize logging ([0127a2c](https://github.com/fivaz/fit-v2/commit/0127a2c8cb7a39d099fa480c6af0e59c4a861e6d))
+* wip - add optimistic-store ([b4cbff7](https://github.com/fivaz/fit-v2/commit/b4cbff765e6eaa489792826b60cc354ed1b745ab))
+
 ## [1.4.0](https://github.com/fivaz/fit-v2/compare/v1.3.0...v1.4.0) (2026-01-14)
 
 ### ✨ Features
