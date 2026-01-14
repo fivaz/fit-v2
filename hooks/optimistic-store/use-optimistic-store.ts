@@ -26,7 +26,6 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	// ---- ADD ----
 	function addItem(item: T) {
-		console.log("addItem", item);
 		return mutateOptimistically({
 			optimistic: () => optimisticAddItem(item),
 			persist: () => addConfig.function(item),

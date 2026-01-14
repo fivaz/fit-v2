@@ -9,6 +9,10 @@ import { MetricsForm } from "@/components/settings/metrics-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { UserForm } from "@/components/settings/user-form";
 import { Button } from "@/components/ui/button";
+import {
+	BodyMetricsProvider,
+	useBodyMetrics,
+} from "@/hooks/body-metrics/body-metrics-store-context";
 import { BodyMetricsUI } from "@/lib/body-metrics/type";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +23,14 @@ type SettingsDetailProps = {
 };
 
 export function SettingsDetail({ bodyMetrics }: SettingsDetailProps) {
+	return (
+		<BodyMetricsProvider initialItems={[bodyMetrics]}>
+			<SettingsDetailInternal />
+		</BodyMetricsProvider>
+	);
+}
+
+export function SettingsDetailInternal() {
 	// Hardcoded for now
 	const [userData, setUserData] = useState({
 		full_name: "John Doe",
@@ -27,6 +39,9 @@ export function SettingsDetail({ bodyMetrics }: SettingsDetailProps) {
 
 	const [isUserOpen, setIsUserOpen] = useState(false);
 	const [isMetricsOpen, setIsMetricsOpen] = useState(false);
+
+	const { firstItem: bodyMetrics } = useBodyMetrics();
+	if (!bodyMetrics) return null;
 
 	const metricsDisplay = [
 		{
@@ -153,8 +168,7 @@ export function SettingsDetail({ bodyMetrics }: SettingsDetailProps) {
 			<MetricsForm
 				isOpen={isMetricsOpen}
 				onClose={() => setIsMetricsOpen(false)}
-				initialData={{ ...userData, ...bodyMetrics }}
-				onSave={() => setIsMetricsOpen(false)}
+				bodyMetrics={bodyMetrics}
 			/>
 		</>
 	);
