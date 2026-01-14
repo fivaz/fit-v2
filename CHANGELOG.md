@@ -1,3 +1,18 @@
+## [1.8.0](https://github.com/fivaz/fit-v2/compare/v1.7.0...v1.8.0) (2026-01-14)
+
+### ✨ Features
+
+* change primary color ([435335f](https://github.com/fivaz/fit-v2/commit/435335faaba8d583cda4b461d821d78284bd6ff3))
+* rework layout ([58df88a](https://github.com/fivaz/fit-v2/commit/58df88a03ebd67b6d34bb4990ff6867afc49d8a4))
+* update program page design ([8062d1c](https://github.com/fivaz/fit-v2/commit/8062d1c9a0b5966f65fb4904a2abfceb0905872c))
+* update programs design ([cf73c9d](https://github.com/fivaz/fit-v2/commit/cf73c9d9b9650b2674aa7c5adac4005758ec68ca))
+* upgrade program exercise row design ([44af27e](https://github.com/fivaz/fit-v2/commit/44af27ebd708dc1b34bbd79ee4b2ce17391af954))
+
+### 🧹 Chores
+
+* add design for exercises ([316af3b](https://github.com/fivaz/fit-v2/commit/316af3b5645bba9b6defad7249a60a48e8e3d007))
+* add design for progress bar ([43ecc61](https://github.com/fivaz/fit-v2/commit/43ecc615541ab54fdcaefe5d7270a181aa1c153f))
+
 ## [1.7.0](https://github.com/fivaz/fit-v2/compare/v1.6.0...v1.7.0) (2026-01-14)
 
 ### ✨ Features
