@@ -1,6 +1,3 @@
-
 export default function Home() {
-	return (
-		<div>Programs</div>
-	);
+	return <div>Programs</div>;
 }
