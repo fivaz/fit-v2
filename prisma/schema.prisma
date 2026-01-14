@@ -14,21 +14,45 @@ datasource db {
 }
 
 model User {
-  id            String     @id
+  id            String       @id
   name          String
   email         String
-  emailVerified Boolean    @default(false)
+  emailVerified Boolean      @default(false)
   image         String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   sessions      Session[]
   accounts      Account[]
   programs      Program[]
   exercises     Exercise[]
   workouts      Workout[]
+  bodyMetrics   BodyMetric[]
 
   @@unique([email])
   @@map("user")
+}
+
+model BodyMetric {
+  id          String @id @default(cuid())
+  weight      Float
+  bodyFat     Float?
+  muscleMass  Float?
+  visceralFat Int?
+
+  // Logical anchor (YYYY-MM-DD). Set at midnight.
+  date DateTime @default(now()) @db.Date
+
+  // The actual time you stepped on the scale/updated the form
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date], name: "userId_date")
+  @@index([userId, date])
+  // This tells Prisma: "Call the model 'BodyMetric' in TS,
+  // but call the table 'body_metrics' in the DB."
+  @@map("body_metrics")
 }
 
 enum MuscleGroup {

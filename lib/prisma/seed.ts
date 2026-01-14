@@ -1,15 +1,14 @@
-import { MuscleGroup } from "@/lib/generated/prisma/client";
+import { MuscleGroup, Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
-async function safeDelete(modelDelete: () => Promise<any>) {
+async function safeDelete(modelDelete: () => Promise<unknown>) {
 	try {
 		await modelDelete();
-	} catch (error: any) {
-		// P2021 is the Prisma error code for "Table does not exist"
-		if (error.code === "P2021") {
-			console.warn(`⚠️ Table not found, skipping delete.`);
+	} catch (error) {
+		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021") {
+			console.warn("⚠️ Table not found, skipping delete.");
 		} else {
-			throw error; // Re-throw if it's a different error (like connection issues)
+			throw error;
 		}
 	}
 }

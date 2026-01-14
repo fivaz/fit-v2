@@ -3,6 +3,7 @@ import { startTransition, useRef } from "react";
 import { toast } from "sonner";
 
 import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
+import { logError } from "@/lib/logger";
 
 export function useOptimisticStore<T extends Identifiable>({
 	initialItems,
@@ -39,6 +40,12 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	// ---- UPDATE ----
 	function updateItem(item: T) {
+		if (!updateConfig) {
+			logError("useOptimisticStore: updateItem called but no updateConfig provided", {
+				extra: { context: { item, items } },
+			});
+			return;
+		}
 		// store previous state for rollback
 		const prevItem = items.find((i) => i.id === item.id);
 
@@ -58,6 +65,12 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	// ---- DELETE ----
 	function deleteItem(id: string) {
+		if (!deleteConfig) {
+			logError("useOptimisticStore: deleteItem called but no deleteConfig provided", {
+				extra: { context: { id, items } },
+			});
+			return;
+		}
 		const prevItem = items.find((i) => i.id === id);
 
 		if (!prevItem) return;
@@ -83,7 +96,12 @@ export function useOptimisticStore<T extends Identifiable>({
 		optimisticSetItems(nextItems);
 
 		// No persistence configured → stop here
-		if (!reorderConfig) return;
+		if (!reorderConfig) {
+			logError("useOptimisticStore: reorderItems called but no reorderConfig provided", {
+				extra: { context: { nextItems, parentId, items } },
+			});
+			return;
+		}
 
 		// Clear previous debounce
 		if (debounceTimeoutRef.current) {
@@ -157,12 +175,12 @@ export type UseOptimisticStoreProps<T> = {
 		onSuccessMessage: string;
 		onErrorMessage: string;
 	};
-	updateConfig: {
+	updateConfig?: {
 		function: (item: T) => Promise<void>;
 		onSuccessMessage: string;
 		onErrorMessage: string;
 	};
-	deleteConfig: {
+	deleteConfig?: {
 		function: (id: string) => Promise<void>;
 		onSuccessMessage: string;
 		onErrorMessage: string;
