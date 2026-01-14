@@ -1,3 +1,25 @@
+## [1.7.0](https://github.com/fivaz/fit-v2/compare/v1.6.0...v1.7.0) (2026-01-14)
+
+### ✨ Features
+
+* add debounce to reorder items ([efde887](https://github.com/fivaz/fit-v2/commit/efde88763b6db6ff84e73ea20b3de2085642c471))
+* implement add exercises to program ([b0cd1fb](https://github.com/fivaz/fit-v2/commit/b0cd1fb3bc6abb377c80c3521294842b5f764310))
+* implement drag and drop for program's exercises ([95ef747](https://github.com/fivaz/fit-v2/commit/95ef7470fe36f010a073307631fcb85e42e57958))
+* show exercises in program page ([fd89a7a](https://github.com/fivaz/fit-v2/commit/fd89a7a4d108114ef6f9d1a5fad940044e12ea8f))
+
+### 🐛 Bug Fixes
+
+* add exercise form was not closing on submit ([89bff27](https://github.com/fivaz/fit-v2/commit/89bff27043752103c65b5a85de063e487bfc5b45))
+
+### ♻️ Refactoring
+
+* modify table program to exercise relationship ([92430cb](https://github.com/fivaz/fit-v2/commit/92430cbfb66b92b4a0890c849730feac51736dc5))
+* move sort programs to use useOptimisticStore ([a35a6c7](https://github.com/fivaz/fit-v2/commit/a35a6c7d8b021c9042d17472ec0529eca36cf8e9))
+
+### 🧹 Chores
+
+* add page of exercises in program page ([3a0d8df](https://github.com/fivaz/fit-v2/commit/3a0d8df6b8f4112cc0d0b53337444c1f55cb1c33))
+
 ## [1.6.0](https://github.com/fivaz/fit-v2/compare/v1.5.0...v1.6.0) (2026-01-14)
 
 ### ✨ Features
