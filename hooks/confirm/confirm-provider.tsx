@@ -1,7 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
-import React from "react";
+import { ReactNode, useCallback, useRef, useState } from "react";
 
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
@@ -12,14 +11,14 @@ interface ConfirmProviderProps {
 }
 
 export function ConfirmProvider({ children }: ConfirmProviderProps) {
-	const [isOpen, setIsOpen] = React.useState(false);
-	const [options, setOptions] = React.useState<ConfirmOptions>({
+	const [isOpen, setIsOpen] = useState(false);
+	const [options, setOptions] = useState<ConfirmOptions>({
 		title: "",
 		message: "",
 	});
-	const resolveRef = React.useRef<((value: boolean) => void) | null>(null);
+	const resolveRef = useRef<((value: boolean) => void) | null>(null);
 
-	const confirm = React.useCallback((confirmOptions: ConfirmOptions): Promise<boolean> => {
+	const confirm = useCallback((confirmOptions: ConfirmOptions): Promise<boolean> => {
 		setOptions(confirmOptions);
 		setIsOpen(true);
 
@@ -28,7 +27,7 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
 		});
 	}, []);
 
-	const handleConfirm = React.useCallback(() => {
+	const handleConfirm = useCallback(() => {
 		if (resolveRef.current) {
 			resolveRef.current(true);
 			resolveRef.current = null;
@@ -36,7 +35,7 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
 		setIsOpen(false);
 	}, []);
 
-	const handleCancel = React.useCallback(() => {
+	const handleCancel = useCallback(() => {
 		if (resolveRef.current) {
 			resolveRef.current(false);
 			resolveRef.current = null;

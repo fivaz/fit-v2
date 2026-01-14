@@ -15,30 +15,57 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { buildEmptyProgram } from "@/lib/program/type";
+import { buildEmptyProgram, ProgramUI } from "@/lib/program/type";
 
-export function ProgramFormButton() {
-	const [open, setOpen] = useState(false);
-	const program = buildEmptyProgram();
+type ProgramFormButtonProps = React.ComponentProps<typeof Button> & {
+	program?: ProgramUI;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+};
+
+export function ProgramFormButton({
+	children,
+	program = buildEmptyProgram(),
+	open: externalOpen,
+	onOpenChange: externalOnOpenChange,
+	...props
+}: ProgramFormButtonProps) {
+	// Internal state management if external state isn't provided
+	const [internalOpen, setInternalOpen] = useState(false);
+
+	// Determine which state to use
+	const isControlled = externalOpen !== undefined;
+	const open = isControlled ? externalOpen : internalOpen;
+	const setOpen = isControlled ? externalOnOpenChange : setInternalOpen;
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
-			<DrawerTrigger asChild>
-				<Button>
-					<NotebookTabsIcon />
-					New Program
-				</Button>
-			</DrawerTrigger>
+			{/* Omit Trigger if controlled externally */}
+			{!isControlled && (
+				<DrawerTrigger asChild>
+					<Button {...props}>
+						{children || (
+							<>
+								<NotebookTabsIcon className="mr-2 h-4 w-4" />
+								New Program
+							</>
+						)}
+					</Button>
+				</DrawerTrigger>
+			)}
+
 			<DrawerContent className="max-h-[90vh]">
-				<div className="mx-auto w-full max-w-md overflow-y-auto">
+				<div className="mx-auto w-full max-w-md overflow-y-auto pb-6">
 					<DrawerHeader>
-						<DrawerTitle>Create Program</DrawerTitle>
-						<DrawerDescription>
-							Name your program and select target muscle groups.
-						</DrawerDescription>
+						<DrawerTitle>{program.id ? "Edit Program" : "Create Program"}</DrawerTitle>
+						{!program.id && (
+							<DrawerDescription>
+								Name your program and select target muscle groups.
+							</DrawerDescription>
+						)}
 					</DrawerHeader>
 
-					<ProgramForm program={program} onClose={() => setOpen(false)} />
+					<ProgramForm program={program} onClose={() => setOpen?.(false)} />
 				</div>
 			</DrawerContent>
 		</Drawer>

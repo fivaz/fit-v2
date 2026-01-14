@@ -6,9 +6,12 @@ import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/lib/consts";
 import { prisma } from "@/lib/prisma";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
+import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 
 export async function getPrograms(): Promise<ProgramUI[]> {
+	await devDelay();
+
 	const userId = await getUserId();
 
 	return prisma.program.findMany({
@@ -36,13 +39,16 @@ const _getProgramById = cache(async (id: string, userId: string): Promise<Progra
 });
 
 export async function getProgramById(id: string): Promise<ProgramUI | null> {
+	await devDelay();
+
 	const userId = await getUserId();
 	return _getProgramById(id, userId);
 }
 
-export async function saveProgram(formData: FormData) {
+export async function saveProgram({ id, name, muscles }: ProgramUI) {
+	await devDelay();
+
 	const userId = await getUserId();
-	const { id, name, muscles } = formToProgram(formData);
 
 	try {
 		await prisma.program.upsert({
@@ -59,7 +65,6 @@ export async function saveProgram(formData: FormData) {
 		});
 
 		revalidatePath(ROUTES.PROGRAMS);
-		return { success: true };
 	} catch (error) {
 		console.error("Database error:", error);
 		throw new Error("Failed to save program");
@@ -71,6 +76,8 @@ export async function saveProgram(formData: FormData) {
  * @param sortedIds An array of program IDs in their new order.
  */
 export async function updateProgramOrder(sortedIds: string[]) {
+	await devDelay();
+
 	try {
 		// Perform all updates in one atomic transaction
 		await prisma.$transaction(
@@ -89,4 +96,16 @@ export async function updateProgramOrder(sortedIds: string[]) {
 		// Return a structured error so the client knows to rollback
 		return { success: false, error: "Database error" };
 	}
+}
+
+export async function deleteProgram(id: string) {
+	await devDelay();
+
+	const userId = await getUserId();
+
+	await prisma.program.delete({
+		where: { id, userId },
+	});
+
+	revalidatePath(ROUTES.PROGRAMS);
 }

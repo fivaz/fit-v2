@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { createContext } from "react";
 
 export interface ConfirmOptions {
 	title: string;
@@ -11,4 +11,4 @@ export interface ConfirmContextType {
 	confirm: (options: ConfirmOptions) => Promise<boolean>;
 }
 
-export const ConfirmContext = React.createContext<ConfirmContextType | null>(null);
+export const ConfirmContext = createContext<ConfirmContextType | null>(null);
