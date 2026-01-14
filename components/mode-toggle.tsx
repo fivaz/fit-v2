@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useTheme } from "next-themes";
 
-import { Moon, Sun } from "lucide-react";
+import { Icon, Monitor, Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,9 +12,19 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { authClient } from "@/lib/auth-client";
 
 export function ModeToggle() {
 	const { setTheme } = useTheme();
+	const { data: session } = authClient.useSession();
+
+	if (session?.user.email !== process.env.NEXT_PUBLIC_DEMO_USER_EMAIL) return;
+
+	const themes = [
+		{ label: "light", value: "light", icon: Sun },
+		{ label: "dark", value: "dark", icon: Moon },
+		{ label: "system", value: "system", icon: Monitor },
+	] as const;
 
 	return (
 		<DropdownMenu>
@@ -26,9 +36,12 @@ export function ModeToggle() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				<DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
+				{themes.map(({ label, value, icon: Icon }) => (
+					<DropdownMenuItem key={value} onClick={() => setTheme(value)} className="capitalize">
+						<Icon className="mr-2 h-4 w-4" />
+						{label}
+					</DropdownMenuItem>
+				))}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
