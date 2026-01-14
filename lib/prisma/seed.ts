@@ -8,6 +8,7 @@ async function main() {
 
 	console.log("🚀 Starting seed...");
 
+	// --- 1️⃣ Create or upsert user ---
 	const user = await prisma.user.upsert({
 		where: { id: DEV_USER_ID },
 		update: {},
@@ -19,6 +20,7 @@ async function main() {
 		},
 	});
 
+	// --- 2️⃣ Create or upsert account ---
 	await prisma.account.upsert({
 		where: { id: DEV_ACCOUNT_ID },
 		update: {},
@@ -32,11 +34,14 @@ async function main() {
 		},
 	});
 
+	// --- 3️⃣ Clear previous data ---
+	await prisma.programToExercise.deleteMany({ where: { programId: { in: [] } } }); // safe even if empty
 	await prisma.exercise.deleteMany({ where: { userId: user.id } });
 	await prisma.program.deleteMany({ where: { userId: user.id } });
 
 	console.log("🏋️ Creating Exercises...");
 
+	// --- 4️⃣ Create exercises ---
 	const benchPress = await prisma.exercise.create({
 		data: {
 			name: "Bench Press",
@@ -60,43 +65,47 @@ async function main() {
 			name: "Barbell Squats",
 			userId: user.id,
 			muscles: [MuscleGroup.quads, MuscleGroup.glutes],
-			imageUrl: "https://images.unsplash.com/photo-1574673139732-1aaaecdd035d?w=400",
+			imageUrl: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=400",
 		},
 	});
 
 	console.log("📋 Creating Programs with associated Exercises...");
 
-	await prisma.program.create({
+	// --- 5️⃣ Create programs with exercises via ProgramToExercise ---
+	const pushDay = await prisma.program.create({
 		data: {
 			name: "Push Day",
 			userId: user.id,
 			muscles: [MuscleGroup.chest, MuscleGroup.shoulders, MuscleGroup.triceps],
-			exercises: {
-				connect: [{ id: benchPress.id }],
-			},
 		},
 	});
 
-	await prisma.program.create({
+	await prisma.programToExercise.create({
+		data: { programId: pushDay.id, exerciseId: benchPress.id, order: 0 },
+	});
+
+	const pullDay = await prisma.program.create({
 		data: {
 			name: "Pull Day",
 			userId: user.id,
 			muscles: [MuscleGroup.back, MuscleGroup.biceps, MuscleGroup.forearms],
-			exercises: {
-				connect: [{ id: pullUps.id }],
-			},
 		},
 	});
 
-	await prisma.program.create({
+	await prisma.programToExercise.create({
+		data: { programId: pullDay.id, exerciseId: pullUps.id, order: 0 },
+	});
+
+	const legDay = await prisma.program.create({
 		data: {
 			name: "Leg Day",
 			userId: user.id,
 			muscles: [MuscleGroup.quads, MuscleGroup.hamstrings, MuscleGroup.glutes],
-			exercises: {
-				connect: [{ id: squats.id }],
-			},
 		},
+	});
+
+	await prisma.programToExercise.create({
+		data: { programId: legDay.id, exerciseId: squats.id, order: 0 },
 	});
 
 	console.log("✅ Seed completed");

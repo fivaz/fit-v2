@@ -1,8 +1,7 @@
 "use client";
 
-
 import { createOptimisticStoreContext } from "@/hooks/optimistic-store/create-optimistic-store-context";
-import { deleteProgram, saveProgram } from "@/lib/program/actions";
+import { deleteProgram, reorderPrograms, saveProgram } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 
 export const [ProgramsProvider, usePrograms] = createOptimisticStoreContext<ProgramUI>({
@@ -26,5 +25,10 @@ export const [ProgramsProvider, usePrograms] = createOptimisticStoreContext<Prog
 		function: deleteProgram,
 		onSuccessMessage: "Program deleted successfully.",
 		onErrorMessage: "Failed to delete program.",
+	},
+
+	reorderConfig: {
+		function: reorderPrograms,
+		onErrorMessage: "Failed to reorder programs.",
 	},
 });

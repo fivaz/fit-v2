@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/drawer";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
-import { ROUTES } from "@/lib/consts";
 import { buildEmptyExercise, ExerciseUI } from "@/lib/exercise/type";
 
 type ExerciseFormButtonProps = React.ComponentProps<typeof Button> & {
@@ -57,13 +56,7 @@ export function ExerciseFormButton({
 			{/* Omit Trigger if controlled externally */}
 			{!isControlled && (
 				<DrawerTrigger asChild>
-					<Button {...props}>
-						{children || (
-							<>
-								<PlusIcon size="icon" className="size-5" />
-							</>
-						)}
-					</Button>
+					<Button {...props}>{children || <PlusIcon className="size-5" />}</Button>
 				</DrawerTrigger>
 			)}
 

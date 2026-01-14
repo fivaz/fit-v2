@@ -1,17 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { startTransition } from "react";
 
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider } from "@dnd-kit/react";
-import { toast } from "sonner";
 
 import { ProgramEmptyState } from "@/components/program/program-empty-state";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { ProgramsProvider, usePrograms } from "@/hooks/program/programs-store-context";
-import { updateProgramOrder } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
+import { sameOrder } from "@/lib/utils";
 
 import { ProgramRow } from "./program-row";
 
@@ -36,33 +34,18 @@ export function ProgramList({ initialPrograms }: ProgramsListProps) {
 }
 
 export function ProgramsListInternal() {
-	const { items: programs, setItems } = usePrograms();
+	const { items: programs, reorderItems } = usePrograms();
 
-	if (programs.length === 0) {
-		return <ProgramEmptyState />;
-	}
+	if (programs.length === 0) return <ProgramEmptyState />;
 
 	return (
 		<DragDropProvider
 			onDragEnd={(event) => {
-				// 1. Save the current state for a potential rollback
-				const previousItems = [...programs];
+				const nextItems = move(programs, event);
 
-				// 2. Optimistic Update (Immediate UI response)
-				const newItems = move(programs, event);
-				setItems(newItems);
+				if (sameOrder(programs, nextItems)) return;
 
-				// 3. Persist to server
-				startTransition(async () => {
-					const result = await updateProgramOrder(newItems.map((i) => i.id));
-
-					if (!result.success) {
-						setItems(previousItems);
-						toast.error("Failed to save order", {
-							description: "Your list has been restored to its original order.",
-						});
-					}
-				});
+				reorderItems(nextItems);
 			}}
 		>
 			<div className="flex flex-col gap-3">

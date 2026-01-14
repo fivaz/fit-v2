@@ -27,10 +27,13 @@ export function createOptimisticStoreContext<T extends Identifiable>(
 		return <Context.Provider value={value}>{children}</Context.Provider>;
 	}
 
-	function useOptimisticStoreContext() {
+	function useOptimisticStoreContext<TOverride extends T = T>() {
 		const context = useContext(Context);
 		if (!context) throw new Error("useOptimisticStoreContext must be used within its Provider");
-		return context;
+
+		// We cast to the override type. Since TOverride extends T,
+		// this is a safe "narrowing" of the type.
+		return context as unknown as UseOptimisticStoreReturn<TOverride>;
 	}
 
 	return [Provider, useOptimisticStoreContext] as const;

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/utils-server";
@@ -12,11 +13,11 @@ import { getUserId } from "@/lib/utils-server";
 /**
  * Fetches all exercises for the current user.
  */
-export async function getExercises(): Promise<ExerciseUI[]> {
+export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<ExerciseUI[]> {
 	const userId = await getUserId();
 
 	return prisma.exercise.findMany({
-		where: { userId },
+		where: { userId, ...filter },
 		select: {
 			id: true,
 			name: true,
@@ -102,5 +103,28 @@ export async function deleteExercise(id: string) {
 			extra: { context: "error deleting exercise", id, userId },
 		});
 		throw new Error("Deletion failed");
+	}
+}
+
+/**
+ * Reorders exercises in a program based on the order of the array.
+ * @param programId The program to update
+ * @param exerciseIds Array of exercise IDs in the new order
+ */
+export async function reorderProgramExercises(exerciseIds: string[], programId: string) {
+	try {
+		await prisma.$transaction(
+			exerciseIds.map((exerciseId, index) =>
+				prisma.programToExercise.update({
+					where: {
+						programId_exerciseId: { programId, exerciseId },
+					},
+					data: { order: index },
+				}),
+			),
+		);
+	} catch (error) {
+		console.error("Failed to reorder program exercises:", error);
+		throw new Error("Failed to reorder program exercises");
 	}
 }

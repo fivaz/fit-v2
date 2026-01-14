@@ -58,8 +58,7 @@ model Program {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Many-to-many relationship with Exercise
-  exercises Exercise[] @relation("ProgramToExercise")
+  exercises ProgramToExercise[]
 
   @@index([userId])
   @@map("program")
@@ -75,14 +74,25 @@ model Exercise {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Many-to-many relationship with Program
-  programs Program[] @relation("ProgramToExercise")
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  programs ProgramToExercise[]
+
   @@index([userId])
   @@map("exercise")
+}
+
+model ProgramToExercise {
+  programId  String
+  exerciseId String
+  order      Int    @default(0)
+
+  program  Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([programId, exerciseId])
+  @@map("program_to_exercise")
 }
 
 model Session {

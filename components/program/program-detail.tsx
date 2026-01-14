@@ -3,23 +3,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import {
-	ArrowLeftIcon,
-	DumbbellIcon,
-	EditIcon,
-	MoreVertical,
-	PlusIcon,
-	Trash2,
-} from "lucide-react";
+import { ArrowLeftIcon, DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
 
+import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
+import { ProgramExerciseList } from "@/components/exercise/program-exercise-list";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
+import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
-import { ProgramUI } from "@/lib/program/type";
+import { ProgramWithExercises } from "@/lib/program/type";
 
 import {
 	DropdownMenu,
@@ -29,7 +25,7 @@ import {
 } from "../ui/dropdown-menu";
 
 type ProgramDetailProps = {
-	program: ProgramUI;
+	program: ProgramWithExercises;
 };
 
 export function ProgramDetail({ program }: ProgramDetailProps) {
@@ -41,9 +37,10 @@ export function ProgramDetail({ program }: ProgramDetailProps) {
 }
 
 export function ProgramDetailInternal() {
-	const { firstItem: program, deleteItem } = usePrograms();
+	const { firstItem: program, deleteItem } = usePrograms<ProgramWithExercises>();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
+	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
 	if (!program) return null;
 
@@ -101,32 +98,26 @@ export function ProgramDetailInternal() {
 									<Trash2 className="size-4" />
 									<span>Delete Program</span>
 								</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => setShowAddExerciseForm(true)}>
+									<DumbbellIcon className="size-4" />
+									<span>Add Exercises</span>
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
-
-						<Button>
-							<PlusIcon className="h-5 w-5" />
-							<DumbbellIcon className="h-5 w-5" />
-						</Button>
 					</div>
 				</div>
 
-				{/* Program background image */}
-				<div className="mx-6 mb-6 h-48 overflow-hidden rounded-2xl">
-					<div
-						className="h-full w-full bg-cover bg-center"
-						style={{
-							backgroundImage: `url('/exercise.jpg')`,
-						}}
-					/>
-				</div>
-			</div>
+				<ExercisesProvider initialItems={program.exercises}>
+					<ProgramExerciseList programId={program.id} />
+				</ExercisesProvider>
 
-			<ProgramFormButton
-				program={program}
-				open={showProgramForm}
-				onOpenChange={setShowProgramForm}
-			/>
+				<AddExerciseForm
+					program={program}
+					open={showAddExerciseForm}
+					setOpen={setShowAddExerciseForm}
+				/>
+				<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
+			</div>
 		</>
 	);
 }
