@@ -8,6 +8,7 @@ import { CheckCircle, CloudCheck, CloudUpload, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useDebounceValue } from "usehooks-ts";
 
+import { WorkoutTimer } from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import { SetRow } from "@/components/workout/set-row";
 import { logError } from "@/lib/logger";
@@ -75,10 +76,13 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 								<CloudCheck className="h-4 w-4 text-green-500" />
 							)}
 						</div>
-						<p className="text-sm text-gray-500 dark:text-gray-400">
-							{initialWorkout.exercises.length} exercises •{" "}
-							{format(initialWorkout.startDate, "HH:mm")}
-						</p>
+						<div className="flex items-center gap-2 text-sm">
+							<span className="text-gray-500 dark:text-gray-400">
+								{initialWorkout.exercises.length} exercises
+							</span>
+							<span className="text-gray-300 dark:text-gray-600">•</span>
+							<WorkoutTimer startDate={initialWorkout.startDate} />
+						</div>
 					</div>
 					<Button className="bg-green-500 text-white hover:bg-green-600">
 						<CheckCircle className="mr-2 h-4 w-4" />
