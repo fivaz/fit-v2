@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 
 import { motion } from "framer-motion";
-import { Activity, ChevronRight, Dumbbell, LogOut, Moon, Scale, Sun, Zap } from "lucide-react";
+import { Activity, ChevronRight, Dumbbell, LogOut, Palette, Scale, Zap } from "lucide-react";
 
 import { ProfileDrawer } from "@/components/settings/profile-drawer";
+import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 const VERSION = "1.0.42-beta";
@@ -21,12 +22,6 @@ const MOCK_USER = {
 
 export function SettingsDetail() {
 	const [showDrawer, setShowDrawer] = useState(false);
-	const [isDark, setIsDark] = useState(false);
-
-	const toggleTheme = () => {
-		setIsDark(!isDark);
-		document.documentElement.classList.toggle("dark");
-	};
 
 	const bodyMetrics = [
 		{ icon: Scale, label: "Weight", value: `${MOCK_USER.weight} kg` },
@@ -36,7 +31,7 @@ export function SettingsDetail() {
 	];
 
 	return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+		<div className="min-h-screen bg-gray-50 pb-12 dark:bg-gray-900">
 			<div className="px-5 pt-12 pb-6">
 				<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
 			</div>
@@ -99,22 +94,11 @@ export function SettingsDetail() {
 						<div className="flex items-center justify-between p-4">
 							<div className="flex items-center gap-3">
 								<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700">
-									{isDark ? (
-										<Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-									) : (
-										<Sun className="h-5 w-5 text-gray-600" />
-									)}
+									<Palette className="h-5 w-5 text-gray-600 dark:text-gray-300" />
 								</div>
-								<span className="font-medium dark:text-white">Dark Mode</span>
+								<span className="font-medium dark:text-white">Theme</span>
 							</div>
-							<div
-								onClick={toggleTheme}
-								className={`flex h-6 w-11 cursor-pointer items-center rounded-full p-1 transition-colors ${isDark ? "bg-orange-500" : "bg-gray-200"}`}
-							>
-								<div
-									className={`h-4 w-4 rounded-full bg-white shadow transition-transform ${isDark ? "translate-x-5" : ""}`}
-								/>
-							</div>
+							<ThemeToggle />
 						</div>
 					</div>
 				</div>
