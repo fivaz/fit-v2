@@ -1,6 +1,19 @@
 import { MuscleGroup } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
+async function safeDelete(modelDelete: () => Promise<any>) {
+	try {
+		await modelDelete();
+	} catch (error: any) {
+		// P2021 is the Prisma error code for "Table does not exist"
+		if (error.code === "P2021") {
+			console.warn(`⚠️ Table not found, skipping delete.`);
+		} else {
+			throw error; // Re-throw if it's a different error (like connection issues)
+		}
+	}
+}
+
 async function main() {
 	const DEV_USER_ID = "demo-user-id";
 	const DEV_ACCOUNT_ID = "account-123";
@@ -35,9 +48,14 @@ async function main() {
 	});
 
 	// --- 3️⃣ Clear previous data ---
-	await prisma.programToExercise.deleteMany({ where: { programId: { in: [] } } }); // safe even if empty
-	await prisma.exercise.deleteMany({ where: { userId: user.id } });
-	await prisma.program.deleteMany({ where: { userId: user.id } });
+	console.log("🧹 Cleaning up existing data...");
+
+	await safeDelete(() => prisma.set.deleteMany({}));
+	await safeDelete(() => prisma.workoutExercise.deleteMany({}));
+	await safeDelete(() => prisma.workout.deleteMany({ where: { userId: user.id } }));
+	await safeDelete(() => prisma.programToExercise.deleteMany({}));
+	await safeDelete(() => prisma.exercise.deleteMany({ where: { userId: user.id } }));
+	await safeDelete(() => prisma.program.deleteMany({ where: { userId: user.id } }));
 
 	console.log("🏋️ Creating Exercises...");
 
@@ -69,13 +87,14 @@ async function main() {
 		},
 	});
 
-	console.log("📋 Creating Programs with associated Exercises...");
+	console.log("📋 Creating Programs...");
 
 	// --- 5️⃣ Create programs with exercises via ProgramToExercise ---
 	const pushDay = await prisma.program.create({
 		data: {
 			name: "Push Day",
 			userId: user.id,
+			imageUrl: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=800&q=80",
 			muscles: [MuscleGroup.chest, MuscleGroup.shoulders, MuscleGroup.triceps],
 		},
 	});
@@ -88,6 +107,7 @@ async function main() {
 		data: {
 			name: "Pull Day",
 			userId: user.id,
+			imageUrl: "https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?w=800&q=80",
 			muscles: [MuscleGroup.back, MuscleGroup.biceps, MuscleGroup.forearms],
 		},
 	});
@@ -100,6 +120,7 @@ async function main() {
 		data: {
 			name: "Leg Day",
 			userId: user.id,
+			imageUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80",
 			muscles: [MuscleGroup.quads, MuscleGroup.hamstrings, MuscleGroup.glutes],
 		},
 	});
@@ -108,7 +129,35 @@ async function main() {
 		data: { programId: legDay.id, exerciseId: squats.id, order: 0 },
 	});
 
-	console.log("✅ Seed completed");
+	// --- 6️⃣ Create a History Item (For testing your boilerplate logic) ---
+	console.log("📜 Seeding historical workout data...");
+
+	const pastDate = new Date();
+	pastDate.setDate(pastDate.getDate() - 2);
+
+	// await prisma.workout.create({
+	// 	data: {
+	// 		userId: user.id,
+	// 		programId: pushDay.id,
+	// 		startDate: pastDate,
+	// 		endDate: new Date(pastDate.getTime() + 3600000),
+	// 		exercises: {
+	// 			create: {
+	// 				exerciseId: benchPress.id,
+	// 				order: 0,
+	// 				sets: {
+	// 					create: [
+	// 						{ order: 0, reps: 10, weight: 60, time: new Date(pastDate.getTime() + 600000) },
+	// 						{ order: 1, reps: 10, weight: 60, time: new Date(pastDate.getTime() + 900000) },
+	// 						{ order: 2, reps: 8, weight: 65, time: new Date(pastDate.getTime() + 1200000) },
+	// 					],
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// });
+
+	console.log("✅ Seed completed: Push, Pull, and Leg days are ready.");
 }
 
 main()

@@ -25,6 +25,7 @@ model User {
   accounts      Account[]
   programs      Program[]
   exercises     Exercise[]
+  workouts      Workout[]
 
   @@unique([email])
   @@map("user")
@@ -46,10 +47,11 @@ enum MuscleGroup {
 }
 
 model Program {
-  id      String        @id @default(uuid())
-  name    String
-  muscles MuscleGroup[]
-  order   Int           @default(0)
+  id       String        @id @default(uuid())
+  name     String
+  muscles  MuscleGroup[]
+  order    Int           @default(0)
+  imageUrl String?
 
   // Association with User
   userId String
@@ -59,6 +61,9 @@ model Program {
   updatedAt DateTime @updatedAt
 
   exercises ProgramToExercise[]
+
+  // --- Track which workouts used this program ---
+  workouts Workout[]
 
   @@index([userId])
   @@map("program")
@@ -79,6 +84,9 @@ model Exercise {
 
   programs ProgramToExercise[]
 
+  // --- Link to actual performed sets for stats ---
+  workoutExercises WorkoutExercise[]
+
   @@index([userId])
   @@map("exercise")
 }
@@ -94,6 +102,63 @@ model ProgramToExercise {
   @@id([programId, exerciseId])
   @@map("program_to_exercise")
 }
+
+model Workout {
+  id        String    @id @default(uuid())
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  programId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  exercises WorkoutExercise[]
+  program   Program?          @relation(fields: [programId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([programId])
+  @@map("workout")
+}
+
+model WorkoutExercise {
+  id    String @id @default(uuid())
+  order Int    @default(0) // Order within the workout session
+
+  workoutId String
+  workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  sets Set[]
+
+  @@index([workoutId])
+  @@index([exerciseId])
+  @@map("workout_exercise")
+}
+
+model Set {
+  id     String    @id @default(uuid())
+  order  Int       @default(0) // 1st set, 2nd set...
+  reps   Int
+  weight Float? // Float allows for 12.5kg, etc.
+  time   DateTime?
+
+  // Identifying if it was a warm-up or failure set
+  isWarmup Boolean @default(false)
+
+  workoutExerciseId String
+  workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+
+  @@index([workoutExerciseId])
+  @@map("set")
+}
+
+// --- AUTH MODELS ---
 
 model Session {
   id        String   @id

@@ -1,7 +1,16 @@
-import { Exercise } from "@/lib/generated/prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { type MuscleGroup } from "@/lib/generated/prisma/client";
 
-export type ExerciseUI = Omit<Exercise, "userId" | "createdAt" | "updatedAt">;
+export const exerciseUIArgs = {
+	select: {
+		id: true,
+		name: true,
+		muscles: true,
+		imageUrl: true,
+	},
+} satisfies Prisma.ExerciseDefaultArgs;
+
+export type ExerciseUI = Prisma.ExerciseGetPayload<typeof exerciseUIArgs>;
 
 export function buildEmptyExercise(): ExerciseUI {
 	return {

@@ -5,9 +5,7 @@ import { ProgramNotFound } from "@/components/program/program-not-found";
 import { getProgramById } from "@/lib/program/actions";
 
 type ProgramPageProps = {
-	params: Promise<{
-		id: string;
-	}>;
+	params: Promise<{ id: string }>;
 };
 
 export default async function ProgramPage({ params }: ProgramPageProps) {

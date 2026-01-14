@@ -1,14 +1,20 @@
 "use server";
-
 import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
-import { ProgramUI, ProgramWithExercises } from "@/lib/program/type";
+import {
+	ProgramUI,
+	programUISelect,
+	ProgramWithExercises,
+	programWithExercisesArgs,
+} from "@/lib/program/type";
 import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
+
+import "server-only";
 
 /**
  * Fetches all programs for the current user.
@@ -20,12 +26,7 @@ export async function getPrograms(): Promise<ProgramUI[]> {
 
 	return prisma.program.findMany({
 		where: { userId },
-		select: {
-			id: true,
-			name: true,
-			muscles: true,
-			order: true,
-		},
+		...programUISelect,
 	});
 }
 
@@ -34,43 +35,17 @@ export async function getPrograms(): Promise<ProgramUI[]> {
  */
 const _getProgramById = cache(
 	async (id: string, userId: string): Promise<ProgramWithExercises | null> => {
-		// First, get the program itself
 		const program = await prisma.program.findFirst({
 			where: { id, userId },
-			select: {
-				id: true,
-				name: true,
-				muscles: true,
-				order: true,
-			},
+			...programWithExercisesArgs,
 		});
 
 		if (!program) return null;
 
-		// Then, get the exercises via the join table, ordered by "order"
-		const exercises = await prisma.programToExercise.findMany({
-			where: { programId: id },
-			select: {
-				exercise: {
-					select: {
-						id: true,
-						name: true,
-						imageUrl: true,
-						muscles: true,
-					},
-				},
-			},
-			orderBy: {
-				order: "asc",
-			},
-		});
-
-		// Map the join table to a simple array of exercises
-		const exercisesList = exercises.map((pe) => pe.exercise);
-
+		// Mapping the nested 'exercise' objects into a flat array
 		return {
 			...program,
-			exercises: exercisesList,
+			exercises: program.exercises.map((item) => item.exercise),
 		};
 	},
 );

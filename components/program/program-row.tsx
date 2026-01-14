@@ -37,7 +37,7 @@ export function ProgramRow({ program, index }: ProgramRowProps) {
 					<GripVertical className="size-5" />
 				</button>
 				<img
-					src={"/exercise.jpg"}
+					src={program.imageUrl || "/exercise.jpg"}
 					alt={program.name}
 					className="h-full w-full object-cover transition-transform group-hover:scale-105"
 				/>

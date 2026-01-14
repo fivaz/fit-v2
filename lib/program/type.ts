@@ -1,8 +1,51 @@
-import { ExerciseUI } from "@/lib/exercise/type";
-import { Program } from "@/lib/generated/prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { MuscleGroup } from "@/lib/generated/prisma/client";
-export type ProgramUI = Omit<Program, "userId" | "createdAt" | "updatedAt">;
-export type ProgramWithExercises = ProgramUI & { exercises: ExerciseUI[] };
+
+export const programUISelect = {
+	select: {
+		id: true,
+		name: true,
+		muscles: true,
+		imageUrl: true,
+		order: true,
+	},
+} satisfies Prisma.ProgramDefaultArgs;
+
+export type ProgramUI = Prisma.ProgramGetPayload<typeof programUISelect>;
+
+export const programWithExercisesArgs = {
+	select: {
+		id: true,
+		name: true,
+		imageUrl: true,
+		muscles: true,
+		order: true,
+
+		exercises: {
+			orderBy: {
+				order: "asc" as const,
+			},
+			select: {
+				order: true,
+				exercise: {
+					select: {
+						id: true,
+						name: true,
+						imageUrl: true,
+						muscles: true,
+					},
+				},
+			},
+		},
+	},
+} satisfies Prisma.ProgramDefaultArgs;
+
+type ProgramRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
+
+// The Flattened type for UI
+export type ProgramWithExercises = Omit<ProgramRaw, "exercises"> & {
+	exercises: ProgramRaw["exercises"][number]["exercise"][];
+};
 
 export function buildEmptyProgram(): ProgramUI {
 	return {
@@ -10,6 +53,7 @@ export function buildEmptyProgram(): ProgramUI {
 		name: "",
 		muscles: [],
 		order: 0,
+		imageUrl: null,
 	};
 }
 
@@ -19,5 +63,6 @@ export function formToProgram(formData: FormData): ProgramUI {
 		name: (formData.get("name") as string) || "",
 		muscles: formData.getAll("muscles") as MuscleGroup[],
 		order: 0,
+		imageUrl: null,
 	};
 }
