@@ -163,7 +163,7 @@ export function SettingsDetailInternal() {
 					</Button>
 					<div className="opacity-30">
 						<span className="text-[10px] font-bold tracking-widest uppercase dark:text-white">
-							Build with Passion
+							Built with Passion
 						</span>
 						<p className="text-xs font-medium dark:text-white">
 							Version {process.env.NEXT_PUBLIC_APP_VERSION}
