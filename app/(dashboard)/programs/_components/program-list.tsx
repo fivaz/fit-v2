@@ -5,13 +5,12 @@ import * as React from "react";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider } from "@dnd-kit/react";
 
-import { ProgramEmptyState } from "@/components/program/program-empty-state";
+import { ProgramEmptyState } from "@/app/(dashboard)/programs/_components/program-empty-state";
+import { ProgramRow } from "@/app/(dashboard)/programs/_components/program-row";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { ProgramsProvider, usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramUI } from "@/lib/program/type";
 import { sameOrder } from "@/lib/utils";
-
-import { ProgramRow } from "./program-row";
 
 type ProgramsListProps = {
 	initialPrograms: ProgramUI[];

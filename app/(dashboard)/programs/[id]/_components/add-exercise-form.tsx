@@ -4,12 +4,8 @@ import * as React from "react";
 import { Loader2 } from "lucide-react";
 import useSWR from "swr";
 
-import { ExerciseSelectorList } from "@/components/exercise/exercise-selector-list";
-import { getExercises } from "@/lib/exercise/actions";
-import { updateProgramExercises } from "@/lib/program/actions";
-import { ProgramWithExercises } from "@/lib/program/type";
-
-import { Button } from "../ui/button";
+import { ExerciseSelectorList } from "@/app/(dashboard)/programs/[id]/_components/exercise-selector-list";
+import { Button } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerClose,
@@ -18,7 +14,10 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
-} from "../ui/drawer";
+} from "@/components/ui/drawer";
+import { getExercises } from "@/lib/exercise/actions";
+import { updateProgramExercises } from "@/lib/program/actions";
+import { ProgramWithExercises } from "@/lib/program/type";
 
 type AddExerciseFormProps = {
 	program: ProgramWithExercises;

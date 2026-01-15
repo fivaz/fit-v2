@@ -2,14 +2,13 @@
 
 import * as React from "react";
 
+import { ExerciseSelectorItem } from "@/app/(dashboard)/programs/[id]/_components/exercise-selector-item";
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
+import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exercise-filter-shell";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ExerciseSelectorItem } from "@/components/exercise/exercise-selector-item";
 import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
-
-import { ExerciseFilterShell, NoResultsFound } from "./exercise-filter-shell";
 
 interface ExerciseSelectorListProps {
 	initialExercises: ExerciseUI[];

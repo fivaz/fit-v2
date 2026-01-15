@@ -12,8 +12,8 @@ import {
 	Trash2,
 } from "lucide-react";
 
-import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
-import { ProgramExerciseList } from "@/components/exercise/program-exercise-list";
+import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
+import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../../../../../components/ui/dropdown-menu";
 
 type ProgramDetailProps = {
 	program: ProgramWithExercises;
