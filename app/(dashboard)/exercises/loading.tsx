@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { PlusIcon } from "lucide-react";
 
-import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -15,8 +15,8 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
+import { useExercises } from "@/hooks/exercise/exercises-store-context";
 import { getExercises } from "@/lib/exercise/actions";
-import { updateProgramExercises } from "@/lib/program/actions";
 import { ProgramWithExercises } from "@/lib/program/type";
 
 type AddExerciseFormProps = {
@@ -26,17 +26,16 @@ type AddExerciseFormProps = {
 };
 
 export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps) {
-	// TODO fix that this function doesn't update if I change program.muscles
 	const {
-		data: exercises,
+		data: allExercises,
 		isLoading,
 		error,
-	} = useSWR("exercises", () => getExercises({ muscles: { hasSome: program.muscles } }));
-
-	// Initialize selection with exercises already in the program
-	const [selectedIds, setSelectedIds] = useState<string[]>(
-		program.exercises?.map((e) => e.id) || [],
+	} = useSWR(["exercises", program.muscles], () =>
+		getExercises({ muscles: { hasSome: program.muscles } }),
 	);
+	const { items: exercises, syncItems } = useExercises();
+
+	const [selectedIds, setSelectedIds] = useState<string[]>(exercises.map((e) => e.id));
 
 	const toggleExercise = (id: string) => {
 		setSelectedIds((prev) =>
@@ -45,7 +44,8 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 	};
 
 	const handleConfirm = async () => {
-		await updateProgramExercises(program.id, selectedIds);
+		const nextItems = allExercises?.filter((ex) => selectedIds.includes(ex.id)) || [];
+		syncItems(nextItems, program.id);
 	};
 
 	return (
@@ -70,7 +70,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 							<div className="text-destructive p-4 text-center">Failed to load exercises.</div>
 						) : (
 							<ExerciseSelectorList
-								initialExercises={exercises || []}
+								initialExercises={allExercises || []}
 								selectedIds={selectedIds}
 								onToggle={toggleExercise}
 							/>

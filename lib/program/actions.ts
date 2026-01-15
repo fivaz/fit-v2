@@ -141,7 +141,7 @@ export async function deleteProgram(id: string) {
 /**
  * Updates exercises linked to a program.
  */
-export async function updateProgramExercises(programId: string, exerciseIds: string[]) {
+export async function updateProgramExercises(exerciseIds: string[], programId: string) {
 	const userId = await getUserId();
 
 	try {

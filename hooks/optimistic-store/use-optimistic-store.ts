@@ -1,4 +1,4 @@
-import { startTransition, useRef, useTransition } from "react";
+import { useRef, useTransition } from "react";
 
 import { toast } from "sonner";
 
@@ -12,6 +12,7 @@ export function useOptimisticStore<T extends Identifiable>({
 	updateConfig,
 	deleteConfig,
 	reorderConfig,
+	syncConfig,
 }: UseOptimisticStoreProps<T>): UseOptimisticStoreReturn<T> {
 	const [isPending, startMutationTransition] = useTransition();
 
@@ -150,6 +151,33 @@ export function useOptimisticStore<T extends Identifiable>({
 		}, reorderConfig.debounceMs ?? 500);
 	}
 
+	function syncItems(nextItems: T[], parentId: string) {
+		if (!syncConfig) {
+			logError("useOptimisticStore: syncItems called but no syncConfig provided", {
+				extra: { nextItems },
+			});
+			return;
+		}
+
+		const prevItems = lastStableItemsRef.current;
+
+		const nextIds = nextItems.map((i) => i.id);
+
+		return mutateOptimistically({
+			optimistic: () => optimisticSetItems(nextItems),
+			persist: () => syncConfig.function(nextIds, parentId),
+			rollback: () => optimisticSetItems(prevItems),
+			onSuccess: () => {
+				lastStableItemsRef.current = nextItems;
+				toast.success(syncConfig.onSuccessMessage);
+			},
+			onError: () =>
+				toast.error(syncConfig.onErrorMessage, {
+					description: "Your changes were rolled back. Please try again.",
+				}),
+		});
+	}
+
 	return {
 		items,
 		firstItem: items[0],
@@ -158,6 +186,7 @@ export function useOptimisticStore<T extends Identifiable>({
 		updateItem,
 		deleteItem,
 		reorderItems,
+		syncItems,
 	};
 }
 
@@ -197,6 +226,11 @@ export type UseOptimisticStoreProps<T> = {
 		onErrorMessage: string;
 		debounceMs?: number;
 	};
+	syncConfig?: {
+		function: (ids: string[], parentId: string) => Promise<void>;
+		onSuccessMessage?: string;
+		onErrorMessage: string;
+	};
 };
 
 export type UseOptimisticStoreReturn<T> = {
@@ -207,4 +241,5 @@ export type UseOptimisticStoreReturn<T> = {
 	updateItem: (item: T) => void;
 	deleteItem: (id: string) => void;
 	reorderItems: (items: T[], parentId?: string) => void;
+	syncItems: (items: T[], parentId: string) => void;
 };

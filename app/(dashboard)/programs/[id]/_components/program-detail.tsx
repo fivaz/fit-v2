@@ -1,14 +1,11 @@
 "use client";
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
 	DumbbellIcon,
 	EditIcon,
-	LoaderCircleIcon,
 	MoreVertical,
-	TimerIcon,
 	Trash2,
 } from "lucide-react";
 
@@ -30,7 +27,6 @@ import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
 import { ProgramWithExercises } from "@/lib/program/type";
-import { handleStartWorkout } from "@/lib/workout/actions";
 
 type ProgramDetailProps = {
 	program: ProgramWithExercises;

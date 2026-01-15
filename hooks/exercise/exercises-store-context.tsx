@@ -3,6 +3,7 @@
 import { createOptimisticStoreContext } from "@/hooks/optimistic-store/create-optimistic-store-context";
 import { deleteExercise, reorderProgramExercises, saveExercise } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { updateProgramExercises } from "@/lib/program/actions";
 
 export const [ExercisesProvider, useExercises] = createOptimisticStoreContext<ExerciseUI>({
 	sortFnc: (items) => items.sort((a, b) => a.name.localeCompare(b.name)),
@@ -33,5 +34,11 @@ export const [ExercisesProvider, useExercises] = createOptimisticStoreContext<Ex
 			return reorderProgramExercises(ids, parentId);
 		},
 		onErrorMessage: "Failed to reorder program's exercises.",
+	},
+
+	syncConfig: {
+		function: updateProgramExercises,
+		onSuccessMessage: "Exercise updated successfully.",
+		onErrorMessage: "Failed to update exercises.",
 	},
 });
