@@ -38,7 +38,7 @@ export const [ExercisesProvider, useExercises] = createOptimisticStoreContext<Ex
 
 	syncConfig: {
 		function: updateProgramExercises,
-		onSuccessMessage: "Exercise updated successfully.",
+		onSuccessMessage: "Exercises updated successfully.",
 		onErrorMessage: "Failed to update exercises.",
 	},
 });
