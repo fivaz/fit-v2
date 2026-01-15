@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +14,7 @@ import {
 
 import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
 import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
+import { StartWorkoutButton } from "@/app/(dashboard)/programs/[id]/_components/start-workout-button";
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Button } from "@/components/ui/button";
@@ -49,10 +50,7 @@ export function ProgramDetailInternal() {
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
-	const { pending } = useFormStatus();
 	if (!program) return null;
-	const handleStart = handleStartWorkout.bind(null, program.id);
-
 	const handleDelete = async () => {
 		const confirmed = await confirm({
 			title: "Delete Program",
@@ -102,28 +100,14 @@ export function ProgramDetailInternal() {
 
 				<ExercisesProvider initialItems={program.exercises}>
 					<ProgramExerciseList programId={program.id} />
+					<AddExerciseForm
+						program={program}
+						open={showAddExerciseForm}
+						setOpen={setShowAddExerciseForm}
+					/>
+					<StartWorkoutButton programId={program.id} isDisabled={program.exercises.length === 0} />
 				</ExercisesProvider>
-
-				<div className="fixed bottom-20 left-1/2 z-20 w-full max-w-md -translate-x-1/2 px-6">
-					<form action={handleStart}>
-						<Button
-							size="lg"
-							type="submit"
-							disabled={pending || !program.exercises.length}
-							className="h-12 w-full rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-lg font-semibold text-white shadow-xl shadow-orange-500/40 transition-transform hover:from-orange-600 hover:to-orange-700 active:scale-[0.98]"
-						>
-							{pending ? <LoaderCircleIcon className="size-6" /> : <TimerIcon className="size-6" />}
-							Start Workout
-						</Button>
-					</form>
-				</div>
 			</div>
-
-			<AddExerciseForm
-				program={program}
-				open={showAddExerciseForm}
-				setOpen={setShowAddExerciseForm}
-			/>
 
 			<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
 		</>
