@@ -1,15 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as React from "react";
 
 import { Loader2 } from "lucide-react";
 import useSWR from "swr";
 
-import { ExerciseSelectorList } from "@/components/exercise/exercise-selector-list";
-import { getExercises } from "@/lib/exercise/actions";
-import { updateProgramExercises } from "@/lib/program/actions";
-import { ProgramWithExercises } from "@/lib/program/type";
-
-import { Button } from "../ui/button";
+import { ExerciseSelectorList } from "@/app/(dashboard)/programs/[id]/_components/exercise-selector-list";
+import { Button } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerClose,
@@ -18,7 +14,11 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
-} from "../ui/drawer";
+} from "@/components/ui/drawer";
+import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { getExercises } from "@/lib/exercise/actions";
+import { ExerciseUI } from "@/lib/exercise/type";
+import { ProgramWithExercises } from "@/lib/program/type";
 
 type AddExerciseFormProps = {
 	program: ProgramWithExercises;
@@ -27,27 +27,25 @@ type AddExerciseFormProps = {
 };
 
 export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps) {
-	// TODO fix that this function doesn't update if I change program.muscles
 	const {
-		data: exercises,
+		data: allExercises,
 		isLoading,
 		error,
-	} = useSWR("exercises", () => getExercises({ muscles: { hasSome: program.muscles } }));
-
-	// Initialize selection with exercises already in the program
-	const [selectedIds, setSelectedIds] = useState<string[]>(
-		program.exercises?.map((e) => e.id) || [],
+	} = useSWR(["exercises", program.muscles], () =>
+		getExercises({ muscles: { hasSome: program.muscles } }),
 	);
+	const { items: exercises, syncItems } = useExercises();
+	const [selected, setSelected] = useState<ExerciseUI[]>(exercises);
 
-	const toggleExercise = (id: string) => {
-		setSelectedIds((prev) =>
-			prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id],
+	const toggleExercise = (exercise: ExerciseUI) => {
+		setSelected((prev) =>
+			prev.some((e) => e.id === exercise.id)
+				? prev.filter((e) => e.id !== exercise.id)
+				: [...prev, exercise],
 		);
 	};
 
-	const handleConfirm = async () => {
-		await updateProgramExercises(program.id, selectedIds);
-	};
+	const handleConfirm = () => syncItems(selected, program.id);
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
@@ -71,8 +69,8 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 							<div className="text-destructive p-4 text-center">Failed to load exercises.</div>
 						) : (
 							<ExerciseSelectorList
-								initialExercises={exercises || []}
-								selectedIds={selectedIds}
+								exercises={allExercises || []}
+								selected={selected}
 								onToggle={toggleExercise}
 							/>
 						)}
@@ -82,7 +80,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 					<DrawerFooter className="bg-background border-t pt-4">
 						<DrawerClose asChild>
 							<Button type="submit" disabled={isLoading || !!error} onClick={handleConfirm}>
-								Confirm ({selectedIds.length}) exercises
+								Confirm ({selected.length}) exercises
 							</Button>
 						</DrawerClose>
 						<DrawerClose asChild>

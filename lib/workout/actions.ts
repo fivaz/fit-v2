@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/consts";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
+import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
 
@@ -69,6 +70,8 @@ export async function getWorkoutById(id: string) {
 export type WorkoutWithMappedSets = Awaited<ReturnType<typeof getWorkoutById>>;
 
 export async function handleStartWorkout(programId: string) {
+	await devDelay();
+
 	const userId = await getUserId();
 
 	const workoutId = await startWorkout(userId, programId);

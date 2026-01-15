@@ -1,36 +1,27 @@
 "use client";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 
-import {
-	DumbbellIcon,
-	EditIcon,
-	LoaderCircleIcon,
-	MoreVertical,
-	TimerIcon,
-	Trash2,
-} from "lucide-react";
+import { DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
 
-import { AddExerciseForm } from "@/components/exercise/add-exercise-form";
-import { ProgramExerciseList } from "@/components/exercise/program-exercise-list";
+import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
+import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
+import { StartWorkoutButton } from "@/app/(dashboard)/programs/[id]/_components/start-workout-button";
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
 import { usePrograms } from "@/hooks/program/programs-store-context";
 import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
 import { ProgramWithExercises } from "@/lib/program/type";
-import { handleStartWorkout } from "@/lib/workout/actions";
-
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 
 type ProgramDetailProps = {
 	program: ProgramWithExercises;
@@ -50,10 +41,7 @@ export function ProgramDetailInternal() {
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
-	const { pending } = useFormStatus();
 	if (!program) return null;
-	const handleStart = handleStartWorkout.bind(null, program.id);
-
 	const handleDelete = async () => {
 		const confirmed = await confirm({
 			title: "Delete Program",
@@ -103,28 +91,14 @@ export function ProgramDetailInternal() {
 
 				<ExercisesProvider initialItems={program.exercises}>
 					<ProgramExerciseList programId={program.id} />
+					<AddExerciseForm
+						program={program}
+						open={showAddExerciseForm}
+						setOpen={setShowAddExerciseForm}
+					/>
+					<StartWorkoutButton programId={program.id} isDisabled={program.exercises.length === 0} />
 				</ExercisesProvider>
-
-				<div className="fixed bottom-20 left-1/2 z-20 w-full max-w-md -translate-x-1/2 px-6">
-					<form action={handleStart}>
-						<Button
-							size="lg"
-							type="submit"
-							disabled={pending || !program.exercises.length}
-							className="h-12 w-full rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-lg font-semibold text-white shadow-xl shadow-orange-500/40 transition-transform hover:from-orange-600 hover:to-orange-700 active:scale-[0.98]"
-						>
-							{pending ? <LoaderCircleIcon className="size-6" /> : <TimerIcon className="size-6" />}
-							Start Workout
-						</Button>
-					</form>
-				</div>
 			</div>
-
-			<AddExerciseForm
-				program={program}
-				open={showAddExerciseForm}
-				setOpen={setShowAddExerciseForm}
-			/>
 
 			<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
 		</>

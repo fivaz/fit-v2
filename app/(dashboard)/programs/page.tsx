@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ProgramList } from "@/components/program/program-list";
+import { ProgramList } from "@/app/(dashboard)/programs/_components/program-list";
 import { getPrograms } from "@/lib/program/actions";
 
 export default async function ProgramsPage() {

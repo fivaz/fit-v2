@@ -3,8 +3,8 @@ import * as React from "react";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider } from "@dnd-kit/react";
 
+import { ProgramExerciseRow } from "@/app/(dashboard)/programs/[id]/_components/program–exercise-row";
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
-import { ProgramExerciseRow } from "@/components/exercise/program–exercise-row";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
 import { sameOrder } from "@/lib/utils";
 

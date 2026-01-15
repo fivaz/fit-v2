@@ -1,4 +1,4 @@
-import { startTransition, useRef } from "react";
+import { useRef, useTransition } from "react";
 
 import { toast } from "sonner";
 
@@ -12,7 +12,10 @@ export function useOptimisticStore<T extends Identifiable>({
 	updateConfig,
 	deleteConfig,
 	reorderConfig,
+	syncConfig,
 }: UseOptimisticStoreProps<T>): UseOptimisticStoreReturn<T> {
+	const [isPending, startMutationTransition] = useTransition();
+
 	const {
 		addItem: optimisticAddItem,
 		updateItem: optimisticUpdateItem,
@@ -23,6 +26,29 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const lastStableItemsRef = useRef<T[]>(items);
+
+	/**
+	 * Internal helper to wrap mutations with the transition
+	 */
+	const mutateOptimistically = ({
+		optimistic,
+		persist,
+		rollback,
+		onSuccess,
+		onError,
+	}: OptimisticMutationParams) => {
+		startMutationTransition(async () => {
+			optimistic?.();
+
+			try {
+				await persist();
+				onSuccess?.();
+			} catch (error) {
+				rollback();
+				onError(error);
+			}
+		});
+	};
 
 	// ---- ADD ----
 	function addItem(item: T) {
@@ -46,9 +72,7 @@ export function useOptimisticStore<T extends Identifiable>({
 			});
 			return;
 		}
-		// store previous state for rollback
 		const prevItem = items.find((i) => i.id === item.id);
-
 		if (!prevItem) return;
 
 		return mutateOptimistically({
@@ -72,7 +96,6 @@ export function useOptimisticStore<T extends Identifiable>({
 			return;
 		}
 		const prevItem = items.find((i) => i.id === id);
-
 		if (!prevItem) return;
 
 		return mutateOptimistically({
@@ -87,6 +110,7 @@ export function useOptimisticStore<T extends Identifiable>({
 		});
 	}
 
+	// ---- REORDER ----
 	function reorderItems(nextItems: T[], parentId?: string) {
 		const prevItems = lastStableItemsRef.current;
 
@@ -127,15 +151,48 @@ export function useOptimisticStore<T extends Identifiable>({
 		}, reorderConfig.debounceMs ?? 500);
 	}
 
+	function syncItems(nextItems: T[], parentId: string) {
+		if (!syncConfig) {
+			logError("useOptimisticStore: syncItems called but no syncConfig provided", {
+				extra: { nextItems },
+			});
+			return;
+		}
+
+		const prevItems = lastStableItemsRef.current;
+
+		const nextIds = nextItems.map((i) => i.id);
+
+		return mutateOptimistically({
+			optimistic: () => optimisticSetItems(nextItems),
+			persist: () => syncConfig.function(nextIds, parentId),
+			rollback: () => optimisticSetItems(prevItems),
+			onSuccess: () => {
+				lastStableItemsRef.current = nextItems;
+				if (syncConfig.onSuccessMessage) {
+					toast.success(syncConfig.onSuccessMessage);
+				}
+			},
+			onError: () =>
+				toast.error(syncConfig.onErrorMessage, {
+					description: "Your changes were rolled back. Please try again.",
+				}),
+		});
+	}
+
 	return {
 		items,
 		firstItem: items[0],
+		isPending,
 		addItem,
 		updateItem,
 		deleteItem,
 		reorderItems,
+		syncItems,
 	};
 }
+
+// --- TYPES ---
 
 export type Identifiable = { id: string };
 
@@ -146,26 +203,6 @@ type OptimisticMutationParams = {
 	onSuccess?: () => void;
 	onError: (error: unknown) => void;
 };
-
-function mutateOptimistically({
-	optimistic,
-	persist,
-	rollback,
-	onSuccess,
-	onError,
-}: OptimisticMutationParams) {
-	startTransition(async () => {
-		optimistic?.();
-
-		try {
-			await persist();
-			onSuccess?.();
-		} catch (error) {
-			rollback();
-			onError(error);
-		}
-	});
-}
 
 export type UseOptimisticStoreProps<T> = {
 	initialItems: T[];
@@ -191,13 +228,20 @@ export type UseOptimisticStoreProps<T> = {
 		onErrorMessage: string;
 		debounceMs?: number;
 	};
+	syncConfig?: {
+		function: (ids: string[], parentId: string) => Promise<void>;
+		onSuccessMessage?: string;
+		onErrorMessage: string;
+	};
 };
 
 export type UseOptimisticStoreReturn<T> = {
 	items: T[];
 	firstItem: T | undefined;
+	isPending: boolean;
 	addItem: (item: T) => void;
 	updateItem: (item: T) => void;
 	deleteItem: (id: string) => void;
 	reorderItems: (items: T[], parentId?: string) => void;
+	syncItems: (items: T[], parentId: string) => void;
 };

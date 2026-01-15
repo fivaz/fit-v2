@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { ProgramDetail } from "@/components/program/program-detail";
-import { ProgramNotFound } from "@/components/program/program-not-found";
+import { ProgramDetail } from "@/app/(dashboard)/programs/[id]/_components/program-detail";
+import { ProgramNotFound } from "@/app/(dashboard)/programs/[id]/_components/program-not-found";
 import { getProgramById } from "@/lib/program/actions";
 
 type ProgramPageProps = {
