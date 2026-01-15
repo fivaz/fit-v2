@@ -169,7 +169,9 @@ export function useOptimisticStore<T extends Identifiable>({
 			rollback: () => optimisticSetItems(prevItems),
 			onSuccess: () => {
 				lastStableItemsRef.current = nextItems;
-				toast.success(syncConfig.onSuccessMessage);
+				if (syncConfig.onSuccessMessage) {
+					toast.success(syncConfig.onSuccessMessage);
+				}
 			},
 			onError: () =>
 				toast.error(syncConfig.onErrorMessage, {

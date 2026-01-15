@@ -2,12 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-	DumbbellIcon,
-	EditIcon,
-	MoreVertical,
-	Trash2,
-} from "lucide-react";
+import { DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
 
 import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
 import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
