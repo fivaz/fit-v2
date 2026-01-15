@@ -8,6 +8,7 @@ import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
+import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 
 import "server-only";
@@ -16,6 +17,8 @@ import "server-only";
  * Fetches all exercises for the current user.
  */
 export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<ExerciseUI[]> {
+	await devDelay();
+
 	const userId = await getUserId();
 
 	return prisma.exercise.findMany({
