@@ -2,14 +2,13 @@
 
 import * as React from "react";
 
+import { ExerciseRow } from "@/app/(dashboard)/exercises/_components/exercise-row";
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
+import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exercise-filter-shell";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ExerciseRow } from "@/components/exercise/exercise-row";
 import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
-
-import { ExerciseFilterShell, NoResultsFound } from "./exercise-filter-shell";
 
 type ExerciseLibraryListProps = {
 	initialExercises: ExerciseUI[];

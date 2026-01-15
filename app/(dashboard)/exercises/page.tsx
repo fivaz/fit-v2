@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Suspense } from "react";
 
-import { ExerciseLibraryList } from "@/components/exercise/exercise-library-list";
+import { ExerciseLibraryList } from "@/app/(dashboard)/exercises/_components/exercise-library-list";
 import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
 import { getExercises } from "@/lib/exercise/actions";
 
