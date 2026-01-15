@@ -1,3 +1,28 @@
+## [1.13.0](https://github.com/fivaz/fit-v2/compare/v1.12.0...v1.13.0) (2026-01-15)
+
+### ✨ Features
+
+* improve design of loading state for exercises page ([6c0777b](https://github.com/fivaz/fit-v2/commit/6c0777ba3b5247b3a237c56ae681101f243ca3cb))
+* improve design of loading state for programs page ([deb7622](https://github.com/fivaz/fit-v2/commit/deb7622d9a6f884c050b4fe8614d5f9e28e4ce29))
+* show the amount of exercises in exercise page ([e62bd4c](https://github.com/fivaz/fit-v2/commit/e62bd4c4eda31754225c340d7680c31a298e433f))
+* update program exercises optimistically, and prevent start workout while it's pending ([400eb61](https://github.com/fivaz/fit-v2/commit/400eb61492b45a3fec4f851098ece0f7cff51f63))
+
+### 💄 Style
+
+* move exercise components related to a page, to inside the page ([5850fb6](https://github.com/fivaz/fit-v2/commit/5850fb6b66c7699e195c657028f64d4b696d6643))
+* move program components related to a page, to inside the page ([a60b0bb](https://github.com/fivaz/fit-v2/commit/a60b0bba5407421fd1ba7808b39455c812ec9131))
+* move program-form to inside program-form-button ([38e184c](https://github.com/fivaz/fit-v2/commit/38e184cce3864a400d94035914b2f25cf8b1d1d6))
+
+### ♻️ Refactoring
+
+* add small checks ([b5bc12a](https://github.com/fivaz/fit-v2/commit/b5bc12ae059a464aad642490d645ea56c4a346af))
+* move start-workout to its own button ([9fdd3aa](https://github.com/fivaz/fit-v2/commit/9fdd3aab05f68447239c55205cd86373ed698903))
+* use exercises in AddExerciseForm instead of a list of exercise ids ([f2bd011](https://github.com/fivaz/fit-v2/commit/f2bd011944285e5f0c4ed109f654fba0c72d1790))
+
+### 🧹 Chores
+
+* export pending state from use-optimistic-store ([2a6981e](https://github.com/fivaz/fit-v2/commit/2a6981e7c6370aa5bae684ae7a271e95003b2029))
+
 ## [1.12.0](https://github.com/fivaz/fit-v2/compare/v1.11.0...v1.12.0) (2026-01-14)
 
 ### ✨ Features
