@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { PlusIcon } from "lucide-react";
 
-import { ProgramForm } from "@/components/program/program-form";
+import { ProgramForm } from "@/components/program/program-form-button/program-form";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,

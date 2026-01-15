@@ -17,6 +17,12 @@ import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
 import { usePrograms } from "@/hooks/program/programs-store-context";
@@ -24,13 +30,6 @@ import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
 import { ProgramWithExercises } from "@/lib/program/type";
 import { handleStartWorkout } from "@/lib/workout/actions";
-
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "../../../../../components/ui/dropdown-menu";
 
 type ProgramDetailProps = {
 	program: ProgramWithExercises;
