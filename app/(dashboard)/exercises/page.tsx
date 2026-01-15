@@ -6,6 +6,8 @@ import { ProgramsSkeleton } from "@/components/program/programs-skeleton";
 import { getExercises } from "@/lib/exercise/actions";
 
 export default async function ExercisesPage() {
+	const exercises = await getExercises();
+
 	return (
 		<div className="relative flex w-full flex-col">
 			{/* Header */}
@@ -15,16 +17,7 @@ export default async function ExercisesPage() {
 					<p className="text-muted-foreground mt-1 text-sm">{3} exercises in library</p>
 				</div>
 			</div>
-
-			<Suspense fallback={<ProgramsSkeleton />}>
-				<ExerciseContent />
-			</Suspense>
+			<ExerciseLibraryList initialExercises={exercises} />
 		</div>
 	);
-}
-
-async function ExerciseContent() {
-	const exercises = await getExercises();
-
-	return <ExerciseLibraryList initialExercises={exercises} />;
 }
