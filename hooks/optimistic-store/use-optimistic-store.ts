@@ -1,4 +1,4 @@
-import { startTransition, useRef } from "react";
+import { startTransition, useRef, useTransition } from "react";
 
 import { toast } from "sonner";
 
@@ -13,6 +13,8 @@ export function useOptimisticStore<T extends Identifiable>({
 	deleteConfig,
 	reorderConfig,
 }: UseOptimisticStoreProps<T>): UseOptimisticStoreReturn<T> {
+	const [isPending, startMutationTransition] = useTransition();
+
 	const {
 		addItem: optimisticAddItem,
 		updateItem: optimisticUpdateItem,
@@ -23,6 +25,29 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const lastStableItemsRef = useRef<T[]>(items);
+
+	/**
+	 * Internal helper to wrap mutations with the transition
+	 */
+	const mutateOptimistically = ({
+		optimistic,
+		persist,
+		rollback,
+		onSuccess,
+		onError,
+	}: OptimisticMutationParams) => {
+		startMutationTransition(async () => {
+			optimistic?.();
+
+			try {
+				await persist();
+				onSuccess?.();
+			} catch (error) {
+				rollback();
+				onError(error);
+			}
+		});
+	};
 
 	// ---- ADD ----
 	function addItem(item: T) {
@@ -46,9 +71,7 @@ export function useOptimisticStore<T extends Identifiable>({
 			});
 			return;
 		}
-		// store previous state for rollback
 		const prevItem = items.find((i) => i.id === item.id);
-
 		if (!prevItem) return;
 
 		return mutateOptimistically({
@@ -72,7 +95,6 @@ export function useOptimisticStore<T extends Identifiable>({
 			return;
 		}
 		const prevItem = items.find((i) => i.id === id);
-
 		if (!prevItem) return;
 
 		return mutateOptimistically({
@@ -87,6 +109,7 @@ export function useOptimisticStore<T extends Identifiable>({
 		});
 	}
 
+	// ---- REORDER ----
 	function reorderItems(nextItems: T[], parentId?: string) {
 		const prevItems = lastStableItemsRef.current;
 
@@ -130,12 +153,15 @@ export function useOptimisticStore<T extends Identifiable>({
 	return {
 		items,
 		firstItem: items[0],
+		isPending,
 		addItem,
 		updateItem,
 		deleteItem,
 		reorderItems,
 	};
 }
+
+// --- TYPES ---
 
 export type Identifiable = { id: string };
 
@@ -146,26 +172,6 @@ type OptimisticMutationParams = {
 	onSuccess?: () => void;
 	onError: (error: unknown) => void;
 };
-
-function mutateOptimistically({
-	optimistic,
-	persist,
-	rollback,
-	onSuccess,
-	onError,
-}: OptimisticMutationParams) {
-	startTransition(async () => {
-		optimistic?.();
-
-		try {
-			await persist();
-			onSuccess?.();
-		} catch (error) {
-			rollback();
-			onError(error);
-		}
-	});
-}
 
 export type UseOptimisticStoreProps<T> = {
 	initialItems: T[];
@@ -196,6 +202,7 @@ export type UseOptimisticStoreProps<T> = {
 export type UseOptimisticStoreReturn<T> = {
 	items: T[];
 	firstItem: T | undefined;
+	isPending: boolean;
 	addItem: (item: T) => void;
 	updateItem: (item: T) => void;
 	deleteItem: (id: string) => void;
