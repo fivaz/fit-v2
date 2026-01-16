@@ -2,6 +2,7 @@
 	"name": "fit",
 	"version": "1.13.0",
 	"private": true,
+	"packageManager": "pnpm@10.0.0",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
@@ -15,7 +16,8 @@
 		"db:generate": "prisma generate",
 		"postinstall": "prisma generate",
 		"prepare": "husky",
-		"test:release": "act"
+		"test:release": "act",
+		"prune-release-cache": "rm -rf .act-cache"
 	},
 	"dependencies": {
 		"@dnd-kit/helpers": "^0.2.1",
