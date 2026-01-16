@@ -16,10 +16,19 @@ import "server-only";
 /**
  * Fetches all exercises for the current user.
  */
-export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<ExerciseUI[]> {
+export async function getExercises(
+	filter?: Prisma.ExerciseWhereInput,
+	page: number = 1,
+	pageSize: number = 20,
+): Promise<ExerciseUI[]> {
 	await devDelay();
 
 	const userId = await getUserId();
+
+	// Calculate how many items to skip
+	// Page 1 = (1 - 1) * 20 = 0 skip
+	// Page 2 = (2 - 1) * 20 = 20 skip
+	const skip = (page - 1) * pageSize;
 
 	return prisma.exercise.findMany({
 		where: {
@@ -30,6 +39,8 @@ export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<
 		orderBy: {
 			name: "asc",
 		},
+		skip: skip,
+		take: pageSize,
 	});
 }
 
