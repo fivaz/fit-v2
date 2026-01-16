@@ -1,11 +1,12 @@
-module.exports = {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
 	branches: ["main", "master"],
+	tagFormat: "v${version}",
 	plugins: [
 		[
 			"@semantic-release/commit-analyzer",
 			{
 				preset: "conventionalcommits",
-				// ADD THIS SECTION:
 				releaseRules: [
 					{ type: "chore", release: "patch" },
 					{ type: "docs", release: "patch" },
@@ -21,27 +22,23 @@ module.exports = {
 				preset: "conventionalcommits",
 				presetConfig: {
 					types: [
-						{ type: "feat", section: "✨ Features" },
-						{ type: "fix", section: "🐛 Bug Fixes" },
-						{ type: "style", section: "💄 Style" },
-						{ type: "refactor", section: "♻️ Refactoring" },
-						{ type: "perf", section: "⚡ Performance" },
-						{ type: "test", section: "🧪 Tests" },
-						{ type: "build", section: "🏗️ Build" },
-						{ type: "ci", section: "👷 CI" },
-						{ type: "chore", section: "🧹 Chores" },
-						{ type: "docs", section: "📝 Documentation" },
+						{ type: "feat", section: "✨ Features", hidden: false },
+						{ type: "fix", section: "🐛 Bug Fixes", hidden: false },
+						{ type: "perf", section: "🚀 Performance Improvements", hidden: false },
+						{ type: "revert", section: "⏪ Reverts", hidden: false },
+						{ type: "chore", section: "🧹 Chores", hidden: false },
+						{ type: "docs", section: "📝 Documentation", hidden: false },
+						{ type: "style", section: "💄 Styles", hidden: false },
+						{ type: "refactor", section: "🔨 Code Refactoring", hidden: false },
+						{ type: "test", section: "✅ Tests", hidden: false },
+						{ type: "build", section: "👷 Build System", hidden: false },
+						{ type: "ci", section: "🔧 Continuous Integration", hidden: false },
 					],
 				},
 			},
 		],
-		"@semantic-release/changelog",
-		[
-			"@semantic-release/npm",
-			{
-				npmPublish: false,
-			},
-		],
+		["@semantic-release/changelog", { changelogFile: "CHANGELOG.md" }],
+		["@semantic-release/npm", { npmPublish: false }],
 		[
 			"@semantic-release/git",
 			{
