@@ -99,6 +99,17 @@ model Exercise {
   imageUrl String?
   muscles  MuscleGroup[]
 
+  // extra fields
+  bodyPart         String?
+  equipment        String?
+  target           String?
+  secondaryMuscles String[]
+  instructions     String[]
+  description      String?
+  difficulty       String?
+  category         String?
+  localPath        String?
+
   // Association with User
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
