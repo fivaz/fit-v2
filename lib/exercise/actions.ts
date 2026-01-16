@@ -22,7 +22,10 @@ export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<
 	const userId = await getUserId();
 
 	return prisma.exercise.findMany({
-		where: { userId, ...filter },
+		where: {
+			OR: [{ userId: userId }, { userId: null }],
+			...filter,
+		},
 		...exerciseUIArgs,
 		orderBy: {
 			name: "asc",
