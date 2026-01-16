@@ -17,7 +17,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 				className="group ring-chart-1 relative h-24 cursor-pointer overflow-hidden rounded-2xl text-left hover:ring-2 focus:ring-2 focus:outline-none"
 			>
 				<img
-					src={exercise.imageUrl || "/exercise.jpg"}
+					src={exercise.imageUrl || exercise.localPath || "/exercise.jpg"}
 					alt={exercise.name}
 					className="h-full w-full object-cover transition-transform group-hover:scale-105"
 				/>

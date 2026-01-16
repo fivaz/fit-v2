@@ -2,7 +2,7 @@
 	"name": "fit",
 	"version": "1.13.1",
 	"private": true,
-	"packageManager": "pnpm@10.0.0",
+	"packageManager": "pnpm@10.28.0",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
@@ -52,7 +52,6 @@
 		"sonner": "^2.0.7",
 		"swr": "^2.3.8",
 		"tailwind-merge": "^3.4.0",
-		"tsx": "^4.21.0",
 		"usehooks-ts": "^3.1.1",
 		"vaul": "^1.1.2",
 		"zod": "^4.3.5"
@@ -80,6 +79,7 @@
 		"semantic-release": "^25.0.2",
 		"semantic-release-pnpm": "^1.0.2",
 		"tailwindcss": "^4",
+		"tsx": "^4.21.0",
 		"tw-animate-css": "^1.4.0",
 		"typescript": "^5"
 	}

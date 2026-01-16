@@ -1,3 +1,4 @@
+import { exerciseUIArgs } from "@/lib/exercise/type";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { MuscleGroup } from "@/lib/generated/prisma/client";
 
@@ -15,12 +16,7 @@ export type ProgramUI = Prisma.ProgramGetPayload<typeof programUISelect>;
 
 export const programWithExercisesArgs = {
 	select: {
-		id: true,
-		name: true,
-		imageUrl: true,
-		muscles: true,
-		order: true,
-
+		...programUISelect.select,
 		exercises: {
 			orderBy: {
 				order: "asc" as const,
@@ -28,12 +24,7 @@ export const programWithExercisesArgs = {
 			select: {
 				order: true,
 				exercise: {
-					select: {
-						id: true,
-						name: true,
-						imageUrl: true,
-						muscles: true,
-					},
+					...exerciseUIArgs,
 				},
 			},
 		},

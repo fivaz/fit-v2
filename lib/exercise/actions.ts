@@ -39,12 +39,7 @@ export async function getExercises(filter?: Prisma.ExerciseWhereInput): Promise<
 const _getExerciseById = cache(async (id: string, userId: string): Promise<ExerciseUI | null> => {
 	return prisma.exercise.findFirst({
 		where: { id, userId },
-		select: {
-			id: true,
-			name: true,
-			muscles: true,
-			imageUrl: true,
-		},
+		...exerciseUIArgs,
 	});
 });
 

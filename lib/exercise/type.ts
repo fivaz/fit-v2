@@ -7,6 +7,7 @@ export const exerciseUIArgs = {
 		name: true,
 		muscles: true,
 		imageUrl: true,
+		localPath: true,
 	},
 } satisfies Prisma.ExerciseDefaultArgs;
 
@@ -17,7 +18,8 @@ export function buildEmptyExercise(): ExerciseUI {
 		id: "",
 		name: "",
 		muscles: [],
-		imageUrl: "",
+		imageUrl: null,
+		localPath: null,
 	};
 }
 
@@ -27,6 +29,7 @@ export function formToExercise(formData: FormData): ExerciseUI {
 		name: (formData.get("name") as string) || "",
 		muscles: formData.getAll("muscles") as MuscleGroup[],
 		//TODO handle image upload
-		imageUrl: "",
+		imageUrl: null,
+		localPath: null,
 	};
 }
