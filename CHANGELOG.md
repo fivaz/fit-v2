@@ -1,3 +1,14 @@
+## [1.13.1](https://github.com/fivaz/fit-v2/compare/v1.13.0...v1.13.1) (2026-01-16)
+
+### 👷 Build System
+
+* remove conflicting cache directories from act ([17a1574](https://github.com/fivaz/fit-v2/commit/17a1574585279d0d0ccdb2cb329e36ee5b762b99))
+
+### 🔧 Continuous Integration
+
+* remove unnecessary cache from semantic release ([3481f32](https://github.com/fivaz/fit-v2/commit/3481f32914ef002db56c6d1be08694be519d2cc3))
+* update design of releases ([089d612](https://github.com/fivaz/fit-v2/commit/089d6121eeebe7af633ed08e6c7b5b19b8c7c27a))
+
 ## [1.13.0](https://github.com/fivaz/fit-v2/compare/v1.12.0...v1.13.0) (2026-01-15)
 
 ### ✨ Features
