@@ -1,11 +1,11 @@
 "use client";
 
-import { createOptimisticStoreContext } from "@/hooks/optimistic-store/create-optimistic-store-context";
+import { createOptimisticManagerContext } from "@/hooks/optimistic-manager/create-optimistic-manager-context";
 import { deleteExercise, reorderProgramExercises, saveExercise } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { updateProgramExercises } from "@/lib/program/actions";
 
-export const [ExercisesProvider, useExercises] = createOptimisticStoreContext<ExerciseUI>({
+export const [ExercisesProvider, useExercises] = createOptimisticManagerContext<ExerciseUI>({
 	sortFnc: (items) => items.sort((a, b) => a.name.localeCompare(b.name)),
 	// ---- ADD ----
 	addConfig: {

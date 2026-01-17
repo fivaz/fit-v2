@@ -1,10 +1,10 @@
 "use client";
 
-import { createOptimisticStoreContext } from "@/hooks/optimistic-store/create-optimistic-store-context";
+import { createOptimisticManagerContext } from "@/hooks/optimistic-manager/create-optimistic-manager-context";
 import { deleteProgram, reorderPrograms, saveProgram } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 
-export const [ProgramsProvider, usePrograms] = createOptimisticStoreContext<ProgramUI>({
+export const [ProgramsProvider, usePrograms] = createOptimisticManagerContext<ProgramUI>({
 	sortFnc: (items) => items.sort((a, b) => a.order - b.order),
 	// ---- ADD ----
 	addConfig: {

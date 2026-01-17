@@ -2,10 +2,10 @@ import { useRef, useTransition } from "react";
 
 import { toast } from "sonner";
 
-import { useOptimisticList } from "@/hooks/optimistic/use-optmistic-list";
+import { useOptimisticList } from "@/hooks/optimistic-manager/use-optmistic-list";
 import { logError } from "@/lib/logger";
 
-export function useOptimisticStore<T extends Identifiable>({
+export function useOptimisticManager<T extends Identifiable>({
 	initialItems,
 	sortFnc,
 	addConfig,
@@ -13,7 +13,7 @@ export function useOptimisticStore<T extends Identifiable>({
 	deleteConfig,
 	reorderConfig,
 	syncConfig,
-}: UseOptimisticStoreProps<T>): UseOptimisticStoreReturn<T> {
+}: UseOptimisticManagerProps<T>): UseOptimisticManagerReturn<T> {
 	const [isPending, startMutationTransition] = useTransition();
 
 	const {
@@ -67,7 +67,7 @@ export function useOptimisticStore<T extends Identifiable>({
 	// ---- UPDATE ----
 	function updateItem(item: T) {
 		if (!updateConfig) {
-			logError("useOptimisticStore: updateItem called but no updateConfig provided", {
+			logError("useOptimisticManager: updateItem called but no updateConfig provided", {
 				extra: { context: { item, items } },
 			});
 			return;
@@ -90,7 +90,7 @@ export function useOptimisticStore<T extends Identifiable>({
 	// ---- DELETE ----
 	function deleteItem(id: string) {
 		if (!deleteConfig) {
-			logError("useOptimisticStore: deleteItem called but no deleteConfig provided", {
+			logError("useOptimisticManager: deleteItem called but no deleteConfig provided", {
 				extra: { context: { id, items } },
 			});
 			return;
@@ -121,7 +121,7 @@ export function useOptimisticStore<T extends Identifiable>({
 
 		// No persistence configured → stop here
 		if (!reorderConfig) {
-			logError("useOptimisticStore: reorderItems called but no reorderConfig provided", {
+			logError("useOptimisticManager: reorderItems called but no reorderConfig provided", {
 				extra: { context: { nextItems, parentId, items } },
 			});
 			return;
@@ -153,7 +153,7 @@ export function useOptimisticStore<T extends Identifiable>({
 
 	function syncItems(nextItems: T[], parentId: string) {
 		if (!syncConfig) {
-			logError("useOptimisticStore: syncItems called but no syncConfig provided", {
+			logError("useOptimisticManager: syncItems called but no syncConfig provided", {
 				extra: { nextItems },
 			});
 			return;
@@ -204,7 +204,7 @@ type OptimisticMutationParams = {
 	onError: (error: unknown) => void;
 };
 
-export type UseOptimisticStoreProps<T> = {
+export type UseOptimisticManagerProps<T> = {
 	initialItems: T[];
 	sortFnc?: (items: T[]) => T[];
 	addConfig: {
@@ -235,7 +235,7 @@ export type UseOptimisticStoreProps<T> = {
 	};
 };
 
-export type UseOptimisticStoreReturn<T> = {
+export type UseOptimisticManagerReturn<T> = {
 	items: T[];
 	firstItem: T | undefined;
 	isPending: boolean;
