@@ -3,10 +3,11 @@ import { useRef, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
+	Identifiable,
 	useOptimisticList,
 	UseOptimisticListOptions,
 	UseOptimisticListReturn,
-} from "@/hooks/optimistic-manager/use-optmistic-list";
+} from "@/hooks/optimistic-manager/use-optimistic-list";
 import { logError } from "@/lib/logger";
 
 export function useOptimisticManager<T extends Identifiable>({
@@ -198,8 +199,6 @@ export function useOptimisticManager<T extends Identifiable>({
 }
 
 // --- TYPES ---
-
-export type Identifiable = { id: string };
 
 type OptimisticMutationParams = {
 	optimistic?: () => void;

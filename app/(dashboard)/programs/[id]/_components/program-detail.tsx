@@ -36,12 +36,13 @@ export function ProgramDetail({ program }: ProgramDetailProps) {
 }
 
 export function ProgramDetailInternal() {
-	const { firstItem: program, deleteItem } = usePrograms<ProgramWithExercises>();
+	const { firstItem, deleteItem } = usePrograms();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
-	if (!program) return null;
+	if (!firstItem) return null;
+	const program = firstItem as ProgramWithExercises;
 	const handleDelete = async () => {
 		const confirmed = await confirm({
 			title: "Delete Program",

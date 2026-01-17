@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext } from "react";
 
+import { Identifiable } from "@/hooks/optimistic-manager/use-optimistic-list";
 import {
-	type Identifiable,
 	useOptimisticManager,
 	type UseOptimisticManagerProps,
 	type UseOptimisticManagerReturn,
@@ -27,14 +27,11 @@ export function createOptimisticManagerContext<T extends Identifiable>(
 		return <Context.Provider value={value}>{children}</Context.Provider>;
 	}
 
-	// you can override T when using the context for a type that implements T, this is useful for reordering based on extra attributes
-	function useOptimisticManagerContext<TOverride extends T = T>() {
+	function useOptimisticManagerContext() {
 		const context = useContext(Context);
 		if (!context) throw new Error("useOptimisticManagerContext must be used within its Provider");
 
-		// We cast to the override type. Since TOverride extends T,
-		// this is a safe "narrowing" of the type.
-		return context as unknown as UseOptimisticManagerReturn<TOverride>;
+		return context;
 	}
 
 	return [Provider, useOptimisticManagerContext] as const;
