@@ -36,4 +36,6 @@ export const MUSCLE_GROUPS = Object.values(MuscleGroup).map((key) => ({
 	...MUSCLE_METADATA[key],
 }));
 
+export const ALL_MUSCLES = Object.keys(MuscleGroup) as MuscleGroupType[];
+
 export type SearchableMuscle = MuscleGroupType;
