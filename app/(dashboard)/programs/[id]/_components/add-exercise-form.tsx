@@ -16,7 +16,7 @@ import {
 	DrawerTitle,
 } from "@/components/ui/drawer";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
-import { getExercises } from "@/lib/exercise/actions";
+import { getExercisesAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { ProgramWithExercises } from "@/lib/program/type";
 
@@ -32,7 +32,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 		isLoading,
 		error,
 	} = useSWR(["exercises", program.muscles], () =>
-		getExercises({ muscles: { hasSome: program.muscles } }),
+		getExercisesAction({ muscles: { hasSome: program.muscles } }),
 	);
 	const { items: exercises, syncItems } = useExercises();
 	const [selected, setSelected] = useState<ExerciseUI[]>(exercises);

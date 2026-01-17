@@ -11,7 +11,7 @@ import { getUserId } from "@/lib/utils-server";
  * Retrieves the most recent body metrics for the current user.
  * Returns an empty body metrics object if no metrics exist yet.
  */
-export async function getBodyMetrics(): Promise<BodyMetricsUI> {
+export async function getBodyMetricsAction(): Promise<BodyMetricsUI> {
 	const userId = await getUserId();
 
 	const metrics = await prisma.bodyMetric.findFirst({
@@ -27,7 +27,7 @@ export async function getBodyMetrics(): Promise<BodyMetricsUI> {
  * Upserts body metrics for a specific user.
  * Expects a complete BodyMetricsUI object containing the measurements.
  */
-export async function saveBodyMetrics(metrics: BodyMetricsUI) {
+export async function saveBodyMetricsAction(metrics: BodyMetricsUI) {
 	const userId = await getUserId();
 	// Normalize date to 00:00:00.000 UTC to hit the daily unique constraint
 	const today = new Date();

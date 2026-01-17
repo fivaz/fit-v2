@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { ExerciseLibraryList } from "@/app/(dashboard)/exercises/_components/exercise-library-list";
-import { getExercises } from "@/lib/exercise/actions";
+import { getExercisesAction } from "@/lib/exercise/actions";
 
 export default async function ExercisesPage() {
-	const exercises = await getExercises();
+	const exercises = await getExercisesAction();
 
 	return (
 		<div className="relative flex w-full flex-col">

@@ -1,9 +1,9 @@
 import React from "react";
 
-import { redirectToActiveWorkout } from "@/lib/workout/actions";
+import { redirectToActiveWorkoutAction } from "@/lib/workout/actions";
 
 export default async function HomePage() {
-	await redirectToActiveWorkout();
+	await redirectToActiveWorkoutAction();
 
 	return (
 		<div className="relative flex w-full flex-col">

@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { SettingsDetail } from "@/components/settings/settings-detail";
-import { getBodyMetrics } from "@/lib/body-metrics/actions";
+import { getBodyMetricsAction } from "@/lib/body-metrics/actions";
 
 export default async function SettingsPage() {
-	const bodyMetrics = await getBodyMetrics();
+	const bodyMetrics = await getBodyMetricsAction();
 
 	return (
 		<div className="relative flex w-full flex-col">

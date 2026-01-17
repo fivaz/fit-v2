@@ -13,7 +13,7 @@ import { getUserId } from "@/lib/utils-server";
 
 import "server-only";
 
-export async function getExercisesSearch({
+export async function getExercisesSearchAction({
 	search,
 	muscles,
 	page = 1,
@@ -35,13 +35,13 @@ export async function getExercisesSearch({
 				: {},
 		],
 	};
-	return getExercises(filter, page, pageSize);
+	return getExercisesAction(filter, page, pageSize);
 }
 
 /**
  * Fetches all exercises for the current user.
  */
-export async function getExercises(
+export async function getExercisesAction(
 	filter?: Prisma.ExerciseWhereInput,
 	page: number = 1,
 	pageSize: number = 20,
@@ -51,8 +51,6 @@ export async function getExercises(
 	const userId = await getUserId();
 
 	// Calculate how many items to skip
-	// Page 1 = (1 - 1) * 20 = 0 skip
-	// Page 2 = (2 - 1) * 20 = 20 skip
 	const skip = (page - 1) * pageSize;
 
 	return prisma.exercise.findMany({
@@ -70,31 +68,24 @@ export async function getExercises(
 }
 
 /**
- * Cached helper: memoized by (id, userId)
+ * Public fetcher for a single exercise.
  */
-const _getExerciseById = cache(async (id: string, userId: string): Promise<ExerciseUI | null> => {
+export async function getExerciseByIdAction(id: string): Promise<ExerciseUI | null> {
+	const userId = await getUserId();
 	return prisma.exercise.findFirst({
 		where: { id, userId },
 		...exerciseUIArgs,
 	});
-});
-
-/**
- * Public fetcher for a single exercise.
- */
-export async function getExerciseById(id: string): Promise<ExerciseUI | null> {
-	const userId = await getUserId();
-	return _getExerciseById(id, userId);
 }
 
 /**
  * Saves or updates an exercise from FormData.
  */
-export async function saveExercise({ id, name, muscles, imageUrl }: ExerciseUI) {
+export async function saveExerciseAction({ id, name, muscles, imageUrl }: ExerciseUI) {
 	const userId = await getUserId();
 	try {
 		await prisma.exercise.upsert({
-			where: { id: id || "new-id" }, // Ensure your mapper returns empty string for new items
+			where: { id: id || "new-id" },
 			update: {
 				name,
 				muscles,
@@ -108,7 +99,6 @@ export async function saveExercise({ id, name, muscles, imageUrl }: ExerciseUI) 
 			},
 		});
 
-		// Revalidate exercise list and programs (in case they display these exercises)
 		revalidatePath(ROUTES.EXERCISES);
 		revalidatePath(ROUTES.PROGRAMS);
 	} catch (error) {
@@ -122,7 +112,7 @@ export async function saveExercise({ id, name, muscles, imageUrl }: ExerciseUI) 
 /**
  * Deletes an exercise.
  */
-export async function deleteExercise(id: string) {
+export async function deleteExerciseAction(id: string) {
 	const userId = await getUserId();
 
 	try {
@@ -142,10 +132,8 @@ export async function deleteExercise(id: string) {
 
 /**
  * Reorders exercises in a program based on the order of the array.
- * @param programId The program to update
- * @param exerciseIds Array of exercise IDs in the new order
  */
-export async function reorderProgramExercises(exerciseIds: string[], programId: string) {
+export async function reorderProgramExercisesAction(exerciseIds: string[], programId: string) {
 	try {
 		await prisma.$transaction(
 			exerciseIds.map((exerciseId, index) =>

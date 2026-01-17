@@ -18,7 +18,7 @@ import "server-only";
 /**
  * Fetches all programs for the current user.
  */
-export async function getPrograms(): Promise<ProgramUI[]> {
+export async function getProgramsAction(): Promise<ProgramUI[]> {
 	await devDelay();
 
 	const userId = await getUserId();
@@ -35,7 +35,7 @@ export async function getPrograms(): Promise<ProgramUI[]> {
 /**
  * Public fetcher for a single program.
  */
-export async function getProgramById(id: string): Promise<ProgramWithExercises | null> {
+export async function getProgramByIdAction(id: string): Promise<ProgramWithExercises | null> {
 	const userId = await getUserId();
 	const program = await prisma.program.findFirst({
 		where: { id, userId },
@@ -54,7 +54,7 @@ export async function getProgramById(id: string): Promise<ProgramWithExercises |
 /**
  * Saves or updates a program.
  */
-export async function saveProgram({ id, name, muscles }: ProgramUI) {
+export async function saveProgramAction({ id, name, muscles }: ProgramUI) {
 	await devDelay();
 
 	const userId = await getUserId();
@@ -85,7 +85,7 @@ export async function saveProgram({ id, name, muscles }: ProgramUI) {
 /**
  * Updates the order of programs.
  */
-export async function reorderPrograms(sortedIds: string[]) {
+export async function reorderProgramsAction(sortedIds: string[]) {
 	await devDelay();
 
 	try {
@@ -110,7 +110,7 @@ export async function reorderPrograms(sortedIds: string[]) {
 /**
  * Deletes a program.
  */
-export async function deleteProgram(id: string) {
+export async function deleteProgramAction(id: string) {
 	await devDelay();
 
 	const userId = await getUserId();
@@ -132,7 +132,7 @@ export async function deleteProgram(id: string) {
 /**
  * Updates exercises linked to a program.
  */
-export async function updateProgramExercises(exerciseIds: string[], programId: string) {
+export async function updateProgramExercisesAction(exerciseIds: string[], programId: string) {
 	const userId = await getUserId();
 
 	try {

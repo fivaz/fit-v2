@@ -1,33 +1,37 @@
 "use client";
 
 import { createOptimisticManagerContext } from "@/hooks/optimistic-manager/create-optimistic-manager-context";
-import { deleteProgram, reorderPrograms, saveProgram } from "@/lib/program/actions";
+import {
+	deleteProgramAction,
+	reorderProgramsAction,
+	saveProgramAction,
+} from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 
 export const [ProgramsProvider, usePrograms] = createOptimisticManagerContext<ProgramUI>({
 	// ---- ADD ----
 	addConfig: {
-		function: saveProgram,
+		function: saveProgramAction,
 		onSuccessMessage: "Program created successfully.",
 		onErrorMessage: "Failed to create program.",
 	},
 
 	// ---- UPDATE ----
 	updateConfig: {
-		function: saveProgram,
+		function: saveProgramAction,
 		onSuccessMessage: "Program updated successfully.",
 		onErrorMessage: "Failed to update program.",
 	},
 
 	// ---- DELETE ----
 	deleteConfig: {
-		function: deleteProgram,
+		function: deleteProgramAction,
 		onSuccessMessage: "Program deleted successfully.",
 		onErrorMessage: "Failed to delete program.",
 	},
 
 	reorderConfig: {
-		function: reorderPrograms,
+		function: reorderProgramsAction,
 		onErrorMessage: "Failed to reorder programs.",
 	},
 });

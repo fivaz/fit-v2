@@ -4,7 +4,7 @@ import { LoaderCircleIcon, TimerIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
-import { handleStartWorkout } from "@/lib/workout/actions";
+import { handleStartWorkoutAction } from "@/lib/workout/actions";
 
 type StartWorkoutButtonProps = {
 	programId: string;
@@ -17,7 +17,7 @@ export function StartWorkoutButton({ programId, isDisabled }: StartWorkoutButton
 
 	const handleStart = () => {
 		startTransition(async () => {
-			await handleStartWorkout(programId);
+			await handleStartWorkoutAction(programId);
 		});
 	};
 

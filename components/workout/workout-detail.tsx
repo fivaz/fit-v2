@@ -13,7 +13,11 @@ import { Button } from "@/components/ui/button";
 import { SetRow } from "@/components/workout/set-row";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { logError } from "@/lib/logger";
-import { finishWorkout, syncWorkoutSets, WorkoutWithMappedSets } from "@/lib/workout/actions";
+import {
+	finishWorkoutAction,
+	syncWorkoutSetsAction,
+	WorkoutWithMappedSets,
+} from "@/lib/workout/actions";
 import { getEmptySet, WorkoutSetMap } from "@/lib/workout/type";
 
 type WorkoutDetailProps = {
@@ -39,7 +43,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 		const syncData = async () => {
 			setIsSyncing(true);
 			try {
-				await syncWorkoutSets(initialWorkout.id, debouncedSets);
+				await syncWorkoutSetsAction(initialWorkout.id, debouncedSets);
 			} catch (error) {
 				logError(error, {
 					extra: {
@@ -73,7 +77,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 		if (!confirmed) return;
 
 		setIsPending(true);
-		await finishWorkout(initialWorkout.id);
+		await finishWorkoutAction(initialWorkout.id);
 		setIsPending(false);
 		toast.success(`Workout finished on ${format(new Date(), "PPpp")}`);
 	}
