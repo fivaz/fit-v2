@@ -8,12 +8,8 @@ import { toast } from "sonner";
 
 import { ProgramEmptyState } from "@/app/(dashboard)/programs/_components/program-empty-state";
 import { ProgramRow } from "@/app/(dashboard)/programs/_components/program-row";
-import {
-	ProgramsProvider,
-	useProgramMutations,
-	useProgramsStore,
-} from "@/app/(dashboard)/programs/store";
 import { ProgramFormButton } from "@/components/program/program-form-button";
+import { ProgramsProvider, useProgramMutations, useProgramsStore } from "@/hooks/program/store";
 import { reorderProgramsAction } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 import { sameOrder } from "@/lib/utils";
@@ -49,16 +45,15 @@ export function ProgramsListInternal() {
 
 		if (sameOrder(programs, reordered)) return;
 
+		// TODO check later why this doesn't rollback
 		setItems(reordered, {
 			persist: () => reorderProgramsAction(reordered.map((p) => p.id)),
-			onError: () => {
-				toast.error("Failed to reorder programs. Reverting.");
-			},
+			onError: () => toast.error("Failed to reorder programs. Reverting."),
 		});
 	}
 
 	return (
-		<DragDropProvider onDragEnd={(event) => handleReorder(event)}>
+		<DragDropProvider onDragEnd={handleReorder}>
 			<div className="flex flex-col gap-4">
 				{sortedPrograms.map((program, index) => (
 					<ProgramRow key={program.id} program={program} index={index} />

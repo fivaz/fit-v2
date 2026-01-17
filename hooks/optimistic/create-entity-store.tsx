@@ -8,10 +8,12 @@ export type Identifiable = { id: string };
 export type EntityStoreReturn<T extends Identifiable> = {
 	items: T[];
 	firstItem: T | undefined;
+	isUnstable: boolean;
 	addItem: (item: T) => void;
 	updateItem: (item: T) => void;
 	deleteItem: (id: string) => void;
 	setItems: (items: T[]) => void;
+	setIsUnstable: (unstable: boolean) => void;
 };
 
 type Action<T> =
@@ -41,13 +43,17 @@ export function createEntityStore<T extends Identifiable>() {
 			}
 		});
 
+		const [isUnstable, setIsUnstable] = useOptimistic(false, (_, newValue: boolean) => newValue);
+
 		const store: EntityStoreReturn<T> = {
 			items,
 			firstItem: items[0],
+			isUnstable,
 			addItem: (item) => dispatch({ type: "add", item }),
 			updateItem: (item) => dispatch({ type: "update", item }),
 			deleteItem: (id) => dispatch({ type: "delete", id }),
 			setItems: (items) => dispatch({ type: "set", items }),
+			setIsUnstable,
 		};
 
 		return <Context.Provider value={store}>{children}</Context.Provider>;
