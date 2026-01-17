@@ -9,7 +9,7 @@ import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
-import { ALL_MUSCLES, MuscleGroup } from "@/lib/muscle/type";
+import { ALL_MUSCLES } from "@/lib/muscle/type";
 
 type ExerciseLibraryListProps = {
 	initialExercises: ExerciseUI[];

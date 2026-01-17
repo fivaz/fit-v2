@@ -24,10 +24,6 @@ export async function getExercisesSearch({
 	page: number;
 	pageSize?: number;
 }) {
-	console.log("search", search);
-	console.log("muscles", muscles);
-	console.log("page", page);
-	console.log("pageSize", pageSize);
 	const filter: Prisma.ExerciseWhereInput = {
 		AND: [
 			search ? { name: { contains: search, mode: "insensitive" } } : {},

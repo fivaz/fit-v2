@@ -1,15 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import { Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MuscleGroup } from "@/lib/generated/prisma/enums";
-import { ALL_MUSCLES, MuscleGroupType, SearchableMuscle } from "@/lib/muscle/type";
-import { cn } from "@/lib/utils";
+import { MuscleGroupType } from "@/lib/muscle/type";
 
 export interface ExerciseFilterShellProps {
 	searchQuery: string;
@@ -29,7 +27,8 @@ export function ExerciseFilterShell({
 	const toggleMuscle = (muscle: MuscleGroupType) => {
 		setSelectedMuscles((muscles) => {
 			if (muscles.includes(muscle)) {
-				if (muscles.length === 1) return ALL_MUSCLES; // if last one return all.
+				// if last one return all.
+				if (muscles.length === 1) return availableMuscles;
 				return muscles.filter((m) => m !== muscle);
 			} else {
 				return [...muscles, muscle];
@@ -37,11 +36,9 @@ export function ExerciseFilterShell({
 		});
 	};
 
-	const addAllMuscles = () => setSelectedMuscles(ALL_MUSCLES);
+	const addAllMuscles = () => setSelectedMuscles(availableMuscles);
 
-	const isAllSelected = selectedMuscles.length === ALL_MUSCLES.length;
-
-	const isAllAvailable = availableMuscles.length === ALL_MUSCLES.length;
+	const isAllSelected = selectedMuscles.length === availableMuscles.length;
 
 	return (
 		<>
@@ -61,19 +58,14 @@ export function ExerciseFilterShell({
 
 			{/* Filter Section */}
 			<div className="scrollbar-hide mb-6 flex gap-3 overflow-x-auto pb-2">
-				{isAllAvailable && (
-					<Button
-						type="button"
-						variant={isAllSelected ? "default" : "outline"}
-						className={cn(
-							"rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize",
-							isAllSelected && "bg-orange-500 hover:bg-orange-600",
-						)}
-						onClick={addAllMuscles}
-					>
-						All
-					</Button>
-				)}
+				<Button
+					type="button"
+					variant={isAllSelected ? "default" : "outline"}
+					className="rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize"
+					onClick={addAllMuscles}
+				>
+					All
+				</Button>
 				{availableMuscles.map((muscle) => {
 					const isActive = !isAllSelected && selectedMuscles.includes(muscle);
 
@@ -89,10 +81,7 @@ export function ExerciseFilterShell({
 								}
 								toggleMuscle(muscle);
 							}}
-							className={cn(
-								"rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize",
-								isActive && "border-orange-500 bg-orange-500 hover:bg-orange-600",
-							)}
+							className="rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize"
 						>
 							{muscle}
 							{isActive && (
