@@ -16,8 +16,8 @@ import "server-only";
 export async function getExercisesSearch({
 	search,
 	muscles,
-	page,
-	pageSize = 5,
+	page = 1,
+	pageSize = 20,
 }: {
 	search?: string;
 	muscles?: MuscleGroup[];
@@ -44,7 +44,7 @@ export async function getExercisesSearch({
 export async function getExercises(
 	filter?: Prisma.ExerciseWhereInput,
 	page: number = 1,
-	pageSize: number = 5,
+	pageSize: number = 20,
 ): Promise<ExerciseUI[]> {
 	await devDelay();
 

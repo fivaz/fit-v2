@@ -1,6 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { useEffect } from "react";
+
+import { useIntersectionObserver } from "usehooks-ts";
 
 import { ExerciseRow } from "@/app/(dashboard)/exercises/_components/exercise-row";
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
@@ -30,12 +33,21 @@ export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListPro
 }
 
 function LibraryInternal() {
-	const { items: exercises } = useExercises();
-
 	const filterData = useExerciseFilters(ALL_MUSCLES);
-	const { filteredExercises } = filterData;
+	const { isLoading, hasNextPage, fetchNextPage, filteredExercises } = filterData;
 
-	if (exercises.length === 0) return <ExerciseEmptyState />;
+	const { isIntersecting, ref: bottomRef } = useIntersectionObserver({
+		threshold: 0.1,
+	});
+
+	useEffect(() => {
+		if (isIntersecting && hasNextPage && !isLoading) {
+			fetchNextPage();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isIntersecting, hasNextPage, isLoading]);
+
+	if (!isLoading && filteredExercises.length === 0) return <ExerciseEmptyState />;
 
 	return (
 		<>
@@ -44,10 +56,18 @@ function LibraryInternal() {
 
 			{/* Management Results Section */}
 			<div className="flex flex-col gap-4">
-				{filteredExercises.length > 0 ? (
-					filteredExercises.map((exercise) => <ExerciseRow key={exercise.id} exercise={exercise} />)
-				) : (
-					<NoResultsFound />
+				{filteredExercises.length > 0
+					? filteredExercises.map((exercise) => (
+							<ExerciseRow key={exercise.id} exercise={exercise} />
+						))
+					: !isLoading && <NoResultsFound />}
+			</div>
+			<div ref={bottomRef} className="flex h-20 items-center justify-center">
+				{isLoading && (
+					<p className="text-muted-foreground animate-pulse text-sm">Loading more exercises...</p>
+				)}
+				{filteredExercises.length > 0 && (
+					<p className="text-muted-foreground text-sm italic">End of list.</p>
 				)}
 			</div>
 		</>
