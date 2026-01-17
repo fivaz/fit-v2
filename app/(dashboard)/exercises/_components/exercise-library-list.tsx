@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useEffect } from "react";
 
 import { useIntersectionObserver } from "usehooks-ts";
@@ -9,7 +8,7 @@ import { ExerciseRow } from "@/app/(dashboard)/exercises/_components/exercise-ro
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
 import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exercise-filter-shell";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
+import { ExercisesProvider, useExercisesStore } from "@/hooks/exercise/store";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { ALL_MUSCLES } from "@/lib/muscle/type";
@@ -34,11 +33,10 @@ export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListPro
 
 function LibraryInternal() {
 	const filterData = useExerciseFilters(ALL_MUSCLES);
-	const { isLoading, hasNextPage, fetchNextPage, filteredExercises } = filterData;
+	const { isLoading, hasNextPage, fetchNextPage } = filterData;
+	const { items: filteredExercises } = useExercisesStore();
 
-	const { isIntersecting, ref: bottomRef } = useIntersectionObserver({
-		threshold: 0.1,
-	});
+	const { isIntersecting, ref: bottomRef } = useIntersectionObserver({ threshold: 0.1 });
 
 	useEffect(() => {
 		if (isIntersecting && hasNextPage && !isLoading) {

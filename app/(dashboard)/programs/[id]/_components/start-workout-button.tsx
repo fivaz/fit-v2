@@ -3,7 +3,6 @@ import { useTransition } from "react";
 import { LoaderCircleIcon, TimerIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useExercises } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseMutations } from "@/hooks/exercise/store";
 import { handleStartWorkoutAction } from "@/lib/workout/actions";
 

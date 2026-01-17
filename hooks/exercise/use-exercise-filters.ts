@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, startTransition, useEffect, useState } from "react";
 
 import useSWRInfinite from "swr/infinite";
 import { useDebounceValue } from "usehooks-ts";
@@ -8,15 +8,17 @@ import { getExercisesSearchAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroupType } from "@/lib/muscle/type";
 
+import { useExerciseMutations, useExercisesStore } from "./store";
+
 type UseExerciseFiltersReturn = ExerciseFilterShellProps & {
-	filteredExercises: ExerciseUI[];
 	isLoading: boolean;
 	fetchNextPage: () => void;
 	hasNextPage: boolean;
 };
 
 export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFiltersReturn {
-	const [searchQuery, setSearchQuery] = useState("");
+	const { setItems } = useExercisesStore();
+	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [selectedMuscles, setSelectedMuscles] = useState<MuscleGroupType[]>(muscles);
 
 	const [debouncedSearchQuery] = useDebounceValue(searchQuery, 300);
@@ -24,7 +26,7 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 	const PAGE_SIZE = 20;
 
 	const getKey = (pageIndex: number, previousPageData: ExerciseUI[]) => {
-		if (previousPageData && !previousPageData.length) return null; // reached the end
+		if (previousPageData && !previousPageData.length) return null;
 		return {
 			search: debouncedSearchQuery,
 			muscles: selectedMuscles,
@@ -38,11 +40,20 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 		getExercisesSearchAction,
 	);
 
+	// Whenever SWR fetches, update the store
+	useEffect(() => {
+		if (data) {
+			const flat = data.flat();
+			// merge into store without overwriting local changes
+			startTransition(() => setItems(flat));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data]);
+
 	return {
-		filteredExercises: (data ? data.flat() : []) as ExerciseUI[],
 		isLoading: isLoading || (isValidating && data && data.length === size) || false,
-		hasNextPage: data ? data[data.length - 1].length === PAGE_SIZE : true,
 		fetchNextPage: () => setSize(size + 1),
+		hasNextPage: data ? data[data.length - 1].length === PAGE_SIZE : true,
 		searchQuery,
 		setSearchQuery,
 		selectedMuscles,

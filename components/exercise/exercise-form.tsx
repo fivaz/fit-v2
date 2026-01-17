@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from "react";
 
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { SelectMuscles } from "@/components/select-muscles";
@@ -7,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { useExerciseMutations } from "@/hooks/exercise/store";
+import { saveExerciseAction } from "@/lib/exercise/actions";
 import { ExerciseUI, formToExercise } from "@/lib/exercise/type";
 
 const formSchema = z.object({
@@ -21,7 +23,7 @@ type ExerciseFormProps = {
 };
 
 export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
-	const { addItem, updateItem } = useExercises();
+	const { addItem, updateItem } = useExerciseMutations();
 	const [errors, setErrors] = useState<{ name?: string; muscles?: string }>({});
 	const isEdit = !!exercise.id;
 
@@ -50,9 +52,17 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
 		onClose();
 
 		if (isEdit) {
-			updateItem(optimisticExercise);
+			updateItem(optimisticExercise, {
+				persist: () => saveExerciseAction(optimisticExercise),
+				onSuccess: () => toast.success("Exercise updated successfully."),
+				onError: () => toast.error("Failed to update exercise."),
+			});
 		} else {
-			addItem(optimisticExercise);
+			addItem(optimisticExercise, {
+				persist: () => saveExerciseAction(optimisticExercise),
+				onSuccess: () => toast.success("Exercise created successfully."),
+				onError: () => toast.error("Failed to create exercise."),
+			});
 		}
 	};
 

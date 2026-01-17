@@ -34,6 +34,7 @@ export async function getExercisesSearchAction({
 				: {},
 		],
 	};
+
 	return getExercisesAction(filter, page, pageSize);
 }
 
@@ -102,7 +103,7 @@ export async function saveExerciseAction({ id, name, muscles, imageUrl }: Exerci
 		revalidatePath(ROUTES.PROGRAMS);
 	} catch (error) {
 		logError(error, {
-			extra: { context: "error saving exercise", id, name, muscles, imageUrl, userId },
+			extra: { context: "saveExerciseAction", id, name, muscles, imageUrl, userId },
 		});
 		throw new Error("Failed to save exercise");
 	}
@@ -123,7 +124,7 @@ export async function deleteExerciseAction(id: string) {
 		revalidatePath(ROUTES.PROGRAMS);
 	} catch (error) {
 		logError(error, {
-			extra: { context: "error deleting exercise", id, userId },
+			extra: { context: "deleteExerciseAction", id, userId },
 		});
 		throw new Error("Deletion failed");
 	}
@@ -132,7 +133,7 @@ export async function deleteExerciseAction(id: string) {
 /**
  * Reorders exercises in a program based on the order of the array.
  */
-export async function reorderProgramExercisesAction(exerciseIds: string[], programId: string) {
+export async function reorderProgramExercisesAction(programId: string, exerciseIds: string[]) {
 	try {
 		await prisma.$transaction(
 			exerciseIds.map((exerciseId, index) =>
@@ -145,7 +146,9 @@ export async function reorderProgramExercisesAction(exerciseIds: string[], progr
 			),
 		);
 	} catch (error) {
-		console.error("Failed to reorder program exercises:", error);
+		logError(error, {
+			extra: { context: "reorderProgramExercisesAction", programId, exerciseIds },
+		});
 		throw new Error("Failed to reorder program exercises");
 	}
 }

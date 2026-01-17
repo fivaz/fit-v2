@@ -6,6 +6,7 @@ import { ExerciseSelectorItem } from "@/app/(dashboard)/programs/[id]/_component
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
 import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exercise-filter-shell";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
+import { useExercisesStore } from "@/hooks/exercise/store";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroupType } from "@/lib/muscle/type";
@@ -24,7 +25,7 @@ export function ExerciseSelectorList({
 	muscles,
 }: ExerciseSelectorListProps) {
 	const filterData = useExerciseFilters(muscles);
-	const { filteredExercises } = filterData;
+	const { items: filteredExercises } = useExercisesStore();
 
 	if (exercises.length === 0) return <ExerciseEmptyState />;
 
