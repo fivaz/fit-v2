@@ -31,11 +31,14 @@ export const programWithExercisesArgs = {
 	},
 } satisfies Prisma.ProgramDefaultArgs;
 
-type ProgramRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
+type ProgramWithExercisesRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
 
-// The Flattened type for UI
-export type ProgramWithExercises = Omit<ProgramRaw, "exercises"> & {
-	exercises: ProgramRaw["exercises"][number]["exercise"][];
+export type OrderedExercise = ProgramWithExercisesRaw["exercises"][number]["exercise"] & {
+	order: number;
+};
+
+export type ProgramWithExercises = Omit<ProgramWithExercisesRaw, "exercises"> & {
+	exercises: OrderedExercise[];
 };
 
 export function buildEmptyProgram(): ProgramUI {

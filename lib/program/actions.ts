@@ -1,5 +1,4 @@
 "use server";
-import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
@@ -27,37 +26,29 @@ export async function getPrograms(): Promise<ProgramUI[]> {
 	return prisma.program.findMany({
 		where: { userId },
 		...programUISelect,
+		orderBy: {
+			order: "asc" as const,
+		},
 	});
 }
-
-/**
- * Cached helper: memoized by (id, userId)
- */
-const _getProgramById = cache(
-	async (id: string, userId: string): Promise<ProgramWithExercises | null> => {
-		const program = await prisma.program.findFirst({
-			where: { id, userId },
-			...programWithExercisesArgs,
-		});
-
-		if (!program) return null;
-
-		// Mapping the nested 'exercise' objects into a flat array
-		return {
-			...program,
-			exercises: program.exercises.map((item) => item.exercise),
-		};
-	},
-);
 
 /**
  * Public fetcher for a single program.
  */
 export async function getProgramById(id: string): Promise<ProgramWithExercises | null> {
-	await devDelay();
-
 	const userId = await getUserId();
-	return _getProgramById(id, userId);
+	const program = await prisma.program.findFirst({
+		where: { id, userId },
+		...programWithExercisesArgs,
+	});
+
+	if (!program) return null;
+
+	// Mapping the nested 'exercise' objects into a flat array
+	return {
+		...program,
+		exercises: program.exercises.map(({ exercise, order }) => ({ ...exercise, order })),
+	};
 }
 
 /**

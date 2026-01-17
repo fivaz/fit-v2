@@ -49,6 +49,8 @@ function LibraryInternal() {
 
 	if (!isLoading && filteredExercises.length === 0) return <ExerciseEmptyState />;
 
+	const sortedExercises = filteredExercises.toSorted((a, b) => a.name.localeCompare(b.name));
+
 	return (
 		<>
 			{/* Reusable Filter UI */}
@@ -56,17 +58,15 @@ function LibraryInternal() {
 
 			{/* Management Results Section */}
 			<div className="flex flex-col gap-4">
-				{filteredExercises.length > 0
-					? filteredExercises.map((exercise) => (
-							<ExerciseRow key={exercise.id} exercise={exercise} />
-						))
+				{sortedExercises.length > 0
+					? sortedExercises.map((exercise) => <ExerciseRow key={exercise.id} exercise={exercise} />)
 					: !isLoading && <NoResultsFound />}
 			</div>
 			<div ref={bottomRef} className="flex h-20 items-center justify-center">
 				{isLoading && (
 					<p className="text-muted-foreground animate-pulse text-sm">Loading more exercises...</p>
 				)}
-				{filteredExercises.length > 0 && (
+				{sortedExercises.length > 0 && (
 					<p className="text-muted-foreground text-sm italic">End of list.</p>
 				)}
 			</div>

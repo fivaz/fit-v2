@@ -6,6 +6,7 @@ import { DragDropProvider } from "@dnd-kit/react";
 import { ProgramExerciseRow } from "@/app/(dashboard)/programs/[id]/_components/program–exercise-row";
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { OrderedExercise } from "@/lib/program/type";
 import { sameOrder } from "@/lib/utils";
 
 type ProgramExerciseListProps = {
@@ -13,7 +14,9 @@ type ProgramExerciseListProps = {
 };
 
 export function ProgramExerciseList({ programId }: ProgramExerciseListProps) {
-	const { items: exercises, reorderItems } = useExercises();
+	const { items, reorderItems } = useExercises();
+
+	const exercises = (items as OrderedExercise[]).toSorted((a, b) => a.order - b.order);
 
 	if (exercises.length === 0) return <ExerciseEmptyState />;
 

@@ -27,7 +27,7 @@ export function ExerciseSelectorItem({
 				{/* Thumbnail: Smaller and rounded */}
 				<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border">
 					<img
-						src={exercise.imageUrl || "/exercise.jpg"}
+						src={exercise.imageUrl || exercise.localPath || "/exercise.jpg"}
 						alt={exercise.name}
 						className="h-full w-full object-cover"
 					/>

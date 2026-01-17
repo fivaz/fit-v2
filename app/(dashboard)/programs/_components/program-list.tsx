@@ -31,22 +31,24 @@ export function ProgramList({ initialPrograms }: ProgramsListProps) {
 }
 
 export function ProgramsListInternal() {
-	const { items: programs, reorderItems } = usePrograms();
+	const { items, reorderItems } = usePrograms();
 
-	if (programs.length === 0) return <ProgramEmptyState />;
+	const sortedPrograms = items.toSorted((a, b) => a.order - b.order);
+
+	if (sortedPrograms.length === 0) return <ProgramEmptyState />;
 
 	return (
 		<DragDropProvider
 			onDragEnd={(event) => {
-				const nextItems = move(programs, event);
+				const nextItems = move(sortedPrograms, event);
 
-				if (sameOrder(programs, nextItems)) return;
+				if (sameOrder(sortedPrograms, nextItems)) return;
 
 				reorderItems(nextItems);
 			}}
 		>
 			<div className="flex flex-col gap-4">
-				{programs.map((program, index) => (
+				{sortedPrograms.map((program, index) => (
 					<ProgramRow key={program.id} program={program} index={index} />
 				))}
 			</div>

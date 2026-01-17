@@ -62,7 +62,7 @@ export async function getExercises(
 		},
 		...exerciseUIArgs,
 		orderBy: {
-			name: "asc",
+			name: "asc" as const,
 		},
 		skip: skip,
 		take: pageSize,

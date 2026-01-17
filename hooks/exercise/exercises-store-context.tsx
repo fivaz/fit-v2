@@ -6,7 +6,6 @@ import { ExerciseUI } from "@/lib/exercise/type";
 import { updateProgramExercises } from "@/lib/program/actions";
 
 export const [ExercisesProvider, useExercises] = createOptimisticManagerContext<ExerciseUI>({
-	sortFnc: (a, b) => a.name.localeCompare(b.name),
 	// ---- ADD ----
 	addConfig: {
 		function: saveExercise,

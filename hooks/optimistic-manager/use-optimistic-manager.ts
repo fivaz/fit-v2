@@ -12,7 +12,6 @@ import { logError } from "@/lib/logger";
 
 export function useOptimisticManager<T extends Identifiable>({
 	initialItems,
-	sortFnc,
 	addConfig,
 	updateConfig,
 	deleteConfig,
@@ -27,7 +26,7 @@ export function useOptimisticManager<T extends Identifiable>({
 		deleteItem: optimisticDeleteItem,
 		setItems: optimisticSetItems,
 		items,
-	} = useOptimisticList({ initialItems, sortFnc });
+	} = useOptimisticList({ initialItems });
 
 	const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const lastStableItemsRef = useRef<T[]>(items);

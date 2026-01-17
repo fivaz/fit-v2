@@ -10,7 +10,6 @@ type Action<T> =
 
 export type UseOptimisticListOptions<T> = {
 	initialItems: T[];
-	sortFnc?: (a: T, b: T) => number;
 };
 
 export type UseOptimisticListReturn<T> = {
@@ -24,7 +23,6 @@ export type UseOptimisticListReturn<T> = {
 
 export function useOptimisticList<T extends Identifiable>({
 	initialItems,
-	sortFnc,
 }: UseOptimisticListOptions<T>): UseOptimisticListReturn<T> {
 	const [optimisticItems, dispatch] = useOptimistic(
 		initialItems,
@@ -67,10 +65,8 @@ export function useOptimisticList<T extends Identifiable>({
 
 	const setItems = (items: T[]) => dispatch({ type: "set", items });
 
-	const sortedItems = sortFnc ? optimisticItems.toSorted(sortFnc) : optimisticItems;
-
 	return {
-		items: sortedItems,
+		items: optimisticItems,
 		firstItem: optimisticItems[0],
 		addItem,
 		updateItem,
