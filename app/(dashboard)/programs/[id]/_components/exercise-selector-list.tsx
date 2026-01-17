@@ -8,15 +8,22 @@ import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exerc
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { MuscleGroup, MuscleGroupType, SearchableMuscle } from "@/lib/muscle/type";
 
 interface ExerciseSelectorListProps {
 	exercises: ExerciseUI[];
+	muscles: MuscleGroupType[];
 	selected: ExerciseUI[];
 	onToggle: (exercise: ExerciseUI) => void;
 }
 
-export function ExerciseSelectorList({ exercises, selected, onToggle }: ExerciseSelectorListProps) {
-	const filterData = useExerciseFilters(exercises);
+export function ExerciseSelectorList({
+	exercises,
+	selected,
+	onToggle,
+	muscles,
+}: ExerciseSelectorListProps) {
+	const filterData = useExerciseFilters(muscles);
 	const { filteredExercises } = filterData;
 
 	if (exercises.length === 0) return <ExerciseEmptyState />;

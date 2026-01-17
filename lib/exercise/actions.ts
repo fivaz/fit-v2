@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
 import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
-import { Prisma } from "@/lib/generated/prisma/client";
+import { MuscleGroup, Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { devDelay } from "@/lib/utils";
@@ -13,13 +13,42 @@ import { getUserId } from "@/lib/utils-server";
 
 import "server-only";
 
+export async function getExercisesSearch({
+	search,
+	muscles,
+	page,
+	pageSize = 5,
+}: {
+	search?: string;
+	muscles?: MuscleGroup[];
+	page: number;
+	pageSize?: number;
+}) {
+	console.log("search", search);
+	console.log("muscles", muscles);
+	console.log("page", page);
+	console.log("pageSize", pageSize);
+	const filter: Prisma.ExerciseWhereInput = {
+		AND: [
+			search ? { name: { contains: search, mode: "insensitive" } } : {},
+			// Use hasSome to match any muscle in the array
+			muscles && muscles.length > 0
+				? {
+						muscles: { hasSome: muscles },
+					}
+				: {},
+		],
+	};
+	return getExercises(filter, page, pageSize);
+}
+
 /**
  * Fetches all exercises for the current user.
  */
 export async function getExercises(
 	filter?: Prisma.ExerciseWhereInput,
 	page: number = 1,
-	pageSize: number = 20,
+	pageSize: number = 5,
 ): Promise<ExerciseUI[]> {
 	await devDelay();
 

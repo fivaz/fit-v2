@@ -6,22 +6,23 @@ import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MuscleGroup } from "@/lib/generated/prisma/enums";
+import { MuscleGroupType, SearchableMuscle } from "@/lib/muscle/type";
 import { cn } from "@/lib/utils";
 
-// --- The Shared UI Part ---
-interface ExerciseFilterShellProps {
+export interface ExerciseFilterShellProps {
 	searchQuery: string;
 	setSearchQuery: (val: string) => void;
-	selectedMuscle: string;
-	setSelectedMuscle: (val: string) => void;
-	availableMuscles: string[];
+	selectedMuscles: SearchableMuscle[];
+	setSelectedMuscles: (val: SearchableMuscle[]) => void;
+	availableMuscles: MuscleGroupType[];
 }
 
 export function ExerciseFilterShell({
 	searchQuery,
 	setSearchQuery,
-	selectedMuscle,
-	setSelectedMuscle,
+	selectedMuscles,
+	setSelectedMuscles,
 	availableMuscles,
 }: ExerciseFilterShellProps) {
 	return (
@@ -46,11 +47,10 @@ export function ExerciseFilterShell({
 					<Button
 						key={muscle}
 						type="button"
-						variant={selectedMuscle === muscle ? "default" : "outline"}
-						onClick={() => setSelectedMuscle(muscle)}
+						variant={selectedMuscles.includes(muscle) ? "default" : "outline"}
 						className={cn(
 							"rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize",
-							selectedMuscle === muscle && "bg-orange-500 hover:bg-orange-600",
+							selectedMuscles.includes(muscle) && "bg-orange-500 hover:bg-orange-600",
 						)}
 					>
 						{muscle}

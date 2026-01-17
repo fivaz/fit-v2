@@ -1,39 +1,39 @@
 import { useMemo, useState } from "react";
 
+import useSWRInfinite from "swr/infinite";
+
+import { ExerciseFilterShellProps } from "@/components/exercise/exercise-filter-shell";
+import { getExercises, getExercisesSearch } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroup } from "@/lib/generated/prisma/enums";
+import { MuscleGroupType, SearchableMuscle } from "@/lib/muscle/type";
 
-export function useExerciseFilters(exercises: ExerciseUI[]) {
+type UseExerciseFiltersReturn = ExerciseFilterShellProps & {
+	filteredExercises: ExerciseUI[];
+};
+
+export function useExerciseFilters(muscles: SearchableMuscle[]): UseExerciseFiltersReturn {
 	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedMuscle, setSelectedMuscle] = useState("all");
+	const [selectedMuscles, setSelectedMuscles] = useState<SearchableMuscle[]>(muscles);
 
-	// Logic: Extract available muscles from current items
-	const availableMuscles = useMemo(() => {
-		const muscleSet = new Set<string>();
-		exercises.forEach((ex) => {
-			ex.muscles.forEach((m) => muscleSet.add(m));
-		});
-		return ["all", ...Array.from(muscleSet).sort()];
-	}, [exercises]);
+	const getKey = (pageIndex: number, previousPageData: ExerciseUI[]) => {
+		console.log("xx", searchQuery);
+		if (previousPageData && !previousPageData.length) return null; // reached the end
+		return { search: searchQuery, muscles: selectedMuscles, page: pageIndex + 1 };
+	};
 
-	// Logic: Filter based on search and muscle selection
-	const filteredExercises = useMemo(() => {
-		return exercises.filter((ex) => {
-			const matchesSearch = ex.name.toLowerCase().includes(searchQuery.toLowerCase());
+	const { data } = useSWRInfinite(getKey, getExercisesSearch);
 
-			const matchesMuscle =
-				selectedMuscle === "all" || ex.muscles.includes(selectedMuscle as MuscleGroup);
+	const filteredExercises: ExerciseUI[] = data ? data.flat() : [];
 
-			return matchesSearch && matchesMuscle;
-		});
-	}, [exercises, searchQuery, selectedMuscle]);
+	console.log(data);
 
 	return {
 		searchQuery,
 		setSearchQuery,
-		selectedMuscle,
-		setSelectedMuscle,
-		availableMuscles,
+		selectedMuscles,
+		setSelectedMuscles,
+		availableMuscles: muscles,
 		filteredExercises,
 	};
 }

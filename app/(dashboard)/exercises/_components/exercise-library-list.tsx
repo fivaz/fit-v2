@@ -9,6 +9,7 @@ import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { MuscleGroup } from "@/lib/muscle/type";
 
 type ExerciseLibraryListProps = {
 	initialExercises: ExerciseUI[];
@@ -31,7 +32,7 @@ export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListPro
 function LibraryInternal() {
 	const { items: exercises } = useExercises();
 
-	const filterData = useExerciseFilters(exercises);
+	const filterData = useExerciseFilters(Object.values(MuscleGroup));
 	const { filteredExercises } = filterData;
 
 	if (exercises.length === 0) return <ExerciseEmptyState />;

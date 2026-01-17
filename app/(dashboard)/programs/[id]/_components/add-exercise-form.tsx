@@ -70,6 +70,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 						) : (
 							<ExerciseSelectorList
 								exercises={allExercises || []}
+								muscles={program.muscles}
 								selected={selected}
 								onToggle={toggleExercise}
 							/>
