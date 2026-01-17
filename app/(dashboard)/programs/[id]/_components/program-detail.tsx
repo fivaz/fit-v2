@@ -3,10 +3,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
 import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
 import { StartWorkoutButton } from "@/app/(dashboard)/programs/[id]/_components/start-workout-button";
+import {
+	ProgramsProvider,
+	useProgramMutations,
+	useProgramsStore,
+} from "@/app/(dashboard)/programs/store";
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Button } from "@/components/ui/button";
@@ -18,9 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
-import { usePrograms } from "@/hooks/program/programs-store-context";
-import { ProgramsProvider } from "@/hooks/program/programs-store-context";
 import { ROUTES } from "@/lib/consts";
+import { deleteProgramAction } from "@/lib/program/actions";
 import { ProgramWithExercises } from "@/lib/program/type";
 
 type ProgramDetailProps = {
@@ -36,13 +41,15 @@ export function ProgramDetail({ program }: ProgramDetailProps) {
 }
 
 export function ProgramDetailInternal() {
-	const { firstItem, deleteItem } = usePrograms();
+	const { firstItem } = useProgramsStore();
+	const { deleteItem } = useProgramMutations();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
 	if (!firstItem) return null;
 	const program = firstItem as ProgramWithExercises;
+
 	const handleDelete = async () => {
 		const confirmed = await confirm({
 			title: "Delete Program",
@@ -51,8 +58,14 @@ export function ProgramDetailInternal() {
 
 		if (!confirmed) return;
 
-		deleteItem(program.id);
-		router.push(ROUTES.PROGRAMS);
+		deleteItem(program.id, {
+			persist: () => deleteProgramAction(program.id),
+			onSuccess: () => {
+				toast.success("Program deleted successfully.");
+				router.push(ROUTES.PROGRAMS);
+			},
+			onError: () => toast.error("Failed to delete program."),
+		});
 	};
 
 	return (

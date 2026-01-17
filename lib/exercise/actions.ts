@@ -1,6 +1,5 @@
 "use server";
 
-import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
