@@ -1,10 +1,9 @@
-import { startTransition, useState } from "react";
+import { useState } from "react";
 
 import useSWRInfinite from "swr/infinite";
 import { useDebounceValue } from "usehooks-ts";
 
 import { ExerciseFilterShellProps } from "@/components/exercise/exercise-filter-shell";
-import { useExercises } from "@/hooks/exercise/exercises-store-context";
 import { getExercisesSearch } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroupType } from "@/lib/muscle/type";

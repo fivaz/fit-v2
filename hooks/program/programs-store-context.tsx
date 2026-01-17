@@ -5,7 +5,7 @@ import { deleteProgram, reorderPrograms, saveProgram } from "@/lib/program/actio
 import { ProgramUI } from "@/lib/program/type";
 
 export const [ProgramsProvider, usePrograms] = createOptimisticManagerContext<ProgramUI>({
-	sortFnc: (items) => items.sort((a, b) => a.order - b.order),
+	sortFnc: (a, b) => a.order - b.order,
 	// ---- ADD ----
 	addConfig: {
 		function: saveProgram,

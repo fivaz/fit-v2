@@ -2,7 +2,11 @@ import { useRef, useTransition } from "react";
 
 import { toast } from "sonner";
 
-import { useOptimisticList } from "@/hooks/optimistic-manager/use-optmistic-list";
+import {
+	useOptimisticList,
+	UseOptimisticListOptions,
+	UseOptimisticListReturn,
+} from "@/hooks/optimistic-manager/use-optmistic-list";
 import { logError } from "@/lib/logger";
 
 export function useOptimisticManager<T extends Identifiable>({
@@ -189,6 +193,7 @@ export function useOptimisticManager<T extends Identifiable>({
 		deleteItem,
 		reorderItems,
 		syncItems,
+		setItems: optimisticSetItems,
 	};
 }
 
@@ -204,9 +209,7 @@ type OptimisticMutationParams = {
 	onError: (error: unknown) => void;
 };
 
-export type UseOptimisticManagerProps<T> = {
-	initialItems: T[];
-	sortFnc?: (items: T[]) => T[];
+export type UseOptimisticManagerProps<T> = UseOptimisticListOptions<T> & {
 	addConfig: {
 		function: (item: T) => Promise<void>;
 		onSuccessMessage: string;
@@ -235,13 +238,8 @@ export type UseOptimisticManagerProps<T> = {
 	};
 };
 
-export type UseOptimisticManagerReturn<T> = {
-	items: T[];
-	firstItem: T | undefined;
+export type UseOptimisticManagerReturn<T> = UseOptimisticListReturn<T> & {
 	isPending: boolean;
-	addItem: (item: T) => void;
-	updateItem: (item: T) => void;
-	deleteItem: (id: string) => void;
 	reorderItems: (items: T[], parentId?: string) => void;
 	syncItems: (items: T[], parentId: string) => void;
 };

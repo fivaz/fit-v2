@@ -9,7 +9,7 @@ import { ExerciseRow } from "@/app/(dashboard)/exercises/_components/exercise-ro
 import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
 import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exercise-filter-shell";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ExercisesProvider, useExercises } from "@/hooks/exercise/exercises-store-context";
+import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { ALL_MUSCLES } from "@/lib/muscle/type";
