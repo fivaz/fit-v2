@@ -3,14 +3,12 @@ import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 import * as z from "zod";
 
-import {
-	useProgramMutations,
-} from "@/app/(dashboard)/programs/store";
 import { SelectMuscles } from "@/components/select-muscles";
 import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useProgramMutations } from "@/hooks/program/store";
 import { saveProgramAction } from "@/lib/program/actions";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
 

@@ -8,11 +8,6 @@ import { toast } from "sonner";
 import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
 import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
 import { StartWorkoutButton } from "@/app/(dashboard)/programs/[id]/_components/start-workout-button";
-import {
-	ProgramsProvider,
-	useProgramMutations,
-	useProgramsStore,
-} from "@/app/(dashboard)/programs/store";
 import { MuscleBadges } from "@/components/muscle-badges";
 import { ProgramFormButton } from "@/components/program/program-form-button";
 import { Button } from "@/components/ui/button";
@@ -23,7 +18,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
-import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
+import { ExercisesProvider } from "@/hooks/exercise/store";
+import { ProgramsProvider, useProgramMutations, useProgramsStore } from "@/hooks/program/store";
 import { ROUTES } from "@/lib/consts";
 import { deleteProgramAction } from "@/lib/program/actions";
 import { ProgramWithExercises } from "@/lib/program/type";

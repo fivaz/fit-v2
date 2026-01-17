@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as React from "react";
 
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 import { ExerciseSelectorList } from "@/app/(dashboard)/programs/[id]/_components/exercise-selector-list";
@@ -15,9 +16,10 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
-import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { useExerciseMutations, useExercisesStore } from "@/hooks/exercise/store";
 import { getExercisesAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { updateProgramExercisesAction } from "@/lib/program/actions";
 import { ProgramWithExercises } from "@/lib/program/type";
 
 type AddExerciseFormProps = {
@@ -34,7 +36,9 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 	} = useSWR(["exercises", program.muscles], () =>
 		getExercisesAction({ muscles: { hasSome: program.muscles } }),
 	);
-	const { items: exercises, syncItems } = useExercises();
+
+	const { items: exercises } = useExercisesStore();
+	const { setItems } = useExerciseMutations();
 	const [selected, setSelected] = useState<ExerciseUI[]>(exercises);
 
 	const toggleExercise = (exercise: ExerciseUI) => {
@@ -45,7 +49,17 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 		);
 	};
 
-	const handleConfirm = () => syncItems(selected, program.id);
+	const handleConfirm = () => {
+		setItems(selected, {
+			persist: () =>
+				updateProgramExercisesAction(
+					selected.map((e) => e.id),
+					program.id,
+				),
+			onSuccess: () => toast.success("Exercises updated successfully."),
+			onError: () => toast.error("Failed to update exercises."),
+		});
+	};
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>

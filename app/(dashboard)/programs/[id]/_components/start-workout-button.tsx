@@ -4,6 +4,7 @@ import { LoaderCircleIcon, TimerIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { useExerciseMutations } from "@/hooks/exercise/store";
 import { handleStartWorkoutAction } from "@/lib/workout/actions";
 
 type StartWorkoutButtonProps = {
@@ -13,7 +14,7 @@ type StartWorkoutButtonProps = {
 
 export function StartWorkoutButton({ programId, isDisabled }: StartWorkoutButtonProps) {
 	const [isSubmitting, startTransition] = useTransition();
-	const { isPending } = useExercises();
+	const { isPending } = useExerciseMutations();
 
 	const handleStart = () => {
 		startTransition(async () => {
