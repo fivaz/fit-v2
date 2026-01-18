@@ -3,9 +3,9 @@ import { z } from "zod";
 import { MuscleGroup } from "@/lib/muscle/type";
 import { prisma } from "@/lib/prisma";
 
-const URL = "https://pub-d03421385ad444aeb7a94fae07e5d610.r2.dev";
+const URL = "https://pub-fedebec83d6a4a24a4b4a3f5e177ddfd.r2.dev";
 
-const SEED_URL = `${URL}/exercises/seed.json`;
+const SEED_URL = `${URL}/fit/exercises/seed.json`;
 
 const exerciseSchema = z.object({
 	id: z.string().min(1),
