@@ -25,6 +25,16 @@ type AddExerciseFormProps = {
 	onOpenChange: (open: boolean) => void;
 };
 
+/**
+ * Renders a drawer UI that lets the user select and add exercises to a program.
+ *
+ * Persists the selected exercise IDs to the provided program when the Confirm button is pressed and shows a success or error toast.
+ *
+ * @param program - The program (with its exercises and muscles) to which selected exercises will be added
+ * @param open - Whether the drawer is open
+ * @param onOpenChange - Callback invoked with the new open state when the drawer is opened or closed
+ * @returns A React element that displays the add-exercise drawer and selection UI
+ */
 export function AddExerciseForm({ program, open, onOpenChange }: AddExerciseFormProps) {
 	const { items: exercises } = useExercisesStore();
 	const { setItems, isPending } = useExerciseMutations();

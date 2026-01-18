@@ -12,6 +12,16 @@ import { getUserId } from "@/lib/utils-server";
 
 import "server-only";
 
+/**
+ * Finds exercises whose names contain every word from the provided search string (case-insensitive)
+ * and that match any of the specified muscle groups, returning results for the requested page.
+ *
+ * @param search - Optional space-separated search string; each word must be present in the exercise name
+ * @param muscles - Optional array of muscle groups; an exercise matches if it targets any of these groups
+ * @param page - 1-based page number to return
+ * @param pageSize - Number of results per page
+ * @returns The exercises for the requested page that match all search words in the name (case-insensitive) and any of the specified muscles
+ */
 export async function getExercisesSearchAction({
 	search,
 	muscles,

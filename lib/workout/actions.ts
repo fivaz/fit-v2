@@ -10,6 +10,13 @@ import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
 
+/**
+ * Replace all sets for a workout with the provided mapping of exercise sets and revalidate the workout page.
+ *
+ * @param workoutId - The workout ID whose sets will be replaced
+ * @param exerciseSetsMap - Map from `workoutExerciseId` to an array of client-provided sets (each set may include `id`, `reps`, `weight`, `time`, and `isWarmup`); array order determines set order
+ * @returns The same `exerciseSetsMap` that was supplied
+ */
 export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: WorkoutSetMap) {
 	// 1. Flatten the map into an array compatible with createMany
 	const allSets = Object.entries(exerciseSetsMap).flatMap(([workoutExerciseId, sets]) =>

@@ -15,6 +15,14 @@ type ProgramExerciseListProps = {
 	programId: string;
 };
 
+/**
+ * Renders a program's ordered list of exercises with drag-and-drop reordering and an empty state.
+ *
+ * Reordering updates local state and persists the new order to the backend; if persistence fails an error toast is shown.
+ *
+ * @param programId - Identifier of the program whose exercises are displayed
+ * @returns The React element containing the exercise list, drag-and-drop handlers, and empty-state UI
+ */
 export function ProgramExerciseList({ programId }: ProgramExerciseListProps) {
 	const { items } = useExercisesStore();
 	const { setItems } = useExerciseMutations();

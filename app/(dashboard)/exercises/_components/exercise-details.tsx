@@ -22,6 +22,14 @@ interface ExerciseDrawerProps {
 	setOpen?: (open: boolean) => void;
 }
 
+/**
+ * Render a drawer showing details for a given exercise.
+ *
+ * @param exercise - Exercise data displayed inside the drawer (name, imageUrl, muscles, instructions)
+ * @param open - Whether the drawer is visible
+ * @param setOpen - Optional state updater invoked when the drawer open state changes
+ * @returns The drawer element containing the exercise image (if available), muscle badges, step-by-step instructions (or a notice when absent), and a Close button
+ */
 export function ExerciseDetails({ exercise, setOpen, open }: ExerciseDrawerProps) {
 	const imageUrl = replaceDomain(exercise.imageUrl);
 	return (
