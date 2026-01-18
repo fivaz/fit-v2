@@ -2,6 +2,8 @@
 
 import React from "react";
 
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -13,7 +15,8 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useBodyMetrics } from "@/hooks/body-metrics/body-metrics-store-context";
+import { useBodyMetricsMutations } from "@/hooks/body-metrics/store";
+import { saveBodyMetricsAction } from "@/lib/body-metrics/actions";
 import { BodyMetricsUI, formToBodyMetric } from "@/lib/body-metrics/type";
 
 interface MetricsFormProps {
@@ -23,14 +26,18 @@ interface MetricsFormProps {
 }
 
 export function MetricsForm({ isOpen, onClose, bodyMetrics }: MetricsFormProps) {
-	const { addItem } = useBodyMetrics();
+	const { addItem } = useBodyMetricsMutations();
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 
 		const bodyMetricsData = formToBodyMetric(formData);
 
-		addItem(bodyMetricsData);
+		addItem(bodyMetricsData, {
+			persist: () => saveBodyMetricsAction(bodyMetricsData),
+			onSuccess: () => toast.success("Body metrics added successfully."),
+			onError: () => toast.error("Failed to add body metrics."),
+		});
 	};
 
 	return (

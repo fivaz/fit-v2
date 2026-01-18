@@ -11,10 +11,7 @@ import { MetricsForm } from "@/components/settings/metrics-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { UserForm } from "@/components/settings/user-form";
 import { Button } from "@/components/ui/button";
-import {
-	BodyMetricsProvider,
-	useBodyMetrics,
-} from "@/hooks/body-metrics/body-metrics-store-context";
+import { BodyMetricsProvider, useBodyMetricsStore } from "@/hooks/body-metrics/store";
 import { authClient } from "@/lib/auth-client";
 import { BodyMetricsUI } from "@/lib/body-metrics/type";
 import { ROUTES } from "@/lib/consts";
@@ -25,22 +22,23 @@ type SettingsDetailProps = {
 	bodyMetrics: BodyMetricsUI;
 };
 
-export function SettingsDetail({ bodyMetrics }: SettingsDetailProps) {
+export function SettingsDetails({ bodyMetrics }: SettingsDetailProps) {
 	return (
 		<BodyMetricsProvider initialItems={[bodyMetrics]}>
-			<SettingsDetailInternal />
+			<SettingsDetailsInternal />
 		</BodyMetricsProvider>
 	);
 }
 
-export function SettingsDetailInternal() {
+export function SettingsDetailsInternal() {
 	const [isPendingSignOut, setIsPendingSignOut] = useState(false);
 	const { data: session } = authClient.useSession();
 
 	const [isUserOpen, setIsUserOpen] = useState(false);
 	const [isMetricsOpen, setIsMetricsOpen] = useState(false);
 	const router = useRouter();
-	const { firstItem: bodyMetrics } = useBodyMetrics();
+	const { firstItem: bodyMetrics } = useBodyMetricsStore();
+
 	if (!bodyMetrics || !session) return null;
 
 	const handleSignOut = async () => {
@@ -48,8 +46,8 @@ export function SettingsDetailInternal() {
 		try {
 			await authClient.signOut();
 			router.push(ROUTES.LOGIN);
-		} catch (err) {
-			logError(err, { extra: { context: "handleSignOut failed" } });
+		} catch (error) {
+			logError(error, { extra: { context: "SettingsDetails#handleSignOut" } });
 			toast.error("Failed to sign out. Please try again.");
 		} finally {
 			setIsPendingSignOut(false);
