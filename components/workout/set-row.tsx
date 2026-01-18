@@ -30,18 +30,10 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const confirm = useConfirm();
 
-	const isFirstRender = useRef(true);
-	useEffect(() => {
-		isFirstRender.current = false;
-	}, []);
-
 	const [showIcon, setShowIcon] = useState(false);
 
 	// Trigger the icon show whenever isWarmup changes
 	useEffect(() => {
-		// We don't want this to run on the very first mount
-		if (isFirstRender.current) return;
-
 		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setShowIcon(true);
 		const timer = setTimeout(() => setShowIcon(false), 1000);
@@ -49,7 +41,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 		return () => clearTimeout(timer);
 	}, [set.isWarmup]);
 
-	async function handleRemoveSet(exerciseId: string, setId: string) {
+	async function handleRemoveSet() {
 		if (set.time || set.reps || set.weight) {
 			const confirmed = await confirm({
 				title: "Delete Set",
@@ -59,44 +51,26 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			if (!confirmed) return;
 		}
 
-		setExerciseSets((map) => {
-			const current = map[exerciseId] ?? [];
-			return { ...map, [exerciseId]: current.filter((set) => set.id !== setId) };
-		});
+		setExerciseSets((map) => ({
+			...map,
+			[exerciseId]: (map[exerciseId] ?? []).filter((s) => s.id !== set.id),
+		}));
 	}
 
-	function updateSet(
-		exerciseId: string,
-		setId: string,
-		field: keyof SetUI,
-		value: string | number,
-	) {
-		setExerciseSets((map) => {
-			const current = map[exerciseId] ?? [];
-			return {
-				...map,
-				[exerciseId]: current.map((set) => (set.id === setId ? { ...set, [field]: value } : set)),
-			};
-		});
-	}
-
-	const handleTimeInputChange = (exerciseId: string, setId: string, timeString: string) => {
-		if (!timeString) return;
-
-		const date = parse(timeString, "HH:mm", new Date());
-
-		updateSet(exerciseId, setId, "time", date.toISOString());
+	const patchSet = (field: keyof SetUI, value?: string | number) => {
+		setExerciseSets((map) => ({
+			...map,
+			[exerciseId]: (map[exerciseId] ?? []).map((s) =>
+				s.id === set.id ? { ...s, [field]: value ?? !s[field] } : s,
+			),
+		}));
 	};
 
-	function toggleWarmup() {
-		setExerciseSets((map) => {
-			const current = map[exerciseId] ?? [];
-			return {
-				...map,
-				[exerciseId]: current.map((s) => (s.id === set.id ? { ...s, isWarmup: !s.isWarmup } : s)),
-			};
-		});
-	}
+	const handleTimeInputChange = (timeString: string) => {
+		if (!timeString) return;
+		const date = parse(timeString, "HH:mm", new Date());
+		patchSet("time", date.toISOString());
+	};
 
 	return (
 		<motion.div
@@ -107,10 +81,10 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			layout
 			className="mb-2 grid grid-cols-[40px_1fr_1fr_1fr_40px] gap-2"
 		>
-			{/* Set Number */}
+			{/* Toggle Warmup */}
 			<button
 				type="button"
-				onClick={toggleWarmup}
+				onClick={() => patchSet("isWarmup")}
 				disabled={isPending}
 				className="flex cursor-pointer items-center justify-center transition-transform active:scale-95"
 			>
@@ -139,7 +113,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 				type="number"
 				inputMode="numeric"
 				value={set.reps || ""}
-				onChange={(e) => updateSet(exerciseId, set.id, "reps", Number(e.target.value))}
+				onChange={(e) => patchSet("reps", Number(e.target.value))}
 				className="h-10 border-gray-200 bg-gray-50 text-center dark:border-gray-600 dark:bg-gray-700"
 			/>
 
@@ -148,7 +122,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 				type="number"
 				inputMode="decimal"
 				value={set.weight || ""}
-				onChange={(e) => updateSet(exerciseId, set.id, "weight", parseFloat(e.target.value))}
+				onChange={(e) => patchSet("weight", parseFloat(e.target.value))}
 				className="h-10 border-gray-200 bg-gray-50 text-center dark:border-gray-600 dark:bg-gray-700"
 			/>
 
@@ -160,7 +134,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 					// date-fns format 'HH:mm' matches input type="time" requirement
 					defaultValue={set.time ? format(new Date(set.time), "HH:mm") : ""}
 					onBlur={() => setEditingTimeSetId(null)}
-					onChange={(e) => handleTimeInputChange(exerciseId, set.id, e.target.value)}
+					onChange={(e) => handleTimeInputChange(e.target.value)}
 					className="h-10 border-orange-500 bg-white p-0 text-center dark:bg-gray-800"
 				/>
 			) : (
@@ -177,7 +151,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 							clearTimeout(timerRef.current);
 							// If they released quickly and weren't editing, it's a normal tap
 							if (editingTimeSetId !== set.id) {
-								updateSet(exerciseId, set.id, "time", new Date().toISOString());
+								patchSet("time", new Date().toISOString());
 							}
 						}
 					}}
@@ -198,7 +172,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			{/* Delete Button */}
 			<button
 				disabled={isPending}
-				onClick={() => handleRemoveSet(exerciseId, set.id)}
+				onClick={handleRemoveSet}
 				className="flex items-center justify-center rounded-lg text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
 			>
 				<Trash2 className="h-4 w-4" />
