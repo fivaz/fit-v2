@@ -32,8 +32,10 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
 		if (!result.success) {
 			const { fieldErrors } = z.flattenError(result.error);
 			setErrors({ name: fieldErrors.name?.[0], muscles: fieldErrors.muscles?.[0] });
-			return;
+			return false;
 		}
+		setErrors({})
+		return true;
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -42,7 +44,7 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
 
 		const exerciseData = formToExercise(formData);
 
-		validateFields(exerciseData);
+		if(!validateFields(exerciseData)) return;
 
 		const optimisticExercise: ExerciseUI = {
 			...exerciseData,

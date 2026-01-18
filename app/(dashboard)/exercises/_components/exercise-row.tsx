@@ -30,7 +30,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 				</div>
 			</button>
 			{exercise.isPrivate ? (
-				<ExerciseFormButton exercise={exercise} open={showForm} onChangeOpen={setShowForm} />
+				<ExerciseFormButton exercise={exercise} open={showForm} onOpenChange={setShowForm} />
 			) : (
 				<ExerciseDetails exercise={exercise} open={showForm} setOpen={setShowForm} />
 			)}

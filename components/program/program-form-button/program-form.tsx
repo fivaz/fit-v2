@@ -34,7 +34,7 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 			setErrors({ name: fieldErrors.name?.[0], muscles: fieldErrors.muscles?.[0] });
 			return false;
 		}
-		setErrors({})
+		setErrors({});
 		return true;
 	};
 

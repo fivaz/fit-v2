@@ -35,9 +35,7 @@ export function replaceDomain(
 
 		return url.toString();
 	} catch (error) {
-		// Instead of throwing, you might want to return the originalUrl or null
-		// depending on how strictly you want your UI to fail.
-		throw new Error(`Invalid URL provided: ${originalUrl}`);
+		return null;
 	}
 }
 

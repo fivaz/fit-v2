@@ -23,14 +23,14 @@ import { buildEmptyExercise, ExerciseUI } from "@/lib/exercise/type";
 type ExerciseFormButtonProps = React.ComponentProps<typeof Button> & {
 	exercise?: ExerciseUI;
 	open?: boolean;
-	onChangeOpen?: (open: boolean) => void;
+	onOpenChange?: (open: boolean) => void;
 };
 
 export function ExerciseFormButton({
 	children,
 	exercise = buildEmptyExercise(),
 	open: externalOpen,
-	onChangeOpen: setExternalOpen,
+	onOpenChange: setExternalOpen,
 	...props
 }: ExerciseFormButtonProps) {
 	// Internal state management if external state isn't provided
