@@ -1,3 +1,9 @@
+## [1.15.1](https://github.com/fivaz/fit-v2/compare/v1.15.0...v1.15.1) (2026-01-18)
+
+### 🔨 Code Refactoring
+
+* refactor replaceDomain ([b8a9025](https://github.com/fivaz/fit-v2/commit/b8a902581bbdfbe8f003bcbfb97559a0786d655f))
+
 ## [1.15.0](https://github.com/fivaz/fit-v2/compare/v1.14.0...v1.15.0) (2026-01-18)
 
 ### ✨ Features
