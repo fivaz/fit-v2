@@ -53,7 +53,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			{/* Omit Trigger if controlled externally */}
-			<DrawerContent className="max-h-[90vh]">
+			<DrawerContent>
 				<div className="relative mx-auto flex h-full w-full max-w-md flex-col overflow-hidden">
 					<DrawerHeader>
 						<DrawerTitle>Add Exercises</DrawerTitle>
