@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { SetRow } from "@/components/workout/set-row";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { logError } from "@/lib/logger";
+import { replaceDomain } from "@/lib/utils";
 import {
 	finishWorkoutAction,
 	syncWorkoutSetsAction,
@@ -125,6 +126,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 			<div className="space-y-6 px-5 py-6">
 				{initialWorkout.exercises.map((exercise, index) => {
 					const sets = exerciseSets[exercise.id] || [];
+					const imageUrl = replaceDomain(exercise.exercise.imageUrl);
 
 					return (
 						<motion.div
@@ -137,7 +139,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 							{/* Exercise Banner */}
 							<div className="relative h-20 overflow-hidden">
 								<img
-									src={exercise.exercise.imageUrl || "/exercise.jpg"}
+									src={imageUrl || "/exercise.jpg"}
 									alt={exercise.exercise.name}
 									className="h-full w-full object-cover"
 								/>

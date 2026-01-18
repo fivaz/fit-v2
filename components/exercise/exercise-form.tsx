@@ -34,7 +34,7 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
 			setErrors({ name: fieldErrors.name?.[0], muscles: fieldErrors.muscles?.[0] });
 			return false;
 		}
-		setErrors({})
+		setErrors({});
 		return true;
 	};
 
@@ -44,7 +44,7 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
 
 		const exerciseData = formToExercise(formData);
 
-		if(!validateFields(exerciseData)) return;
+		if (!validateFields(exerciseData)) return;
 
 		const optimisticExercise: ExerciseUI = {
 			...exerciseData,

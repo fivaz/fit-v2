@@ -16,29 +16,15 @@ export function sameOrder<T extends { id: string }>(a: T[], b: T[]) {
 	return a.every((item, i) => item.id === b[i]?.id);
 }
 
-export function replaceDomain(
-	originalUrl: string | null,
-	newDomain = "pub-fedebec83d6a4a24a4b4a3f5e177ddfd.r2.dev",
-): string | null {
-	if (!originalUrl) return null;
+export function replaceDomain(url: string | null | undefined): string {
+	if (!url) return "";
 
-	try {
-		const url = new URL(originalUrl);
+	const oldDomain = "https://cdn.sfivaz.com";
+	const newDomain = "https://pub-fedebec83d6a4a24a4b4a3f5e177ddfd.r2.dev";
 
-		// 1. Clean the newDomain to ensure no protocol (https://) is attached
-		url.host = newDomain.replace(/^https?:\/\//, "");
-
-		// 2. Inject "/fit" at the start of the path if it's not already there
-		if (!url.pathname.startsWith("/fit/")) {
-			url.pathname = `/fit${url.pathname}`;
-		}
-
-		return url.toString();
-	} catch (error) {
-		return null;
+	if (url.startsWith(oldDomain)) {
+		return url.replace(oldDomain, newDomain);
 	}
-}
 
-// Test case:
-// Input:  "https://cdn.sfivaz.com/exercises/0001.gif"
-// Output: "https://pub-fedebec83d6a4a24a4b4a3f5e177ddfd.r2.dev/fit/exercises/0001.gif"
+	return url;
+}

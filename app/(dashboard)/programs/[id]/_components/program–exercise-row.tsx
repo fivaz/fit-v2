@@ -5,7 +5,7 @@ import { GripVertical } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { ExerciseUI } from "@/lib/exercise/type";
-import { cn } from "@/lib/utils";
+import { cn, replaceDomain } from "@/lib/utils";
 
 type ProgramExerciseRowProps = {
 	exercise: ExerciseUI;
@@ -17,6 +17,7 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 		id: exercise.id,
 		index,
 	});
+	const imageUrl = replaceDomain(exercise.imageUrl);
 
 	return (
 		<Card
@@ -40,7 +41,7 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 				<div className="flex min-w-0 flex-1 items-center gap-4 p-4">
 					<div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
 						<img
-							src={exercise.imageUrl || "/exercise.jpg"}
+							src={imageUrl || "/exercise.jpg"}
 							alt={exercise.name}
 							className="h-full w-full object-cover"
 						/>

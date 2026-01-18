@@ -13,6 +13,7 @@ export function ExerciseSelectorItem({
 	isSelected,
 	onToggle,
 }: ExerciseSelectorItemProps) {
+	const imageUrl = replaceDomain(exercise.imageUrl);
 	return (
 		<div
 			onClick={onToggle}
@@ -27,7 +28,7 @@ export function ExerciseSelectorItem({
 				{/* Thumbnail: Smaller and rounded */}
 				<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border">
 					<img
-						src={replaceDomain(exercise.imageUrl) || "/exercise.jpg"}
+						src={imageUrl || "/exercise.jpg"}
 						alt={exercise.name}
 						className="h-full w-full object-cover"
 					/>
