@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/fivaz/fit-v2/compare/v1.15.1...v1.15.2) (2026-01-18)
+
+### 🔨 Code Refactoring
+
+* allow sentry only in production ([469e089](https://github.com/fivaz/fit-v2/commit/469e08906ae00300df423b9fcd1b177a2a164874))
+* install sentry ([78c7919](https://github.com/fivaz/fit-v2/commit/78c7919fda224970e2173e1176e082368dd1c184))
+
 ## [1.15.1](https://github.com/fivaz/fit-v2/compare/v1.15.0...v1.15.1) (2026-01-18)
 
 ### 🔨 Code Refactoring
