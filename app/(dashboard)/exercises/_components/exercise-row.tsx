@@ -3,6 +3,8 @@ import { useState } from "react";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { ExerciseUI } from "@/lib/exercise/type";
 
+import { ExerciseDetails } from "./exercise-details";
+
 type ExerciseRowProps = {
 	exercise: ExerciseUI;
 };
@@ -23,10 +25,14 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 				/>
 				<div className="absolute inset-0 flex flex-col justify-end bg-linear-to-t from-black/90 to-black/20 p-4">
 					<h3 className="text-lg font-bold text-white capitalize">{exercise.name}</h3>
-					<p className="text-sm text-white">{exercise.muscles.join(", ")}</p>
+					<p className="text-sm text-white capitalize">{exercise.muscles.join(", ")}</p>
 				</div>
 			</button>
-			<ExerciseFormButton exercise={exercise} open={showForm} onOpenChange={setShowForm} />
+			{exercise.isPrivate ? (
+				<ExerciseFormButton exercise={exercise} open={showForm} setOpen={setShowForm} />
+			) : (
+				<ExerciseDetails exercise={exercise} open={showForm} setOpen={setShowForm} />
+			)}
 		</>
 	);
 }

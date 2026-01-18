@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ProgramDetail } from "@/app/(dashboard)/programs/[id]/_components/program-detail";
+import { ProgramDetails } from "@/app/(dashboard)/programs/[id]/_components/program-details";
 import { ProgramNotFound } from "@/app/(dashboard)/programs/[id]/_components/program-not-found";
 import { getProgramByIdAction } from "@/lib/program/actions";
 
@@ -17,5 +17,5 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 		return <ProgramNotFound />;
 	}
 
-	return <ProgramDetail program={program} />;
+	return <ProgramDetails program={program} />;
 }

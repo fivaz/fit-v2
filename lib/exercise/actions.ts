@@ -50,32 +50,26 @@ export async function getExercisesAction(
 
 	const userId = await getUserId();
 
-	// Calculate how many items to skip
+	// Calculate how many items to skip for pagination
 	const skip = (page - 1) * pageSize;
 
-	return prisma.exercise.findMany({
+	const exercises = await prisma.exercise.findMany({
 		where: {
-			OR: [{ userId: userId }, { userId: null }],
+			OR: [{ userId }, { userId: null }],
 			...filter,
 		},
 		...exerciseUIArgs,
 		orderBy: {
-			name: "asc" as const,
+			name: "asc",
 		},
-		skip: skip,
+		skip,
 		take: pageSize,
 	});
-}
 
-/**
- * Public fetcher for a single exercise.
- */
-export async function getExerciseByIdAction(id: string): Promise<ExerciseUI | null> {
-	const userId = await getUserId();
-	return prisma.exercise.findFirst({
-		where: { id, userId },
-		...exerciseUIArgs,
-	});
+	return exercises.map((exercise) => ({
+		...exercise,
+		isPrivate: exercise.userId !== null,
+	}));
 }
 
 /**

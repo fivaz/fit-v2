@@ -1,4 +1,4 @@
-import { exerciseUIArgs } from "@/lib/exercise/type";
+import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { MuscleGroup } from "@/lib/generated/prisma/client";
 
@@ -33,9 +33,7 @@ export const programWithExercisesArgs = {
 
 type ProgramWithExercisesRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
 
-export type OrderedExercise = ProgramWithExercisesRaw["exercises"][number]["exercise"] & {
-	order: number;
-};
+export type OrderedExercise = ExerciseUI & { order: number };
 
 export type ProgramWithExercises = Omit<ProgramWithExercisesRaw, "exercises"> & {
 	exercises: OrderedExercise[];

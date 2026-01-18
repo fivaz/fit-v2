@@ -47,7 +47,11 @@ export async function getProgramByIdAction(id: string): Promise<ProgramWithExerc
 	// Mapping the nested 'exercise' objects into a flat array
 	return {
 		...program,
-		exercises: program.exercises.map(({ exercise, order }) => ({ ...exercise, order })),
+		exercises: program.exercises.map(({ exercise, order }) => ({
+			...exercise,
+			order,
+			isPrivate: userId !== null,
+		})),
 	};
 }
 

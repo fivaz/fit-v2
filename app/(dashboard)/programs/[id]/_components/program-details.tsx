@@ -28,15 +28,15 @@ type ProgramDetailProps = {
 	program: ProgramWithExercises;
 };
 
-export function ProgramDetail({ program }: ProgramDetailProps) {
+export function ProgramDetails({ program }: ProgramDetailProps) {
 	return (
 		<ProgramsProvider initialItems={[program]}>
-			<ProgramDetailInternal />
+			<ProgramDetailsInternal />
 		</ProgramsProvider>
 	);
 }
 
-export function ProgramDetailInternal() {
+export function ProgramDetailsInternal() {
 	const { firstItem } = useProgramsStore();
 	const { deleteItem } = useProgramMutations();
 	const confirm = useConfirm();
