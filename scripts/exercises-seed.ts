@@ -1,9 +1,14 @@
+import { readFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
 import { MuscleGroup } from "@/lib/muscle/type";
 import { prisma } from "@/lib/prisma";
 
-const URL = "https://pub-fedebec83d6a4a24a4b4a3f5e177ddfd.r2.dev";
+import "dotenv/config";
+
+const URL = process.env.NEXT_PUBLIC_ASSET_URL;
 
 const SEED_URL = `${URL}/fit/exercises/seed.json`;
 
@@ -19,7 +24,7 @@ const exerciseSchema = z.object({
 	difficulty: z.string().optional().nullable(),
 	category: z.string().optional().nullable(),
 	// Updated to use the MuscleGroup enum
-	muscles: z.array(z.nativeEnum(MuscleGroup)),
+	muscles: z.array(z.enum(MuscleGroup)),
 	imageUrl: z.string().optional().nullable(),
 });
 
@@ -39,6 +44,29 @@ async function fetchExercises(): Promise<unknown> {
 	const data = await response.json();
 	console.log("📥 Data downloaded successfully.");
 	return data;
+}
+
+/**
+ * 1. Read JSON data from local seed.json
+ */
+async function readExercises(): Promise<unknown> {
+	try {
+		// FIX: Get the directory path safely
+		const currentFilePath = fileURLToPath(import.meta.url);
+		const currentDir = dirname(currentFilePath);
+		const filePath = join(currentDir, "seed.json");
+
+		console.log(`📂 Reading exercises from local file: ${filePath}...`);
+
+		const fileContent = await readFile(filePath, "utf-8");
+		const data = JSON.parse(fileContent);
+
+		console.log("📥 Local data loaded successfully.");
+		return data;
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error";
+		throw new Error(`Failed to read seed.json: ${message}`);
+	}
 }
 
 /**
@@ -77,7 +105,7 @@ async function bulkInsert(exercises: ExerciseInput[]) {
  */
 async function seedDatabase() {
 	try {
-		const rawData = await fetchExercises();
+		const rawData = await readExercises();
 		const validatedData = validateExercises(rawData);
 		await bulkInsert(validatedData);
 

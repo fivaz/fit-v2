@@ -72,6 +72,7 @@ export async function saveProgramAction({ id, name, muscles }: ProgramUI) {
 				muscles,
 			},
 			create: {
+				id,
 				name,
 				muscles,
 				userId,

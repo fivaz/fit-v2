@@ -23,6 +23,7 @@ interface ExerciseDrawerProps {
 }
 
 export function ExerciseDetails({ exercise, setOpen, open }: ExerciseDrawerProps) {
+	const imageUrl = replaceDomain(exercise.imageUrl);
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerContent>
@@ -46,13 +47,9 @@ export function ExerciseDetails({ exercise, setOpen, open }: ExerciseDrawerProps
 					<ScrollArea className="h-[60vh] px-4">
 						<div className="space-y-6 pb-6">
 							{/* Image Section */}
-							{replaceDomain(exercise.imageUrl) && (
-								<div className="bg-muted aspect-video w-full overflow-hidden rounded-lg border">
-									<img
-										src={replaceDomain(exercise.imageUrl) || "/exercise.jpg"}
-										alt={exercise.name}
-										className="h-full w-full object-cover"
-									/>
+							{imageUrl && (
+								<div className="bg-muted w-full overflow-hidden rounded-lg border">
+									<img src={imageUrl} alt={exercise.name} className="block h-auto w-full" />
 								</div>
 							)}
 

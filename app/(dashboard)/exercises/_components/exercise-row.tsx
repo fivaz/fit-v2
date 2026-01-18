@@ -12,6 +12,7 @@ type ExerciseRowProps = {
 
 export function ExerciseRow({ exercise }: ExerciseRowProps) {
 	const [showForm, setShowForm] = useState(false);
+	const imageUrl = replaceDomain(exercise.imageUrl);
 
 	return (
 		<>
@@ -20,7 +21,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 				className="group ring-chart-1 relative h-24 cursor-pointer overflow-hidden rounded-2xl text-left hover:ring-2 focus:ring-2 focus:outline-none"
 			>
 				<img
-					src={replaceDomain(exercise.imageUrl) || "/exercise.jpg"}
+					src={imageUrl || "/exercise.jpg"}
 					alt={exercise.name}
 					className="h-full w-full object-cover transition-transform group-hover:scale-105"
 				/>
