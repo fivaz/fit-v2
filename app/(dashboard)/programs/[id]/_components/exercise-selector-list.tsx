@@ -59,7 +59,7 @@ export function ExerciseSelectorList({ selected, onToggle, muscles }: ExerciseSe
 					{isLoading && (
 						<p className="text-muted-foreground animate-pulse text-sm">Loading more exercises...</p>
 					)}
-					{sortedExercises.length > 0 && (
+					{!isLoading && !hasNextPage && sortedExercises.length > 0 && (
 						<p className="text-muted-foreground text-sm italic">End of list.</p>
 					)}
 				</div>

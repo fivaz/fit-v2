@@ -5,10 +5,9 @@ import { useEffect } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
 import { ExerciseRow } from "@/app/(dashboard)/exercises/_components/exercise-row";
-import { ExerciseEmptyState } from "@/components/exercise/exercise-empty-state";
 import { ExerciseFilterShell, NoResultsFound } from "@/components/exercise/exercise-filter-shell";
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ExercisesProvider, useExercisesStore } from "@/hooks/exercise/store";
+import { ExercisesProvider } from "@/hooks/exercise/store";
 import { useExerciseFilters } from "@/hooks/exercise/use-exercise-filters";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { ALL_MUSCLES } from "@/lib/muscle/type";
@@ -61,7 +60,7 @@ function LibraryInternal() {
 				{isLoading && (
 					<p className="text-muted-foreground animate-pulse text-sm">Loading more exercises...</p>
 				)}
-				{sortedExercises.length > 0 && (
+				{!isLoading && !hasNextPage && sortedExercises.length > 0 && (
 					<p className="text-muted-foreground text-sm italic">End of list.</p>
 				)}
 			</div>

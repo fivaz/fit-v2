@@ -36,6 +36,7 @@ export async function getProgramsAction(): Promise<ProgramUI[]> {
  * Public fetcher for a single program.
  */
 export async function getProgramByIdAction(id: string): Promise<ProgramWithExercises | null> {
+	await devDelay();
 	const userId = await getUserId();
 	const program = await prisma.program.findFirst({
 		where: { id, userId },
@@ -50,7 +51,7 @@ export async function getProgramByIdAction(id: string): Promise<ProgramWithExerc
 		exercises: program.exercises.map(({ exercise, order }) => ({
 			...exercise,
 			order,
-			isPrivate: userId !== null,
+			isPrivate: exercise.userId !== null,
 		})),
 	};
 }
