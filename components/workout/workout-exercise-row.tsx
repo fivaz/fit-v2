@@ -55,7 +55,7 @@ export function ExerciseCard({
 
 			<div className="p-4">
 				{/* Header Row */}
-				<div className="mb-2 grid grid-cols-[40px_1fr_1fr_1fr_40px] gap-2 px-2">
+				<div className="mb-2 grid grid-cols-[40px_1fr_1fr_1fr_40px] gap-2">
 					{["SET", "REPS", "WEIGHT", "TIME"].map((label) => (
 						<div
 							key={label}
@@ -69,10 +69,11 @@ export function ExerciseCard({
 
 				{/* Sets */}
 				<AnimatePresence mode="popLayout">
-					{sets.map((set) => (
+					{sets.map((set, index) => (
 						<SetRow
 							key={set.id}
 							set={set}
+							index={index}
 							setExerciseSets={setExerciseSets}
 							exerciseId={exercise.id}
 							isPending={isPending}

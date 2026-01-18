@@ -13,10 +13,11 @@ type SetRowProps = {
 	exerciseId: string;
 	set: SetUI;
 	isPending: boolean;
+	index: number;
 	setExerciseSets: Dispatch<SetStateAction<WorkoutSetMap>>;
 };
 
-export function SetRow({ isPending, setExerciseSets, exerciseId, set }: SetRowProps) {
+export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: SetRowProps) {
 	const [editingTimeSetId, setEditingTimeSetId] = useState<string | null>(null);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const confirm = useConfirm();
@@ -60,6 +61,16 @@ export function SetRow({ isPending, setExerciseSets, exerciseId, set }: SetRowPr
 		updateSet(exerciseId, setId, "time", date.toISOString());
 	};
 
+	function toggleWarmup() {
+		setExerciseSets((map) => {
+			const current = map[exerciseId] ?? [];
+			return {
+				...map,
+				[exerciseId]: current.map((s) => (s.id === set.id ? { ...s, isWarmup: !s.isWarmup } : s)),
+			};
+		});
+	}
+
 	return (
 		<motion.div
 			key={set.id}
@@ -70,11 +81,23 @@ export function SetRow({ isPending, setExerciseSets, exerciseId, set }: SetRowPr
 			className="mb-2 grid grid-cols-[40px_1fr_1fr_1fr_40px] gap-2"
 		>
 			{/* Set Number */}
-			<div className="flex items-center justify-center">
-				<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-sm font-semibold text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
-					{+1}
+			<button
+				type="button"
+				onClick={toggleWarmup}
+				disabled={isPending}
+				className="flex cursor-pointer items-center justify-center transition-transform active:scale-95"
+			>
+				<div
+					className={cn(
+						"flex h-8 w-8 items-center justify-center rounded-lg text-sm font-semibold transition-colors",
+						set.isWarmup
+							? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" // Warmup (Blue)
+							: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400", // Normal (Orange)
+					)}
+				>
+					{index + 1}
 				</div>
-			</div>
+			</button>
 
 			{/* Reps Input */}
 			<Input
