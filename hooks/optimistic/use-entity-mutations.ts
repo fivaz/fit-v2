@@ -29,7 +29,7 @@ export function createEntityMutations<T extends Identifiable>(
 		}, [store.items]);
 
 		async function runMutation(optimisticUpdate: () => void, config?: PersistConfig<T>) {
-			const snapshot = latestItemsRef.current.map((p) => ({ ...p }));
+			const snapshot = structuredClone(latestItemsRef.current);
 
 			// Optimistic update
 			startTransition(() => optimisticUpdate());
@@ -45,7 +45,7 @@ export function createEntityMutations<T extends Identifiable>(
 				config.onSuccess?.(latestItemsRef.current);
 			} catch (error) {
 				// rollback
-				startTransition(() => store.setItems(snapshot.map((p) => ({ ...p }))));
+				startTransition(() => store.setItems(snapshot));
 				config.onError?.(error, snapshot);
 			} finally {
 				pendingCountRef.current -= 1;

@@ -7,7 +7,6 @@ export const exerciseUIArgs = {
 		name: true,
 		muscles: true,
 		imageUrl: true,
-		localPath: true,
 		userId: true,
 		instructions: true,
 	},
@@ -23,8 +22,7 @@ export function buildEmptyExercise(): ExerciseUI {
 		name: "",
 		muscles: [],
 		imageUrl: null,
-		localPath: null,
-		isPrivate: false,
+		isPrivate: true,
 		instructions: [],
 	};
 }
@@ -36,8 +34,7 @@ export function formToExercise(formData: FormData): ExerciseUI {
 		muscles: formData.getAll("muscles") as MuscleGroup[],
 		//TODO handle image upload
 		imageUrl: null,
-		localPath: null,
-		isPrivate: false,
+		isPrivate: true,
 		instructions: [],
 	};
 }

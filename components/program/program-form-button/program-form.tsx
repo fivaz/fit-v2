@@ -32,8 +32,10 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 		if (!result.success) {
 			const { fieldErrors } = z.flattenError(result.error);
 			setErrors({ name: fieldErrors.name?.[0], muscles: fieldErrors.muscles?.[0] });
-			return;
+			return false;
 		}
+		setErrors({});
+		return true;
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -42,7 +44,7 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 
 		const programData = formToProgram(formData);
 
-		validateFields(programData);
+		if (!validateFields(programData)) return;
 
 		const newProgram: ProgramUI = { ...programData, id: programData.id || crypto.randomUUID() };
 

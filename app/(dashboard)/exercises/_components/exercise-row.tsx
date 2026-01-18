@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { replaceDomain } from "@/lib/utils";
 
 import { ExerciseDetails } from "./exercise-details";
 
@@ -19,7 +20,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 				className="group ring-chart-1 relative h-24 cursor-pointer overflow-hidden rounded-2xl text-left hover:ring-2 focus:ring-2 focus:outline-none"
 			>
 				<img
-					src={exercise.imageUrl || exercise.localPath || "/exercise.jpg"}
+					src={replaceDomain(exercise.imageUrl) || "/exercise.jpg"}
 					alt={exercise.name}
 					className="h-full w-full object-cover transition-transform group-hover:scale-105"
 				/>
@@ -29,7 +30,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 				</div>
 			</button>
 			{exercise.isPrivate ? (
-				<ExerciseFormButton exercise={exercise} open={showForm} setOpen={setShowForm} />
+				<ExerciseFormButton exercise={exercise} open={showForm} onOpenChange={setShowForm} />
 			) : (
 				<ExerciseDetails exercise={exercise} open={showForm} setOpen={setShowForm} />
 			)}

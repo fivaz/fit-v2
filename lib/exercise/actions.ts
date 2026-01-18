@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { ROUTES } from "@/lib/consts";
+import { PAGE_SIZE, ROUTES } from "@/lib/consts";
 import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
 import { MuscleGroup, Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
@@ -16,7 +16,7 @@ export async function getExercisesSearchAction({
 	search,
 	muscles,
 	page = 1,
-	pageSize = 20,
+	pageSize = PAGE_SIZE,
 }: {
 	search?: string;
 	muscles?: MuscleGroup[];
@@ -27,11 +27,9 @@ export async function getExercisesSearchAction({
 		AND: [
 			search ? { name: { contains: search, mode: "insensitive" } } : {},
 			// Use hasSome to match any muscle in the array
-			muscles && muscles.length > 0
-				? {
-						muscles: { hasSome: muscles },
-					}
-				: {},
+			{
+				muscles: { hasSome: muscles },
+			},
 		],
 	};
 
@@ -44,7 +42,7 @@ export async function getExercisesSearchAction({
 export async function getExercisesAction(
 	filter?: Prisma.ExerciseWhereInput,
 	page: number = 1,
-	pageSize: number = 20,
+	pageSize: number = PAGE_SIZE,
 ): Promise<ExerciseUI[]> {
 	await devDelay();
 

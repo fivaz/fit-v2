@@ -41,9 +41,9 @@ export function ProgramsListInternal() {
 	if (sortedPrograms.length === 0) return <ProgramEmptyState />;
 
 	function handleReorder(event: Parameters<typeof move>[1]) {
-		const reordered = move(programs, event);
+		const reordered = move(sortedPrograms, event);
 
-		if (sameOrder(programs, reordered)) return;
+		if (sameOrder(sortedPrograms, reordered)) return;
 
 		// TODO check later why this doesn't rollback
 		setItems(reordered, {

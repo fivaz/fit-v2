@@ -36,19 +36,21 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 				</div>
 
 				{/* Content */}
-				<div className="flex flex-1 items-center gap-4 p-4">
+				{/* Added 'min-w-0' here so the flex child can shrink smaller than its content, it's necessary for the truncate */}
+				<div className="flex min-w-0 flex-1 items-center gap-4 p-4">
 					<div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
 						<img
-							src={exercise.imageUrl || exercise.localPath || "/exercise.jpg"}
+							src={exercise.imageUrl || "/exercise.jpg"}
 							alt={exercise.name}
 							className="h-full w-full object-cover"
 						/>
 					</div>
+
 					<div className="min-w-0 flex-1">
-						<h3 className="truncate font-semibold text-gray-900 dark:text-white">
+						<h3 className="block truncate font-semibold text-gray-900 capitalize dark:text-white">
 							{exercise.name}
 						</h3>
-						<p className="mt-0.5 truncate text-sm text-gray-500 capitalize dark:text-gray-400">
+						<p className="mt-0.5 block truncate text-sm text-gray-500 capitalize dark:text-gray-400">
 							{exercise.muscles.join(", ")}
 						</p>
 					</div>

@@ -21,11 +21,11 @@ import { ProgramWithExercises } from "@/lib/program/type";
 
 type AddExerciseFormProps = {
 	program: ProgramWithExercises;
-	open?: boolean;
-	setOpen?: (open: boolean) => void;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
 };
 
-export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps) {
+export function AddExerciseForm({ program, open, onOpenChange }: AddExerciseFormProps) {
 	const { items: exercises } = useExercisesStore();
 	const { setItems, isPending } = useExerciseMutations();
 	const [selected, setSelected] = useState<ExerciseUI[]>(exercises);
@@ -51,7 +51,7 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 	};
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
+		<Drawer autoFocus={true} open={open} onOpenChange={onOpenChange}>
 			{/* Omit Trigger if controlled externally */}
 			<DrawerContent>
 				<div className="relative mx-auto flex h-full w-full max-w-md flex-col overflow-hidden">
