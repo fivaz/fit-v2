@@ -1,3 +1,43 @@
+## [1.14.0](https://github.com/fivaz/fit-v2/compare/v1.13.1...v1.14.0) (2026-01-18)
+
+### ✨ Features
+
+* add a page to show public exercises details ([2ae367f](https://github.com/fivaz/fit-v2/commit/2ae367f3444e4454fcf631c6a3c6a600cf315aa1))
+* add all muscles button to filter in all cases ([3461e56](https://github.com/fivaz/fit-v2/commit/3461e5606bfa63d690543c2b9aab2b11f1d36c45))
+* add button all muscle groups to filter ([bad2545](https://github.com/fivaz/fit-v2/commit/bad2545452356aa1d52fc2d015e1d50ca3518a3b))
+* add infinite list in exercises page ([33f3719](https://github.com/fivaz/fit-v2/commit/33f37198fb3852d3cf6cf36507ee8db71c618b72))
+* fetch exercises that don't have a userId too in exercises page ([392c89d](https://github.com/fivaz/fit-v2/commit/392c89d51dcc560fa113b8b00eb1adacc24c2873))
+* implement fetch while searching exercises by name ([d6d0d33](https://github.com/fivaz/fit-v2/commit/d6d0d334564f5c474b0b59b08c0001b268995937))
+* integrate filter component with optimistic list ([1f23d7a](https://github.com/fivaz/fit-v2/commit/1f23d7a6237073276c84490473b342f6a211e3ff))
+* search indefinitely exercises in add exercise form ([b2468e0](https://github.com/fivaz/fit-v2/commit/b2468e0ab660533bf2e7ee15bef5e32f44de9e5b))
+* show instructions in exercise details ([ec6fcfd](https://github.com/fivaz/fit-v2/commit/ec6fcfd9632c7efc4dc89f79d1050531ed864f1e))
+* update design of exercise row ([c0f559a](https://github.com/fivaz/fit-v2/commit/c0f559a513d3c02ba5cbc86abf4b832acbe23773))
+
+### 🐛 Bug Fixes
+
+* sort not working in the first render ([0d5131d](https://github.com/fivaz/fit-v2/commit/0d5131df8e919706c77c2cf8d9e8118989efec50))
+
+### 🧹 Chores
+
+* add more fields to exercise table and seed ([a4e8546](https://github.com/fivaz/fit-v2/commit/a4e8546474badb263678db1d08df1053c7cd5549))
+* add pagination to getExercises ([1aca367](https://github.com/fivaz/fit-v2/commit/1aca367d9cb097beca1ab9b1245027cdcfc7abf5))
+* add unstable state tracking in use-store ([a39811b](https://github.com/fivaz/fit-v2/commit/a39811b4b5c57c7a7c79a43e545f22a511cd5a4f))
+* allow exercises not to have a user ([d8b0751](https://github.com/fivaz/fit-v2/commit/d8b0751ad1fba55d757f447586ae3f60aefe9fd5))
+* use localPath as fallback of imageUrl of exercises ([37ffd0c](https://github.com/fivaz/fit-v2/commit/37ffd0cd996f8436253be5a1814232c35e7e6eb0))
+
+### 💄 Styles
+
+* end each server action function with Action ([3a9270e](https://github.com/fivaz/fit-v2/commit/3a9270e10d66412b64b06107070e920097f4be82))
+* rename optimistic store to optimistic manager ([1d9157d](https://github.com/fivaz/fit-v2/commit/1d9157dbc24a9ebe876e83af9b97cd5f70669e5f))
+
+### 🔨 Code Refactoring
+
+* remove generic extend from optimistic context ([fceebe9](https://github.com/fivaz/fit-v2/commit/fceebe9935a08b48648587974414fa8e6d5faf96))
+* remove list ordering from use-optimistic-manager and let the view take care of it ([084a096](https://github.com/fivaz/fit-v2/commit/084a09621e8ddcdf07a8ef344c68f32bba150d87))
+* replace legacy optimist mutation hook for all entities ([8124579](https://github.com/fivaz/fit-v2/commit/8124579d2707dbb7750e64b6a3408866c2910192))
+* split program optimistic hook into 2 hooks ([8ad9cc0](https://github.com/fivaz/fit-v2/commit/8ad9cc06fc31214b0798df5eb236031ecc8a8755))
+* use new optimistic hook in exercises ([63f765a](https://github.com/fivaz/fit-v2/commit/63f765ad2460b43e9abfc262eb1742c4cb65cdc4))
+
 ## [1.13.1](https://github.com/fivaz/fit-v2/compare/v1.13.0...v1.13.1) (2026-01-16)
 
 ### 👷 Build System
