@@ -1,3 +1,21 @@
+## [1.16.0](https://github.com/fivaz/fit-v2/compare/v1.15.2...v1.16.0) (2026-01-18)
+
+### ✨ Features
+
+* make program exercise row also clickable ([dc89148](https://github.com/fivaz/fit-v2/commit/dc89148da093ddac0168317cb12e8c3025ca4cfd))
+* make replaceDomain conditional on feature flags ([69b33ee](https://github.com/fivaz/fit-v2/commit/69b33eec1bea574dfeb71ce7fda4d97864b74d50))
+* search for exercises with individual words ([b7a6132](https://github.com/fivaz/fit-v2/commit/b7a6132a586c61583affc2a65f745440bebd3049))
+
+### 🐛 Bug Fixes
+
+* change environment variable that checks for production for sentry ([d341ef6](https://github.com/fivaz/fit-v2/commit/d341ef6933e133dd557cc309d1ed659a37bb6acd))
+* prevent keyboard from making the drawer slide up ([ebbae95](https://github.com/fivaz/fit-v2/commit/ebbae95a5a8c88b84c4ce3a04a456511c5b956ee))
+* time wasn't being synced in workout ([92eb7fe](https://github.com/fivaz/fit-v2/commit/92eb7fe261ccca0cb5131038c401b4141de0b84c))
+
+### 🔨 Code Refactoring
+
+* lint files ([2bde84c](https://github.com/fivaz/fit-v2/commit/2bde84c365c8a9a65ec3374145398e955a9a5abb))
+
 ## [1.15.2](https://github.com/fivaz/fit-v2/compare/v1.15.1...v1.15.2) (2026-01-18)
 
 ### 🔨 Code Refactoring
