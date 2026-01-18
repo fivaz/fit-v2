@@ -60,7 +60,6 @@ export async function getWorkoutByIdAction(id: string) {
 	workout.exercises.forEach((workoutExercise) => {
 		exerciseSets[workoutExercise.id] = workoutExercise.sets.map((set) => ({
 			...set,
-			time: set.time ? set.time.toISOString() : null,
 		}));
 	});
 	return {

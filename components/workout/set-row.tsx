@@ -130,26 +130,31 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			{editingTimeSetId === set.id ? (
 				<Input
 					type="time"
-					autoFocus
+					ref={(input) => {
+						// Manually focus without selecting text when component mounts
+						if (input && document.activeElement !== input) {
+							input.focus();
+						}
+					}}
 					// date-fns format 'HH:mm' matches input type="time" requirement
 					defaultValue={set.time ? format(new Date(set.time), "HH:mm") : ""}
 					onBlur={() => setEditingTimeSetId(null)}
 					onChange={(e) => handleTimeInputChange(e.target.value)}
+					// This allows the user to tap again to open the native picker
+					onClick={(e) => e.currentTarget.showPicker?.()}
 					className="h-10 border-orange-500 bg-white p-0 text-center dark:bg-gray-800"
 				/>
 			) : (
 				<motion.button
 					type="button"
-					// Handle Long Press via Pointer Events
 					onPointerDown={() => {
 						timerRef.current = setTimeout(() => {
 							setEditingTimeSetId(set.id);
-						}, 500); // 500ms for long press
+						}, 500);
 					}}
 					onPointerUp={() => {
 						if (timerRef.current) {
 							clearTimeout(timerRef.current);
-							// If they released quickly and weren't editing, it's a normal tap
 							if (editingTimeSetId !== set.id) {
 								patchSet("time", new Date().toISOString());
 							}
