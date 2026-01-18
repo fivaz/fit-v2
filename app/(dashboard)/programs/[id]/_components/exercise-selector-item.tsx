@@ -1,6 +1,6 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { ExerciseUI } from "@/lib/exercise/type";
-import { cn } from "@/lib/utils";
+import { cn, replaceDomain } from "@/lib/utils";
 
 type ExerciseSelectorItemProps = {
 	exercise: ExerciseUI;
@@ -27,7 +27,7 @@ export function ExerciseSelectorItem({
 				{/* Thumbnail: Smaller and rounded */}
 				<div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border">
 					<img
-						src={exercise.imageUrl || exercise.localPath || "/exercise.jpg"}
+						src={replaceDomain(exercise.imageUrl) || "/exercise.jpg"}
 						alt={exercise.name}
 						className="h-full w-full object-cover"
 					/>
