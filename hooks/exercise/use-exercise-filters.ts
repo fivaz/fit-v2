@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, startTransition, useEffect, useState } from "react";
+import { useState } from "react";
 
 import useSWRInfinite from "swr/infinite";
 import { useDebounceValue } from "usehooks-ts";
@@ -8,16 +8,14 @@ import { getExercisesSearchAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroupType } from "@/lib/muscle/type";
 
-import { useExerciseMutations, useExercisesStore } from "./store";
-
 type UseExerciseFiltersReturn = ExerciseFilterShellProps & {
 	isLoading: boolean;
 	fetchNextPage: () => void;
 	hasNextPage: boolean;
+	filteredExercises: ExerciseUI[];
 };
 
 export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFiltersReturn {
-	const { setItems } = useExercisesStore();
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [selectedMuscles, setSelectedMuscles] = useState<MuscleGroupType[]>(muscles);
 
@@ -40,17 +38,8 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 		getExercisesSearchAction,
 	);
 
-	// Whenever SWR fetches, update the store
-	useEffect(() => {
-		if (data) {
-			const flat = data.flat();
-			// merge into store without overwriting local changes
-			startTransition(() => setItems(flat));
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data]);
-
 	return {
+		filteredExercises: data ? data.flat() : [],
 		isLoading: isLoading || (isValidating && data && data.length === size) || false,
 		fetchNextPage: () => setSize(size + 1),
 		hasNextPage: data ? data[data.length - 1].length === PAGE_SIZE : true,

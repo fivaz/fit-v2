@@ -33,8 +33,7 @@ export function ExerciseLibraryList({ initialExercises }: ExerciseLibraryListPro
 
 function LibraryInternal() {
 	const filterData = useExerciseFilters(ALL_MUSCLES);
-	const { isLoading, hasNextPage, fetchNextPage } = filterData;
-	const { items: filteredExercises } = useExercisesStore();
+	const { isLoading, hasNextPage, fetchNextPage, filteredExercises } = filterData;
 
 	const { isIntersecting, ref: bottomRef } = useIntersectionObserver({ threshold: 0.1 });
 
@@ -44,8 +43,6 @@ function LibraryInternal() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isIntersecting, hasNextPage, isLoading]);
-
-	if (!isLoading && filteredExercises.length === 0) return <ExerciseEmptyState />;
 
 	const sortedExercises = filteredExercises.toSorted((a, b) => a.name.localeCompare(b.name));
 

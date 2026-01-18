@@ -37,7 +37,7 @@ export function ExerciseSelectorItem({
 				<div className="flex flex-col">
 					<h3
 						className={cn(
-							"mb-1 text-sm leading-none font-semibold",
+							"mb-1 text-sm leading-none font-semibold capitalize",
 							isSelected ? "text-orange-900" : "text-foreground",
 						)}
 					>

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import * as React from "react";
 
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import useSWR from "swr";
 
 import { ExerciseSelectorList } from "@/app/(dashboard)/programs/[id]/_components/exercise-selector-list";
 import { Button } from "@/components/ui/button";
@@ -17,7 +15,6 @@ import {
 	DrawerTitle,
 } from "@/components/ui/drawer";
 import { useExerciseMutations, useExercisesStore } from "@/hooks/exercise/store";
-import { getExercisesAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { updateProgramExercisesAction } from "@/lib/program/actions";
 import { ProgramWithExercises } from "@/lib/program/type";
@@ -29,16 +26,8 @@ type AddExerciseFormProps = {
 };
 
 export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps) {
-	const {
-		data: allExercises,
-		isLoading,
-		error,
-	} = useSWR(["exercises", program.muscles], () =>
-		getExercisesAction({ muscles: { hasSome: program.muscles } }),
-	);
-
 	const { items: exercises } = useExercisesStore();
-	const { setItems } = useExerciseMutations();
+	const { setItems, isPending } = useExerciseMutations();
 	const [selected, setSelected] = useState<ExerciseUI[]>(exercises);
 
 	const toggleExercise = (exercise: ExerciseUI) => {
@@ -73,28 +62,18 @@ export function AddExerciseForm({ program, open, setOpen }: AddExerciseFormProps
 						</DrawerDescription>
 					</DrawerHeader>
 
-					<div className="flex-1 overflow-y-auto px-4 pb-20">
-						{/* Bottom padding so items aren't hidden by footer */}
-						{isLoading ? (
-							<div className="flex h-40 items-center justify-center">
-								<Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
-							</div>
-						) : error ? (
-							<div className="text-destructive p-4 text-center">Failed to load exercises.</div>
-						) : (
-							<ExerciseSelectorList
-								exercises={allExercises || []}
-								muscles={program.muscles}
-								selected={selected}
-								onToggle={toggleExercise}
-							/>
-						)}
+					<div className="flex-1 overflow-y-auto px-4 pb-4">
+						<ExerciseSelectorList
+							muscles={program.muscles}
+							selected={selected}
+							onToggle={toggleExercise}
+						/>
 					</div>
 
 					{/* Fixed Footer */}
 					<DrawerFooter className="bg-background border-t pt-4">
 						<DrawerClose asChild>
-							<Button type="submit" disabled={isLoading || !!error} onClick={handleConfirm}>
+							<Button type="submit" disabled={isPending} onClick={handleConfirm}>
 								Confirm ({selected.length}) exercises
 							</Button>
 						</DrawerClose>
