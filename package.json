@@ -12,7 +12,7 @@
 		"tsc": "tsc --noEmit --watch",
 		"db:setup": "pnpm prisma migrate reset --force && pnpm prisma db seed && pnpm run exercises-seed && prisma migrate dev",
 		"db:reset": "pnpm prisma migrate reset --force && pnpm prisma db seed && pnpm run exercises-seed",
-		"db:seed": "prisma db seed",
+		"db:seed": "prisma db seed && pnpm run exercises-seed",
 		"db:generate": "prisma generate",
 		"postinstall": "prisma generate",
 		"prepare": "husky",

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { ROUTES } from "@/lib/consts";
+import { PAGE_SIZE, ROUTES } from "@/lib/consts";
 import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
 import { MuscleGroup, Prisma } from "@/lib/generated/prisma/client";
 import { logError } from "@/lib/logger";
@@ -16,7 +16,7 @@ export async function getExercisesSearchAction({
 	search,
 	muscles,
 	page = 1,
-	pageSize = 20,
+	pageSize = PAGE_SIZE,
 }: {
 	search?: string;
 	muscles?: MuscleGroup[];
@@ -27,11 +27,9 @@ export async function getExercisesSearchAction({
 		AND: [
 			search ? { name: { contains: search, mode: "insensitive" } } : {},
 			// Use hasSome to match any muscle in the array
-			muscles && muscles.length > 0
-				? {
-						muscles: { hasSome: muscles },
-					}
-				: {},
+			{
+				muscles: { hasSome: muscles },
+			},
 		],
 	};
 
@@ -44,47 +42,26 @@ export async function getExercisesSearchAction({
 export async function getExercisesAction(
 	filter?: Prisma.ExerciseWhereInput,
 	page: number = 1,
-	pageSize: number = 20,
+	pageSize: number = PAGE_SIZE,
 ): Promise<ExerciseUI[]> {
 	await devDelay();
 
 	const userId = await getUserId();
 
-	// --- Pagination: coerce and clamp inputs to safe integers ---
-	const safePage = Number.isFinite(Number(page)) ? Math.max(1, Math.floor(Number(page))) : 1;
-	const MAX_PAGE_SIZE = 100;
-	const safePageSize = Number.isFinite(Number(pageSize))
-		? Math.max(1, Math.min(MAX_PAGE_SIZE, Math.floor(Number(pageSize))))
-		: 20;
-
-	const skip = (safePage - 1) * safePageSize;
-
-	// --- Build a safe `where` object: do NOT spread the incoming filter at top-level ---
-	// Strip any boolean operator fields from the incoming filter to avoid callers injecting OR/AND/NOT.
-	const sanitizedFilter: Prisma.ExerciseWhereInput = {};
-	if (filter && typeof filter === "object") {
-		for (const [key, value] of Object.entries(filter)) {
-			if (key === "AND" || key === "OR" || key === "NOT") {
-				// Skip boolean operators provided by callers
-				continue;
-			}
-			// Copy allowed keys as-is (shallow copy). Deep validation can be added if needed.
-			(sanitizedFilter as any)[key] = value;
-		}
-	}
-
-	const where: Prisma.ExerciseWhereInput = {
-		AND: [sanitizedFilter || {}, { OR: [{ userId }, { userId: null }] }],
-	};
+	// Calculate how many items to skip for pagination
+	const skip = (page - 1) * pageSize;
 
 	const exercises = await prisma.exercise.findMany({
-		where,
+		where: {
+			OR: [{ userId }, { userId: null }],
+			...filter,
+		},
 		...exerciseUIArgs,
 		orderBy: {
 			name: "asc",
 		},
 		skip,
-		take: safePageSize,
+		take: pageSize,
 	});
 
 	return exercises.map((exercise) => ({

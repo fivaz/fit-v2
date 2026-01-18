@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { ExerciseUI } from "@/lib/exercise/type";
+import { replaceDomain } from "@/lib/utils";
 
 import { ExerciseDetails } from "./exercise-details";
-import { replaceDomain } from "@/lib/utils";
 
 type ExerciseRowProps = {
 	exercise: ExerciseUI;

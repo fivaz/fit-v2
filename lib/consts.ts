@@ -8,3 +8,5 @@ export const ROUTES = {
 	REGISTER: "/register",
 	SETTINGS: "/settings",
 };
+
+export const PAGE_SIZE = 20;
