@@ -70,10 +70,18 @@ export function ExerciseCard({
 										<span className="sr-only">Set info</span>
 									</button>
 								</TooltipTrigger>
-								<TooltipContent side="top" className="max-w-50 text-xs">
-									<p>
-										Tap the set number to toggle between <strong>Normal</strong> (Orange) and{" "}
-										<strong>Warmup</strong> (Blue) sets.
+								<TooltipContent
+									side="top"
+									className="max-w-52 border-gray-200 bg-white/95 px-3 py-2 text-xs text-gray-600 shadow-xl backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/95 dark:text-gray-300"
+								>
+									<p className="leading-relaxed">
+										Tap the set number to toggle between{" "}
+										<strong className="font-bold text-orange-600 dark:text-orange-400">
+											Normal
+										</strong>{" "}
+										and{" "}
+										<strong className="font-bold text-blue-600 dark:text-blue-400">Warmup</strong>{" "}
+										sets.
 									</p>
 								</TooltipContent>
 							</Tooltip>
