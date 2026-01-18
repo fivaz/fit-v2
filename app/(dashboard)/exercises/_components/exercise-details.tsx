@@ -29,7 +29,7 @@ export function ExerciseDetails({ exercise, setOpen, open }: ExerciseDrawerProps
 			<DrawerContent>
 				<div className="mx-auto w-full max-w-md">
 					<DrawerHeader className="text-left">
-						<DrawerTitle className="flex items-center gap-2 text-2xl font-bold">
+						<DrawerTitle className="flex items-center gap-2 text-2xl font-bold capitalize">
 							<Dumbbell className="text-primary h-5 w-5" />
 							{exercise.name}
 						</DrawerTitle>

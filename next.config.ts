@@ -47,7 +47,7 @@ const sentryOptions = {
 			removeDebugLogging: true,
 		},
 	},
-}
+};
 
 export default process.env.NODE_ENV === "production"
 	? withSentryConfig(nextConfig, sentryOptions)

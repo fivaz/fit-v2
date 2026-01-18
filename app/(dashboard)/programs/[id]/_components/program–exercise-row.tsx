@@ -1,8 +1,11 @@
 import * as React from "react";
+import { useState } from "react";
 
 import { useSortable } from "@dnd-kit/react/sortable";
 import { GripVertical } from "lucide-react";
 
+import { ExerciseDetails } from "@/app/(dashboard)/exercises/_components/exercise-details";
+import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { Card } from "@/components/ui/card";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { cn, replaceDomain } from "@/lib/utils";
@@ -17,6 +20,7 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 		id: exercise.id,
 		index,
 	});
+	const [showForm, setShowForm] = useState(false);
 	const imageUrl = replaceDomain(exercise.imageUrl);
 
 	return (
@@ -38,7 +42,11 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 
 				{/* Content */}
 				{/* Added 'min-w-0' here so the flex child can shrink smaller than its content, it's necessary for the truncate */}
-				<div className="flex min-w-0 flex-1 items-center gap-4 p-4">
+				<button
+					type="button"
+					className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 p-4 text-left"
+					onClick={() => setShowForm(true)}
+				>
 					<div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
 						<img
 							src={imageUrl || "/exercise.jpg"}
@@ -55,7 +63,12 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 							{exercise.muscles.join(", ")}
 						</p>
 					</div>
-				</div>
+				</button>
+				{exercise.isPrivate ? (
+					<ExerciseFormButton exercise={exercise} open={showForm} onOpenChange={setShowForm} />
+				) : (
+					<ExerciseDetails exercise={exercise} open={showForm} setOpen={setShowForm} />
+				)}
 			</div>
 		</Card>
 	);
