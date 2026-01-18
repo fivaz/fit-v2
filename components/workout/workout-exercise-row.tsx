@@ -1,9 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Info, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { SetRow } from "@/components/workout/set-row";
 import { replaceDomain } from "@/lib/utils";
 import { WorkoutWithMappedSets } from "@/lib/workout/actions";
@@ -56,10 +57,33 @@ export function ExerciseCard({
 			<div className="p-4">
 				{/* Header Row */}
 				<div className="mb-2 grid grid-cols-[40px_1fr_1fr_1fr_40px] gap-2">
-					{["SET", "REPS", "WEIGHT", "TIME"].map((label) => (
+					<TooltipProvider>
+						<div className="flex items-center justify-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+							SET
+							<Tooltip delayDuration={300}>
+								<TooltipTrigger asChild>
+									<button
+										type="button"
+										className="cursor-help transition-colors hover:text-orange-500"
+									>
+										<Info className="size-3" />
+										<span className="sr-only">Set info</span>
+									</button>
+								</TooltipTrigger>
+								<TooltipContent side="top" className="max-w-50 text-xs">
+									<p>
+										Tap the set number to toggle between <strong>Normal</strong> (Orange) and{" "}
+										<strong>Warmup</strong> (Blue) sets.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</div>
+					</TooltipProvider>
+
+					{["REPS", "WEIGHT", "TIME"].map((label) => (
 						<div
 							key={label}
-							className="text-center text-xs font-medium text-gray-500 dark:text-gray-400"
+							className="flex items-center justify-center text-xs font-medium text-gray-500 dark:text-gray-400"
 						>
 							{label}
 						</div>
