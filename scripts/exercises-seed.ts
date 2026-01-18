@@ -5,12 +5,9 @@ import { z } from "zod";
 
 import { MuscleGroup } from "@/lib/muscle/type";
 import { prisma } from "@/lib/prisma";
+import { replaceDomain } from "@/lib/utils";
 
 import "dotenv/config";
-
-const URL = process.env.NEXT_PUBLIC_ASSET_URL;
-
-const SEED_URL = `${URL}/fit/exercises/seed.json`;
 
 const exerciseSchema = z.object({
 	id: z.string().min(1),
@@ -34,8 +31,10 @@ type ExerciseInput = z.infer<typeof exerciseSchema>;
  * 1. Fetch JSON data from CDN
  */
 async function fetchExercises(): Promise<unknown> {
-	console.log(`🌐 Fetching exercises from: ${SEED_URL}...`);
-	const response = await fetch(SEED_URL);
+	const seedUrl = replaceDomain(process.env.EXERCISE_SEED_URL);
+
+	console.log(`🌐 Fetching exercises from: ${seedUrl}...`);
+	const response = await fetch(seedUrl);
 
 	if (!response.ok) {
 		throw new Error(`Failed to fetch: ${response.statusText}`);
@@ -105,7 +104,7 @@ async function bulkInsert(exercises: ExerciseInput[]) {
  */
 async function seedDatabase() {
 	try {
-		const rawData = await readExercises();
+		const rawData = await fetchExercises();
 		const validatedData = validateExercises(rawData);
 		await bulkInsert(validatedData);
 
