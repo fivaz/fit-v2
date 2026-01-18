@@ -144,7 +144,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 									className="h-full w-full object-cover"
 								/>
 								<div className="absolute inset-0 bg-linear-to-r from-black/60 to-transparent" />
-								<h3 className="absolute bottom-3 left-4 text-lg font-semibold text-white">
+								<h3 className="absolute bottom-3 left-4 text-lg font-semibold text-white capitalize">
 									{exercise.exercise.name}
 								</h3>
 							</div>

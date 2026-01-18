@@ -45,6 +45,7 @@ export function ProgramExerciseList({ programId }: ProgramExerciseListProps) {
 					<ProgramExerciseRow key={exercise.id} exercise={exercise} index={index} />
 				))}
 			</div>
+			<div className="mb-28"></div>
 		</DragDropProvider>
 	);
 }

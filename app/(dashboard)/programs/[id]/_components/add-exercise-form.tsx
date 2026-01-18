@@ -51,9 +51,14 @@ export function AddExerciseForm({ program, open, onOpenChange }: AddExerciseForm
 	};
 
 	return (
-		<Drawer autoFocus={true} open={open} onOpenChange={onOpenChange}>
+		<Drawer
+			autoFocus={true}
+			open={open}
+			onOpenChange={onOpenChange}
+			repositionInputs={false}
+		>
 			{/* Omit Trigger if controlled externally */}
-			<DrawerContent>
+			<DrawerContent className="h-dvh">
 				<div className="relative mx-auto flex h-full w-full max-w-md flex-col overflow-hidden">
 					<DrawerHeader>
 						<DrawerTitle>Add Exercises</DrawerTitle>
