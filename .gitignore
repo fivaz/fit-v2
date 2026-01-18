@@ -47,3 +47,5 @@ next-env.d.ts
 scripts/exercises-full.json
 public/exercises/*
 .idea/
+# Sentry Config File
+.env.sentry-build-plugin
