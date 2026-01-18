@@ -1,39 +1,52 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
+import useSWRInfinite from "swr/infinite";
+import { useDebounceValue } from "usehooks-ts";
+
+import { ExerciseFilterShellProps } from "@/components/exercise/exercise-filter-shell";
+import { getExercisesSearchAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
-import { MuscleGroup } from "@/lib/generated/prisma/enums";
+import { MuscleGroupType } from "@/lib/muscle/type";
 
-export function useExerciseFilters(exercises: ExerciseUI[]) {
-	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedMuscle, setSelectedMuscle] = useState("all");
+type UseExerciseFiltersReturn = ExerciseFilterShellProps & {
+	isLoading: boolean;
+	fetchNextPage: () => void;
+	hasNextPage: boolean;
+	filteredExercises: ExerciseUI[];
+};
 
-	// Logic: Extract available muscles from current items
-	const availableMuscles = useMemo(() => {
-		const muscleSet = new Set<string>();
-		exercises.forEach((ex) => {
-			ex.muscles.forEach((m) => muscleSet.add(m));
-		});
-		return ["all", ...Array.from(muscleSet).sort()];
-	}, [exercises]);
+export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFiltersReturn {
+	const [searchQuery, setSearchQuery] = useState<string>("");
+	const [selectedMuscles, setSelectedMuscles] = useState<MuscleGroupType[]>(muscles);
 
-	// Logic: Filter based on search and muscle selection
-	const filteredExercises = useMemo(() => {
-		return exercises.filter((ex) => {
-			const matchesSearch = ex.name.toLowerCase().includes(searchQuery.toLowerCase());
+	const [debouncedSearchQuery] = useDebounceValue(searchQuery, 300);
 
-			const matchesMuscle =
-				selectedMuscle === "all" || ex.muscles.includes(selectedMuscle as MuscleGroup);
+	const PAGE_SIZE = 20;
 
-			return matchesSearch && matchesMuscle;
-		});
-	}, [exercises, searchQuery, selectedMuscle]);
+	const getKey = (pageIndex: number, previousPageData: ExerciseUI[]) => {
+		if (previousPageData && !previousPageData.length) return null;
+		return {
+			search: debouncedSearchQuery,
+			muscles: selectedMuscles,
+			page: pageIndex + 1,
+			PAGE_SIZE,
+		};
+	};
+
+	const { data, size, setSize, isLoading, isValidating } = useSWRInfinite(
+		getKey,
+		getExercisesSearchAction,
+	);
 
 	return {
+		filteredExercises: data ? data.flat() : [],
+		isLoading: isLoading || (isValidating && data && data.length === size) || false,
+		fetchNextPage: () => setSize(size + 1),
+		hasNextPage: data ? data[data.length - 1].length === PAGE_SIZE : true,
 		searchQuery,
 		setSearchQuery,
-		selectedMuscle,
-		setSelectedMuscle,
-		availableMuscles,
-		filteredExercises,
+		selectedMuscles,
+		setSelectedMuscles,
+		availableMuscles: muscles,
 	};
 }

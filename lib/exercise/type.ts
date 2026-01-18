@@ -7,17 +7,25 @@ export const exerciseUIArgs = {
 		name: true,
 		muscles: true,
 		imageUrl: true,
+		localPath: true,
+		userId: true,
+		instructions: true,
 	},
 } satisfies Prisma.ExerciseDefaultArgs;
 
-export type ExerciseUI = Prisma.ExerciseGetPayload<typeof exerciseUIArgs>;
+export type ExerciseUI = Omit<Prisma.ExerciseGetPayload<typeof exerciseUIArgs>, "userId"> & {
+	isPrivate: boolean;
+};
 
 export function buildEmptyExercise(): ExerciseUI {
 	return {
 		id: "",
 		name: "",
 		muscles: [],
-		imageUrl: "",
+		imageUrl: null,
+		localPath: null,
+		isPrivate: false,
+		instructions: [],
 	};
 }
 
@@ -27,6 +35,9 @@ export function formToExercise(formData: FormData): ExerciseUI {
 		name: (formData.get("name") as string) || "",
 		muscles: formData.getAll("muscles") as MuscleGroup[],
 		//TODO handle image upload
-		imageUrl: "",
+		imageUrl: null,
+		localPath: null,
+		isPrivate: false,
+		instructions: [],
 	};
 }

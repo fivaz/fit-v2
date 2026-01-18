@@ -10,7 +10,7 @@ import { devDelay } from "@/lib/utils";
 import { getUserId } from "@/lib/utils-server";
 import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
 
-export async function syncWorkoutSets(workoutId: string, exerciseSetsMap: WorkoutSetMap) {
+export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: WorkoutSetMap) {
 	// 1. Flatten the map into an array compatible with createMany
 	const allSets = Object.entries(exerciseSetsMap).flatMap(([workoutExerciseId, sets]) =>
 		sets.map((set, index) => ({
@@ -43,7 +43,7 @@ export async function syncWorkoutSets(workoutId: string, exerciseSetsMap: Workou
  * Fetches a complete workout session including the program details,
  * all exercises performed, and the individual sets for each exercise.
  */
-export async function getWorkoutById(id: string) {
+export async function getWorkoutByIdAction(id: string) {
 	const userId = await getUserId();
 
 	const workout = await prisma.workout.findUnique({
@@ -67,14 +67,14 @@ export async function getWorkoutById(id: string) {
 	};
 }
 
-export type WorkoutWithMappedSets = Awaited<ReturnType<typeof getWorkoutById>>;
+export type WorkoutWithMappedSets = Awaited<ReturnType<typeof getWorkoutByIdAction>>;
 
-export async function handleStartWorkout(programId: string) {
+export async function handleStartWorkoutAction(programId: string) {
 	await devDelay();
 
 	const userId = await getUserId();
 
-	const workoutId = await startWorkout(userId, programId);
+	const workoutId = await startWorkoutAction(userId, programId);
 
 	redirect(`${ROUTES.WORKOUT}/${workoutId}`);
 }
@@ -83,7 +83,7 @@ export async function handleStartWorkout(programId: string) {
  * Creates a new workout session based on a program.
  * Pre-fills sets based on previous history or defaults.
  */
-export async function startWorkout(userId: string, programId: string) {
+export async function startWorkoutAction(userId: string, programId: string) {
 	// 1. Fetch the Program with its ordered exercises
 	const program = await prisma.program.findUnique({
 		where: { id: programId },
@@ -98,7 +98,6 @@ export async function startWorkout(userId: string, programId: string) {
 	if (!program) throw new Error("Program not found");
 
 	// 2. Fetch the LAST workout for this specific program + user
-	// We need this to copy the weights/reps
 	const lastWorkout = await prisma.workout.findFirst({
 		where: {
 			userId,
@@ -129,15 +128,13 @@ export async function startWorkout(userId: string, programId: string) {
 			data: {
 				userId,
 				programId,
-				startDate: new Date(), // User requested startDate
-				// endDate remains null until they finish
+				startDate: new Date(),
 
 				// Create the WorkoutExercises and Sets simultaneously
 				exercises: {
 					create: program.exercises.map((programExercise) => {
 						const previousData = getPreviousStats(programExercise.exerciseId);
 
-						// LOGIC: Define the sets to create
 						let setsToCreate = [];
 
 						if (previousData && previousData.sets.length > 0) {
@@ -146,7 +143,7 @@ export async function startWorkout(userId: string, programId: string) {
 								order: index,
 								reps: prevSet.reps,
 								weight: prevSet.weight,
-								time: null, // Reset time as it hasn't happened yet
+								time: null,
 								isWarmup: prevSet.isWarmup,
 							}));
 						} else {
@@ -174,13 +171,12 @@ export async function startWorkout(userId: string, programId: string) {
 	return newWorkout.id;
 }
 
-export async function finishWorkout(workoutId: string) {
+export async function finishWorkoutAction(workoutId: string) {
 	try {
 		await prisma.workout.update({
 			where: { id: workoutId },
 			data: {
 				endDate: new Date(),
-				// You could also calculate total volume here if you have a field for it
 			},
 		});
 	} catch (error) {
@@ -188,24 +184,22 @@ export async function finishWorkout(workoutId: string) {
 		throw new Error("Could not complete workout");
 	}
 
-	// Clear cache and move the user
 	revalidatePath(ROUTES.PROGRESS);
 	redirect(ROUTES.PROGRESS);
 }
 
-export async function redirectToActiveWorkout() {
+export async function redirectToActiveWorkoutAction() {
 	const userId = await getUserId();
 
 	const activeWorkout = await prisma.workout.findFirst({
 		where: {
 			userId,
-			endDate: null, // This is the "active" criteria
+			endDate: null,
 		},
 		select: { id: true },
 	});
 
 	if (activeWorkout) {
-		// If found, move the user immediately
 		redirect(`${ROUTES.WORKOUT}/${activeWorkout.id}`);
 	}
 

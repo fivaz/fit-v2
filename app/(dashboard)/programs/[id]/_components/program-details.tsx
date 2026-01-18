@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { DumbbellIcon, EditIcon, MoreVertical, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { AddExerciseForm } from "@/app/(dashboard)/programs/[id]/_components/add-exercise-form";
 import { ProgramExerciseList } from "@/app/(dashboard)/programs/[id]/_components/program-exercise-list";
@@ -17,31 +18,34 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
-import { ExercisesProvider } from "@/hooks/exercise/exercises-store-context";
-import { usePrograms } from "@/hooks/program/programs-store-context";
-import { ProgramsProvider } from "@/hooks/program/programs-store-context";
+import { ExercisesProvider } from "@/hooks/exercise/store";
+import { ProgramsProvider, useProgramMutations, useProgramsStore } from "@/hooks/program/store";
 import { ROUTES } from "@/lib/consts";
+import { deleteProgramAction } from "@/lib/program/actions";
 import { ProgramWithExercises } from "@/lib/program/type";
 
 type ProgramDetailProps = {
 	program: ProgramWithExercises;
 };
 
-export function ProgramDetail({ program }: ProgramDetailProps) {
+export function ProgramDetails({ program }: ProgramDetailProps) {
 	return (
 		<ProgramsProvider initialItems={[program]}>
-			<ProgramDetailInternal />
+			<ProgramDetailsInternal />
 		</ProgramsProvider>
 	);
 }
 
-export function ProgramDetailInternal() {
-	const { firstItem: program, deleteItem } = usePrograms<ProgramWithExercises>();
+export function ProgramDetailsInternal() {
+	const { firstItem } = useProgramsStore();
+	const { deleteItem } = useProgramMutations();
 	const confirm = useConfirm();
 	const [showProgramForm, setShowProgramForm] = useState(false);
 	const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
 	const router = useRouter();
-	if (!program) return null;
+	if (!firstItem) return null;
+	const program = firstItem as ProgramWithExercises;
+
 	const handleDelete = async () => {
 		const confirmed = await confirm({
 			title: "Delete Program",
@@ -50,8 +54,14 @@ export function ProgramDetailInternal() {
 
 		if (!confirmed) return;
 
-		deleteItem(program.id);
-		router.push(ROUTES.PROGRAMS);
+		deleteItem(program.id, {
+			persist: () => deleteProgramAction(program.id),
+			onSuccess: () => {
+				toast.success("Program deleted successfully.");
+				router.push(ROUTES.PROGRAMS);
+			},
+			onError: () => toast.error("Failed to delete program."),
+		});
 	};
 
 	return (
@@ -91,12 +101,12 @@ export function ProgramDetailInternal() {
 
 				<ExercisesProvider initialItems={program.exercises}>
 					<ProgramExerciseList programId={program.id} />
+					<StartWorkoutButton programId={program.id} isDisabled={program.exercises.length === 0} />
 					<AddExerciseForm
 						program={program}
 						open={showAddExerciseForm}
 						setOpen={setShowAddExerciseForm}
 					/>
-					<StartWorkoutButton programId={program.id} isDisabled={program.exercises.length === 0} />
 				</ExercisesProvider>
 			</div>
 

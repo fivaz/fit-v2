@@ -4,11 +4,13 @@ import * as React from "react";
 
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider } from "@dnd-kit/react";
+import { toast } from "sonner";
 
 import { ProgramEmptyState } from "@/app/(dashboard)/programs/_components/program-empty-state";
 import { ProgramRow } from "@/app/(dashboard)/programs/_components/program-row";
 import { ProgramFormButton } from "@/components/program/program-form-button";
-import { ProgramsProvider, usePrograms } from "@/hooks/program/programs-store-context";
+import { ProgramsProvider, useProgramMutations, useProgramsStore } from "@/hooks/program/store";
+import { reorderProgramsAction } from "@/lib/program/actions";
 import { ProgramUI } from "@/lib/program/type";
 import { sameOrder } from "@/lib/utils";
 
@@ -31,22 +33,29 @@ export function ProgramList({ initialPrograms }: ProgramsListProps) {
 }
 
 export function ProgramsListInternal() {
-	const { items: programs, reorderItems } = usePrograms();
+	const { items: programs } = useProgramsStore();
+	const { setItems } = useProgramMutations();
 
-	if (programs.length === 0) return <ProgramEmptyState />;
+	const sortedPrograms = programs.toSorted((a, b) => a.order - b.order);
+
+	if (sortedPrograms.length === 0) return <ProgramEmptyState />;
+
+	function handleReorder(event: Parameters<typeof move>[1]) {
+		const reordered = move(programs, event);
+
+		if (sameOrder(programs, reordered)) return;
+
+		// TODO check later why this doesn't rollback
+		setItems(reordered, {
+			persist: () => reorderProgramsAction(reordered.map((p) => p.id)),
+			onError: () => toast.error("Failed to reorder programs. Reverting."),
+		});
+	}
 
 	return (
-		<DragDropProvider
-			onDragEnd={(event) => {
-				const nextItems = move(programs, event);
-
-				if (sameOrder(programs, nextItems)) return;
-
-				reorderItems(nextItems);
-			}}
-		>
+		<DragDropProvider onDragEnd={handleReorder}>
 			<div className="flex flex-col gap-4">
-				{programs.map((program, index) => (
+				{sortedPrograms.map((program, index) => (
 					<ProgramRow key={program.id} program={program} index={index} />
 				))}
 			</div>

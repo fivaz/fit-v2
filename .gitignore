@@ -44,3 +44,5 @@ next-env.d.ts
 
 .secrets
 .act-cache
+scripts/exercises-full.json
+public/exercises/*

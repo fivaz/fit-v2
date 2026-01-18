@@ -4,6 +4,7 @@ import * as React from "react";
 import { useState } from "react";
 
 import { PlusIcon, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 import { ExerciseForm } from "@/components/exercise/exercise-form";
 import { Button } from "@/components/ui/button";
@@ -15,30 +16,31 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
-import { useExercises } from "@/hooks/exercise/exercises-store-context";
+import { useExerciseMutations } from "@/hooks/exercise/store";
+import { deleteExerciseAction } from "@/lib/exercise/actions";
 import { buildEmptyExercise, ExerciseUI } from "@/lib/exercise/type";
 
 type ExerciseFormButtonProps = React.ComponentProps<typeof Button> & {
 	exercise?: ExerciseUI;
 	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
+	setOpen?: (open: boolean) => void;
 };
 
 export function ExerciseFormButton({
 	children,
 	exercise = buildEmptyExercise(),
 	open: externalOpen,
-	onOpenChange: externalOnOpenChange,
+	setOpen: externalSetOpen,
 	...props
 }: ExerciseFormButtonProps) {
 	// Internal state management if external state isn't provided
 	const [internalOpen, setInternalOpen] = useState(false);
-	const { deleteItem } = useExercises();
+	const { deleteItem } = useExerciseMutations();
 	const confirm = useConfirm();
 	// Determine which state to use
 	const isControlled = externalOpen !== undefined;
 	const open = isControlled ? externalOpen : internalOpen;
-	const setOpen = isControlled ? externalOnOpenChange : setInternalOpen;
+	const setOpen = isControlled ? externalSetOpen : setInternalOpen;
 
 	const handleDelete = async () => {
 		const confirmed = await confirm({
@@ -48,7 +50,11 @@ export function ExerciseFormButton({
 
 		if (!confirmed) return;
 
-		deleteItem(exercise.id);
+		deleteItem(exercise.id, {
+			persist: () => deleteExerciseAction(exercise.id),
+			onSuccess: () => toast.success("Exercise deleted successfully."),
+			onError: () => toast.error("Failed to delete exercise."),
+		});
 	};
 
 	return (
@@ -64,7 +70,7 @@ export function ExerciseFormButton({
 				<div className="mx-auto w-full max-w-md overflow-y-auto pb-6">
 					<DrawerHeader className="relative">
 						<DrawerTitle>{exercise.id ? "Edit Exercise" : "Create Exercise"}</DrawerTitle>
-						{exercise.id && (
+						{exercise.id && !exercise.isPrivate && (
 							<Button
 								variant="destructive"
 								className="absolute top-0 right-0 mx-4 my-2"

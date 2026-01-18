@@ -1,3 +1,4 @@
+import { ExerciseUI, exerciseUIArgs } from "@/lib/exercise/type";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { MuscleGroup } from "@/lib/generated/prisma/client";
 
@@ -15,12 +16,7 @@ export type ProgramUI = Prisma.ProgramGetPayload<typeof programUISelect>;
 
 export const programWithExercisesArgs = {
 	select: {
-		id: true,
-		name: true,
-		imageUrl: true,
-		muscles: true,
-		order: true,
-
+		...programUISelect.select,
 		exercises: {
 			orderBy: {
 				order: "asc" as const,
@@ -28,23 +24,19 @@ export const programWithExercisesArgs = {
 			select: {
 				order: true,
 				exercise: {
-					select: {
-						id: true,
-						name: true,
-						imageUrl: true,
-						muscles: true,
-					},
+					...exerciseUIArgs,
 				},
 			},
 		},
 	},
 } satisfies Prisma.ProgramDefaultArgs;
 
-type ProgramRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
+type ProgramWithExercisesRaw = Prisma.ProgramGetPayload<typeof programWithExercisesArgs>;
 
-// The Flattened type for UI
-export type ProgramWithExercises = Omit<ProgramRaw, "exercises"> & {
-	exercises: ProgramRaw["exercises"][number]["exercise"][];
+export type OrderedExercise = ExerciseUI & { order: number };
+
+export type ProgramWithExercises = Omit<ProgramWithExercisesRaw, "exercises"> & {
+	exercises: OrderedExercise[];
 };
 
 export function buildEmptyProgram(): ProgramUI {

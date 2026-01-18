@@ -1,5 +1,4 @@
 "use server";
-import { cache } from "react";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/lib/consts";
@@ -19,7 +18,7 @@ import "server-only";
 /**
  * Fetches all programs for the current user.
  */
-export async function getPrograms(): Promise<ProgramUI[]> {
+export async function getProgramsAction(): Promise<ProgramUI[]> {
 	await devDelay();
 
 	const userId = await getUserId();
@@ -27,43 +26,39 @@ export async function getPrograms(): Promise<ProgramUI[]> {
 	return prisma.program.findMany({
 		where: { userId },
 		...programUISelect,
+		orderBy: {
+			order: "asc" as const,
+		},
 	});
 }
 
 /**
- * Cached helper: memoized by (id, userId)
- */
-const _getProgramById = cache(
-	async (id: string, userId: string): Promise<ProgramWithExercises | null> => {
-		const program = await prisma.program.findFirst({
-			where: { id, userId },
-			...programWithExercisesArgs,
-		});
-
-		if (!program) return null;
-
-		// Mapping the nested 'exercise' objects into a flat array
-		return {
-			...program,
-			exercises: program.exercises.map((item) => item.exercise),
-		};
-	},
-);
-
-/**
  * Public fetcher for a single program.
  */
-export async function getProgramById(id: string): Promise<ProgramWithExercises | null> {
-	await devDelay();
-
+export async function getProgramByIdAction(id: string): Promise<ProgramWithExercises | null> {
 	const userId = await getUserId();
-	return _getProgramById(id, userId);
+	const program = await prisma.program.findFirst({
+		where: { id, userId },
+		...programWithExercisesArgs,
+	});
+
+	if (!program) return null;
+
+	// Mapping the nested 'exercise' objects into a flat array
+	return {
+		...program,
+		exercises: program.exercises.map(({ exercise, order }) => ({
+			...exercise,
+			order,
+			isPrivate: userId !== null,
+		})),
+	};
 }
 
 /**
  * Saves or updates a program.
  */
-export async function saveProgram({ id, name, muscles }: ProgramUI) {
+export async function saveProgramAction({ id, name, muscles }: ProgramUI) {
 	await devDelay();
 
 	const userId = await getUserId();
@@ -94,7 +89,7 @@ export async function saveProgram({ id, name, muscles }: ProgramUI) {
 /**
  * Updates the order of programs.
  */
-export async function reorderPrograms(sortedIds: string[]) {
+export async function reorderProgramsAction(sortedIds: string[]) {
 	await devDelay();
 
 	try {
@@ -119,7 +114,7 @@ export async function reorderPrograms(sortedIds: string[]) {
 /**
  * Deletes a program.
  */
-export async function deleteProgram(id: string) {
+export async function deleteProgramAction(id: string) {
 	await devDelay();
 
 	const userId = await getUserId();
@@ -141,7 +136,7 @@ export async function deleteProgram(id: string) {
 /**
  * Updates exercises linked to a program.
  */
-export async function updateProgramExercises(exerciseIds: string[], programId: string) {
+export async function updateProgramExercisesAction(exerciseIds: string[], programId: string) {
 	const userId = await getUserId();
 
 	try {

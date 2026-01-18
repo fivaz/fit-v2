@@ -39,7 +39,7 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 				<div className="flex flex-1 items-center gap-4 p-4">
 					<div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
 						<img
-							src={exercise.imageUrl || "/exercise.jpg"}
+							src={exercise.imageUrl || exercise.localPath || "/exercise.jpg"}
 							alt={exercise.name}
 							className="h-full w-full object-cover"
 						/>

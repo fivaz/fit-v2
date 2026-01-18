@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { WorkoutDetail } from "@/components/workout/workout-detail";
 import { WorkoutNotFound } from "@/components/workout/workout-not-found";
-import { getWorkoutById } from "@/lib/workout/actions";
+import { getWorkoutByIdAction } from "@/lib/workout/actions";
 
 type ProgramPageProps = {
 	params: Promise<{ id: string }>;
@@ -11,7 +11,7 @@ type ProgramPageProps = {
 export default async function WorkoutPage({ params }: ProgramPageProps) {
 	const { id } = await params;
 
-	const workout = await getWorkoutById(id);
+	const workout = await getWorkoutByIdAction(id);
 
 	if (!workout) {
 		return <WorkoutNotFound />;

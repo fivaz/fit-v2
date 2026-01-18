@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from "react";
 
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { SelectMuscles } from "@/components/select-muscles";
@@ -7,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { usePrograms } from "@/hooks/program/programs-store-context";
+import { useProgramMutations } from "@/hooks/program/store";
+import { saveProgramAction } from "@/lib/program/actions";
 import { formToProgram, ProgramUI } from "@/lib/program/type";
 
 const formSchema = z.object({
@@ -21,7 +23,7 @@ type ProgramFormProps = {
 };
 
 export function ProgramForm({ program, onClose }: ProgramFormProps) {
-	const { addItem, updateItem } = usePrograms();
+	const { addItem, updateItem } = useProgramMutations();
 	const [errors, setErrors] = useState<{ name?: string; muscles?: string }>({});
 	const isEdit = !!program.id;
 
@@ -42,17 +44,22 @@ export function ProgramForm({ program, onClose }: ProgramFormProps) {
 
 		validateFields(programData);
 
-		const optimisticProgram: ProgramUI = {
-			...programData,
-			id: programData.id || crypto.randomUUID(),
-		};
+		const newProgram: ProgramUI = { ...programData, id: programData.id || crypto.randomUUID() };
 
 		onClose();
 
 		if (isEdit) {
-			updateItem(optimisticProgram);
+			void updateItem(newProgram, {
+				persist: () => saveProgramAction(newProgram),
+				onSuccess: () => toast.success("Program updated successfully."),
+				onError: () => toast.error("Failed to update program. Reverting."),
+			});
 		} else {
-			addItem(optimisticProgram);
+			void addItem(newProgram, {
+				persist: () => saveProgramAction(newProgram),
+				onSuccess: () => toast.success("Program created successfully."),
+				onError: () => toast.error("Failed to create program. Reverting."),
+			});
 		}
 	};
 

@@ -1,29 +1,45 @@
 "use client";
 
 import * as React from "react";
+import { Dispatch, SetStateAction } from "react";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { MuscleGroupType } from "@/lib/muscle/type";
 
-// --- The Shared UI Part ---
-interface ExerciseFilterShellProps {
+export interface ExerciseFilterShellProps {
 	searchQuery: string;
 	setSearchQuery: (val: string) => void;
-	selectedMuscle: string;
-	setSelectedMuscle: (val: string) => void;
-	availableMuscles: string[];
+	selectedMuscles: MuscleGroupType[];
+	setSelectedMuscles: Dispatch<SetStateAction<MuscleGroupType[]>>;
+	availableMuscles: MuscleGroupType[];
 }
 
 export function ExerciseFilterShell({
 	searchQuery,
 	setSearchQuery,
-	selectedMuscle,
-	setSelectedMuscle,
+	selectedMuscles,
+	setSelectedMuscles,
 	availableMuscles,
 }: ExerciseFilterShellProps) {
+	const toggleMuscle = (muscle: MuscleGroupType) => {
+		setSelectedMuscles((muscles) => {
+			if (muscles.includes(muscle)) {
+				// if last one return all.
+				if (muscles.length === 1) return availableMuscles;
+				return muscles.filter((m) => m !== muscle);
+			} else {
+				return [...muscles, muscle];
+			}
+		});
+	};
+
+	const addAllMuscles = () => setSelectedMuscles(availableMuscles);
+
+	const isAllSelected = selectedMuscles.length === availableMuscles.length;
+
 	return (
 		<>
 			{/* Search Section */}
@@ -42,20 +58,40 @@ export function ExerciseFilterShell({
 
 			{/* Filter Section */}
 			<div className="scrollbar-hide mb-6 flex gap-3 overflow-x-auto pb-2">
-				{availableMuscles.map((muscle) => (
-					<Button
-						key={muscle}
-						type="button"
-						variant={selectedMuscle === muscle ? "default" : "outline"}
-						onClick={() => setSelectedMuscle(muscle)}
-						className={cn(
-							"rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize",
-							selectedMuscle === muscle && "bg-orange-500 hover:bg-orange-600",
-						)}
-					>
-						{muscle}
-					</Button>
-				))}
+				<Button
+					type="button"
+					variant={isAllSelected ? "default" : "outline"}
+					className="rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize"
+					onClick={addAllMuscles}
+				>
+					All
+				</Button>
+				{availableMuscles.map((muscle) => {
+					const isActive = !isAllSelected && selectedMuscles.includes(muscle);
+
+					return (
+						<Button
+							key={muscle}
+							type="button"
+							variant={isActive ? "default" : "outline"}
+							onClick={() => {
+								if (isAllSelected) {
+									setSelectedMuscles([muscle]);
+									return;
+								}
+								toggleMuscle(muscle);
+							}}
+							className="rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap capitalize"
+						>
+							{muscle}
+							{isActive && (
+								<span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-white/20 text-[10px]">
+									<X className="h-3 w-3" />
+								</span>
+							)}
+						</Button>
+					);
+				})}
 			</div>
 		</>
 	);
