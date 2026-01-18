@@ -1,8 +1,10 @@
-import fs from "fs/promises";
-import path from "path";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
+
+const URL = "https://pub-d03421385ad444aeb7a94fae07e5d610.r2.dev";
+
+const SEED_URL = `${URL}/exercises/seed.json`;
 
 const exerciseSchema = z.object({
 	id: z.string().min(1),
@@ -15,52 +17,74 @@ const exerciseSchema = z.object({
 	description: z.string().optional().nullable(),
 	difficulty: z.string().optional().nullable(),
 	category: z.string().optional().nullable(),
-	localPath: z.string().optional().nullable(),
+	imageUrl: z.string().optional().nullable(),
 });
 
+type ExerciseInput = z.infer<typeof exerciseSchema>;
+
+/**
+ * 1. Fetch JSON data from CDN
+ */
+async function fetchExercises(): Promise<unknown> {
+	console.log(`🌐 Fetching exercises from: ${SEED_URL}...`);
+	const response = await fetch(SEED_URL);
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch: ${response.statusText}`);
+	}
+
+	const data = await response.json();
+	console.log("📥 Data downloaded successfully.");
+	return data;
+}
+
+/**
+ * 2. Validate data against Zod Schema
+ */
+function validateExercises(data: unknown): ExerciseInput[] {
+	console.log("🔍 Validating data structure...");
+	const parsed = z.array(exerciseSchema).safeParse(data);
+
+	if (!parsed.success) {
+		console.error("❌ Validation failed:");
+		console.error(JSON.stringify(z.formatError(parsed.error), null, 2));
+		process.exit(1);
+	}
+
+	console.log("✅ Validation passed.");
+	return parsed.data;
+}
+
+/**
+ * 3. Bulk Insert into Database
+ */
+async function bulkInsert(exercises: ExerciseInput[]) {
+	console.log(`🚀 Starting database seed for ${exercises.length} exercises...`);
+
+	const result = await prisma.exercise.createMany({
+		data: exercises,
+		skipDuplicates: true,
+	});
+
+	console.log(`✨ Successfully seeded ${result.count} new exercises!`);
+	if (result.count === 0) {
+		console.log("ℹ️ No new exercises were added (they might already exist).");
+	}
+}
+
+/**
+ * Main Orchestrator
+ */
 async function seedDatabase() {
 	try {
-		const jsonPath = path.join(process.cwd(), "scripts", "exercises-full.json");
+		const rawData = await fetchExercises();
+		const validatedData = validateExercises(rawData);
+		await bulkInsert(validatedData);
 
-		const fileContent = await fs.readFile(jsonPath, "utf-8");
-
-		const exercisesSchema = z.array(exerciseSchema);
-
-		const exercisesData = JSON.parse(fileContent);
-
-		const parsed = exercisesSchema.safeParse(exercisesData);
-
-		if (!parsed.success) {
-			console.error("❌ exercises-full.json validation failed:");
-			console.error(z.formatError(parsed.error));
-			process.exit(1);
-		}
-
-		const validExercises = parsed.data;
-
-		// TODO validate json
-
-		console.log(`🚀 Starting database seed for ${validExercises.length} exercises...`);
-
-		for (const exerciseData of validExercises) {
-			// Prepare the data object to avoid repetition in upsert
-
-			// TODO use bulk
-			await prisma.exercise.upsert({
-				where: { id: exerciseData.id },
-				update: exerciseData,
-				create: {
-					...exerciseData,
-					id: exerciseData.id,
-				},
-			});
-
-			// console.log(`✅ Synced: ${exerciseData.name}`);
-		}
-
-		console.log("\n✨ Database seeding complete!");
+		console.log("\n🏁 Mission accomplished! Database is up to date.");
 	} catch (error) {
-		console.error("❌ Error seeding database:", error);
+		console.error("\n💥 Critical error during seeding:");
+		console.error(error);
 		process.exit(1);
 	} finally {
 		await prisma.$disconnect();
