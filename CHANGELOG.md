@@ -1,3 +1,27 @@
+## [1.15.0](https://github.com/fivaz/fit-v2/compare/v1.14.0...v1.15.0) (2026-01-18)
+
+### ✨ Features
+
+* only show exercises of selected muscles ([b9a2b5f](https://github.com/fivaz/fit-v2/commit/b9a2b5ff0e7750dbec985e5fd120b2a52d09e3b8))
+* truncate name in ProgramExerciseRow ([9fd0922](https://github.com/fivaz/fit-v2/commit/9fd092251864f211d1a0151edf0c542c30165028))
+
+### 🐛 Bug Fixes
+
+* form errors weren't preventing the submission ([2631052](https://github.com/fivaz/fit-v2/commit/26310529dca2efc26d6f8a7a4069d3bc2d0c05c9))
+* prevent form from being submitted with errors ([4a57c52](https://github.com/fivaz/fit-v2/commit/4a57c5206876cf31c77f7f3a3c83e7fb2e5cc08c))
+* program exercises were checked on private using user's userId instead of the exercises one ([f0c1786](https://github.com/fivaz/fit-v2/commit/f0c1786e24fc0deeaeeb4ef45e652dfccfc0228d))
+
+### 🧹 Chores
+
+* change bucket url for the seed ([79f4e8c](https://github.com/fivaz/fit-v2/commit/79f4e8cd8ed74b11444e59e015956b2036c12757))
+* check seed json ([6d71805](https://github.com/fivaz/fit-v2/commit/6d71805ff9254e55d11bffa3c30748d163b1c01b))
+* remove localPath ([a191bfa](https://github.com/fivaz/fit-v2/commit/a191bfa567be1ad315036afe3e8e9b5463dc6002))
+* update seed script ([18dee76](https://github.com/fivaz/fit-v2/commit/18dee76fd447c5ea670c9ac6306c277064af48de))
+
+### 👷 Build System
+
+* remove .idea files from repo ([a8f4711](https://github.com/fivaz/fit-v2/commit/a8f47111a41f587aebe27da14bf9d4eb3cadde5a))
+
 ## [1.14.0](https://github.com/fivaz/fit-v2/compare/v1.13.1...v1.14.0) (2026-01-18)
 
 ### ✨ Features
