@@ -11,6 +11,7 @@ import { getUserId } from "@/lib/utils-server";
 import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
 
 export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: WorkoutSetMap) {
+	await devDelay();
 	// 1. Flatten the map into an array compatible with createMany
 	const allSets = Object.entries(exerciseSetsMap).flatMap(([workoutExerciseId, sets]) =>
 		sets.map((set, index) => ({
@@ -68,7 +69,7 @@ export async function getWorkoutByIdAction(id: string) {
 	};
 }
 
-export type WorkoutWithMappedSets = Awaited<ReturnType<typeof getWorkoutByIdAction>>;
+export type WorkoutWithMappedSets = NonNullable<Awaited<ReturnType<typeof getWorkoutByIdAction>>>;
 
 export async function handleStartWorkoutAction(programId: string) {
 	await devDelay();
