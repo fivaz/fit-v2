@@ -1,8 +1,16 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import { format, parse } from "date-fns";
 import { motion } from "framer-motion";
-import { Clock, Trash2 } from "lucide-react";
+import {
+	Clock,
+	Dumbbell,
+	DumbbellIcon,
+	Thermometer,
+	ThermometerSun,
+	ThermometerSunIcon,
+	Trash2,
+} from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
@@ -21,6 +29,25 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 	const [editingTimeSetId, setEditingTimeSetId] = useState<string | null>(null);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const confirm = useConfirm();
+
+	const isFirstRender = useRef(true);
+	useEffect(() => {
+		isFirstRender.current = false;
+	}, []);
+
+	const [showIcon, setShowIcon] = useState(false);
+
+	// Trigger the icon show whenever isWarmup changes
+	useEffect(() => {
+		// We don't want this to run on the very first mount
+		if (isFirstRender.current) return;
+
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		setShowIcon(true);
+		const timer = setTimeout(() => setShowIcon(false), 1000);
+
+		return () => clearTimeout(timer);
+	}, [set.isWarmup]);
 
 	async function handleRemoveSet(exerciseId: string, setId: string) {
 		if (set.time || set.reps || set.weight) {
@@ -89,13 +116,21 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			>
 				<div
 					className={cn(
-						"flex h-8 w-8 items-center justify-center rounded-lg text-sm font-semibold transition-colors",
+						"flex h-8 w-8 items-center justify-center rounded-lg text-sm font-semibold transition-all duration-300",
 						set.isWarmup
-							? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" // Warmup (Blue)
-							: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400", // Normal (Orange)
+							? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+							: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",
 					)}
 				>
-					{index + 1}
+					{showIcon ? (
+						set.isWarmup ? (
+							<ThermometerSunIcon className="animate-in zoom-in size-4" />
+						) : (
+							<DumbbellIcon className="animate-in zoom-in size-4" />
+						)
+					) : (
+						<span className="animate-in fade-in duration-500">{index + 1}</span>
+					)}
 				</div>
 			</button>
 
