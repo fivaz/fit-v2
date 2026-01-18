@@ -23,10 +23,15 @@ export async function getExercisesSearchAction({
 	page: number;
 	pageSize?: number;
 }) {
+	// 1. Split the search string into individual words and filter out empty strings
+	const searchWords = search?.trim().split(/\s+/).filter(Boolean) || [];
+
 	const filter: Prisma.ExerciseWhereInput = {
 		AND: [
-			search ? { name: { contains: search, mode: "insensitive" } } : {},
-			// Use hasSome to match any muscle in the array
+			// 2. Map each word to a "contains" check
+			...searchWords.map((word) => ({
+				name: { contains: word, mode: "insensitive" as Prisma.QueryMode },
+			})),
 			{
 				muscles: { hasSome: muscles },
 			},
