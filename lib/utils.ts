@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export async function devDelay(ms: number = 0) {
+export async function devDelay(ms: number = 1000) {
 	if (process.env.NODE_ENV === "development") {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
@@ -17,7 +17,7 @@ export function sameOrder<T extends { id: string }>(a: T[], b: T[]) {
 }
 
 export function replaceDomain(url: string | null | undefined): string {
-	if(!process.env.NEXT_PUBLIC_IS_PUBLIC_DOMAIN_DOWN) return url || "";
+	if (!process.env.NEXT_PUBLIC_IS_PUBLIC_DOMAIN_DOWN) return url || "";
 
 	if (!url) return "";
 

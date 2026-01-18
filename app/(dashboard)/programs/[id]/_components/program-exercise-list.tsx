@@ -40,12 +40,11 @@ export function ProgramExerciseList({ programId }: ProgramExerciseListProps) {
 				});
 			}}
 		>
-			<div className="flex flex-col gap-4">
+			<div className="pb-28 flex flex-col gap-4">
 				{exercises.map((exercise, index) => (
 					<ProgramExerciseRow key={exercise.id} exercise={exercise} index={index} />
 				))}
 			</div>
-			<div className="mb-28"></div>
 		</DragDropProvider>
 	);
 }

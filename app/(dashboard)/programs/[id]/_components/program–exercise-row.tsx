@@ -1,14 +1,14 @@
 import * as React from "react";
+import { useState } from "react";
 
 import { useSortable } from "@dnd-kit/react/sortable";
 import { GripVertical } from "lucide-react";
 
+import { ExerciseDetails } from "@/app/(dashboard)/exercises/_components/exercise-details";
+import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
 import { Card } from "@/components/ui/card";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { cn, replaceDomain } from "@/lib/utils";
-import { useState } from "react";
-import { ExerciseFormButton } from "@/components/exercise/exercise-form-button";
-import { ExerciseDetails } from "@/app/(dashboard)/exercises/_components/exercise-details";
 
 type ProgramExerciseRowProps = {
 	exercise: ExerciseUI;
@@ -43,7 +43,8 @@ export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps)
 				{/* Content */}
 				{/* Added 'min-w-0' here so the flex child can shrink smaller than its content, it's necessary for the truncate */}
 				<button
-					className="cursor-pointer flex min-w-0 flex-1 items-center gap-4 p-4 text-left"
+					type="button"
+					className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 p-4 text-left"
 					onClick={() => setShowForm(true)}
 				>
 					<div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
