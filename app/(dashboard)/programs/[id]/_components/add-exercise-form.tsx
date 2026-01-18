@@ -21,8 +21,8 @@ import { ProgramWithExercises } from "@/lib/program/type";
 
 type AddExerciseFormProps = {
 	program: ProgramWithExercises;
-	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
 };
 
 export function AddExerciseForm({ program, open, onOpenChange }: AddExerciseFormProps) {
@@ -51,7 +51,7 @@ export function AddExerciseForm({ program, open, onOpenChange }: AddExerciseForm
 	};
 
 	return (
-		<Drawer open={open} onOpenChange={onOpenChange}>
+		<Drawer autoFocus={true} open={open} onOpenChange={onOpenChange}>
 			{/* Omit Trigger if controlled externally */}
 			<DrawerContent>
 				<div className="relative mx-auto flex h-full w-full max-w-md flex-col overflow-hidden">

@@ -50,20 +50,41 @@ export async function getExercisesAction(
 
 	const userId = await getUserId();
 
-	// Calculate how many items to skip for pagination
-	const skip = (page - 1) * pageSize;
+	// --- Pagination: coerce and clamp inputs to safe integers ---
+	const safePage = Number.isFinite(Number(page)) ? Math.max(1, Math.floor(Number(page))) : 1;
+	const MAX_PAGE_SIZE = 100;
+	const safePageSize = Number.isFinite(Number(pageSize))
+		? Math.max(1, Math.min(MAX_PAGE_SIZE, Math.floor(Number(pageSize))))
+		: 20;
+
+	const skip = (safePage - 1) * safePageSize;
+
+	// --- Build a safe `where` object: do NOT spread the incoming filter at top-level ---
+	// Strip any boolean operator fields from the incoming filter to avoid callers injecting OR/AND/NOT.
+	const sanitizedFilter: Prisma.ExerciseWhereInput = {};
+	if (filter && typeof filter === "object") {
+		for (const [key, value] of Object.entries(filter)) {
+			if (key === "AND" || key === "OR" || key === "NOT") {
+				// Skip boolean operators provided by callers
+				continue;
+			}
+			// Copy allowed keys as-is (shallow copy). Deep validation can be added if needed.
+			(sanitizedFilter as any)[key] = value;
+		}
+	}
+
+	const where: Prisma.ExerciseWhereInput = {
+		AND: [sanitizedFilter || {}, { OR: [{ userId }, { userId: null }] }],
+	};
 
 	const exercises = await prisma.exercise.findMany({
-		where: {
-			OR: [{ userId }, { userId: null }],
-			...filter,
-		},
+		where,
 		...exerciseUIArgs,
 		orderBy: {
 			name: "asc",
 		},
 		skip,
-		take: pageSize,
+		take: safePageSize,
 	});
 
 	return exercises.map((exercise) => ({
