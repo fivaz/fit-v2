@@ -17,6 +17,7 @@ export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: 
 			id: set.id, // Using the client-generated UUID
 			reps: set.reps,
 			weight: set.weight,
+			time: set.time,
 			order: index,
 			workoutExerciseId,
 		})),
