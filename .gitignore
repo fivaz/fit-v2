@@ -46,3 +46,4 @@ next-env.d.ts
 .act-cache
 scripts/exercises-full.json
 public/exercises/*
+.idea/
