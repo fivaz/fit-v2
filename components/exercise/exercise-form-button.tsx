@@ -23,14 +23,14 @@ import { buildEmptyExercise, ExerciseUI } from "@/lib/exercise/type";
 type ExerciseFormButtonProps = React.ComponentProps<typeof Button> & {
 	exercise?: ExerciseUI;
 	open?: boolean;
-	setOpen?: (open: boolean) => void;
+	onChangeOpen?: (open: boolean) => void;
 };
 
 export function ExerciseFormButton({
 	children,
 	exercise = buildEmptyExercise(),
 	open: externalOpen,
-	setOpen: externalSetOpen,
+	onChangeOpen: setExternalOpen,
 	...props
 }: ExerciseFormButtonProps) {
 	// Internal state management if external state isn't provided
@@ -40,7 +40,7 @@ export function ExerciseFormButton({
 	// Determine which state to use
 	const isControlled = externalOpen !== undefined;
 	const open = isControlled ? externalOpen : internalOpen;
-	const setOpen = isControlled ? externalSetOpen : setInternalOpen;
+	const setOpen = isControlled ? setExternalOpen : setInternalOpen;
 
 	const handleDelete = async () => {
 		const confirmed = await confirm({
@@ -70,7 +70,7 @@ export function ExerciseFormButton({
 				<div className="mx-auto w-full max-w-md overflow-y-auto pb-6">
 					<DrawerHeader className="relative">
 						<DrawerTitle>{exercise.id ? "Edit Exercise" : "Create Exercise"}</DrawerTitle>
-						{exercise.id && !exercise.isPrivate && (
+						{exercise.id && exercise.isPrivate && (
 							<Button
 								variant="destructive"
 								className="absolute top-0 right-0 mx-4 my-2"
