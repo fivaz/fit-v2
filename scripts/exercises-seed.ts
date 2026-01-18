@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { MuscleGroup } from "@/lib/muscle/type";
 import { prisma } from "@/lib/prisma";
 
 const URL = "https://pub-d03421385ad444aeb7a94fae07e5d610.r2.dev";
@@ -17,6 +18,8 @@ const exerciseSchema = z.object({
 	description: z.string().optional().nullable(),
 	difficulty: z.string().optional().nullable(),
 	category: z.string().optional().nullable(),
+	// Updated to use the MuscleGroup enum
+	muscles: z.array(z.nativeEnum(MuscleGroup)),
 	imageUrl: z.string().optional().nullable(),
 });
 
@@ -67,9 +70,6 @@ async function bulkInsert(exercises: ExerciseInput[]) {
 	});
 
 	console.log(`✨ Successfully seeded ${result.count} new exercises!`);
-	if (result.count === 0) {
-		console.log("ℹ️ No new exercises were added (they might already exist).");
-	}
 }
 
 /**

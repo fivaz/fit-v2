@@ -4,6 +4,7 @@ import useSWRInfinite from "swr/infinite";
 import { useDebounceValue } from "usehooks-ts";
 
 import { ExerciseFilterShellProps } from "@/components/exercise/exercise-filter-shell";
+import { PAGE_SIZE } from "@/lib/consts";
 import { getExercisesSearchAction } from "@/lib/exercise/actions";
 import { ExerciseUI } from "@/lib/exercise/type";
 import { MuscleGroupType } from "@/lib/muscle/type";
@@ -21,7 +22,7 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 
 	const [debouncedSearchQuery] = useDebounceValue(searchQuery, 300);
 
-	const pageSize = 20;
+	const pageSize = PAGE_SIZE;
 
 	const getKey = (pageIndex: number, previousPageData: ExerciseUI[]) => {
 		if (previousPageData && !previousPageData.length) return null;
