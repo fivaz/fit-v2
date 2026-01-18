@@ -20,14 +20,14 @@ import { buildEmptyProgram, ProgramUI } from "@/lib/program/type";
 type ProgramFormButtonProps = React.ComponentProps<typeof Button> & {
 	program?: ProgramUI;
 	open?: boolean;
-	setOpen?: (open: boolean) => void;
+	onOpenChange?: (open: boolean) => void;
 };
 
 export function ProgramFormButton({
 	children,
 	program = buildEmptyProgram(),
 	open: externalOpen,
-	setOpen: externalOnOpenChange,
+	onOpenChange: setExternalOpen,
 	...props
 }: ProgramFormButtonProps) {
 	// Internal state management if external state isn't provided
@@ -36,10 +36,10 @@ export function ProgramFormButton({
 	// Determine which state to use
 	const isControlled = externalOpen !== undefined;
 	const open = isControlled ? externalOpen : internalOpen;
-	const setOpen = isControlled ? externalOnOpenChange : setInternalOpen;
+	const onOpenChange = isControlled ? setExternalOpen : setInternalOpen;
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
+		<Drawer open={open} onOpenChange={onOpenChange}>
 			{/* Omit Trigger if controlled externally */}
 			{!isControlled && (
 				<DrawerTrigger asChild>
@@ -58,7 +58,7 @@ export function ProgramFormButton({
 						)}
 					</DrawerHeader>
 
-					<ProgramForm program={program} onClose={() => setOpen?.(false)} />
+					<ProgramForm program={program} onClose={() => onOpenChange?.(false)} />
 				</div>
 			</DrawerContent>
 		</Drawer>

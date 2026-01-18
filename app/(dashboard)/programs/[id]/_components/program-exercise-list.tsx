@@ -34,7 +34,7 @@ export function ProgramExerciseList({ programId }: ProgramExerciseListProps) {
 					persist: () =>
 						reorderProgramExercisesAction(
 							programId,
-							exercises.map((e) => e.id),
+							nextItems.map((e) => e.id),
 						),
 					onError: () => toast.error("Failed to reorder program's exercises."),
 				});

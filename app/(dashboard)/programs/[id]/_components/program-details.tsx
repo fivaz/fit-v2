@@ -105,12 +105,16 @@ export function ProgramDetailsInternal() {
 					<AddExerciseForm
 						program={program}
 						open={showAddExerciseForm}
-						setOpen={setShowAddExerciseForm}
+						onOpenChange={setShowAddExerciseForm}
 					/>
 				</ExercisesProvider>
 			</div>
 
-			<ProgramFormButton program={program} open={showProgramForm} setOpen={setShowProgramForm} />
+			<ProgramFormButton
+				program={program}
+				open={showProgramForm}
+				onOpenChange={setShowProgramForm}
+			/>
 		</>
 	);
 }

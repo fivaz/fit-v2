@@ -21,7 +21,7 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 
 	const [debouncedSearchQuery] = useDebounceValue(searchQuery, 300);
 
-	const PAGE_SIZE = 20;
+	const pageSize = 20;
 
 	const getKey = (pageIndex: number, previousPageData: ExerciseUI[]) => {
 		if (previousPageData && !previousPageData.length) return null;
@@ -29,7 +29,7 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 			search: debouncedSearchQuery,
 			muscles: selectedMuscles,
 			page: pageIndex + 1,
-			PAGE_SIZE,
+			pageSize,
 		};
 	};
 
@@ -42,7 +42,7 @@ export function useExerciseFilters(muscles: MuscleGroupType[]): UseExerciseFilte
 		filteredExercises: data ? data.flat() : [],
 		isLoading: isLoading || (isValidating && data && data.length === size) || false,
 		fetchNextPage: () => setSize(size + 1),
-		hasNextPage: data ? data[data.length - 1].length === PAGE_SIZE : true,
+		hasNextPage: data ? data[data.length - 1].length === pageSize : true,
 		searchQuery,
 		setSearchQuery,
 		selectedMuscles,

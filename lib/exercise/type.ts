@@ -24,7 +24,7 @@ export function buildEmptyExercise(): ExerciseUI {
 		muscles: [],
 		imageUrl: null,
 		localPath: null,
-		isPrivate: false,
+		isPrivate: true,
 		instructions: [],
 	};
 }
@@ -37,7 +37,7 @@ export function formToExercise(formData: FormData): ExerciseUI {
 		//TODO handle image upload
 		imageUrl: null,
 		localPath: null,
-		isPrivate: false,
+		isPrivate: true,
 		instructions: [],
 	};
 }
