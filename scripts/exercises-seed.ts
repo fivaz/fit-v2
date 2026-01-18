@@ -28,7 +28,10 @@ const exerciseSchema = z.object({
 type ExerciseInput = z.infer<typeof exerciseSchema>;
 
 /**
- * 1. Fetch JSON data from CDN
+ * Download and parse exercise seed JSON from the configured seed URL.
+ *
+ * @returns The parsed JSON data from the exercise seed URL.
+ * @throws Error if the HTTP response has a non-OK status.
  */
 async function fetchExercises(): Promise<unknown> {
 	const seedUrl = replaceDomain(process.env.EXERCISE_SEED_URL);
@@ -100,7 +103,10 @@ async function bulkInsert(exercises: ExerciseInput[]) {
 }
 
 /**
- * Main Orchestrator
+ * Orchestrates fetching exercise seed data, validating it, and inserting it into the database.
+ *
+ * Performs the full seeding flow: fetches raw data, validates against the exercise schema, and bulk-inserts validated records.
+ * On error, logs the failure and terminates the process with exit code 1. Always disconnects the Prisma client when finished.
  */
 async function seedDatabase() {
 	try {

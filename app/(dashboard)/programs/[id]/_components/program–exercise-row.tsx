@@ -15,6 +15,15 @@ type ProgramExerciseRowProps = {
 	index: number;
 };
 
+/**
+ * Render a sortable program exercise row with a drag handle, thumbnail, metadata, and controls to open either an edit form or details panel.
+ *
+ * Clicking the main content opens the corresponding details or form controlled by the exercise's `isPrivate` flag.
+ *
+ * @param exercise - The exercise data to display (name, imageUrl, muscles, isPrivate, id, etc.).
+ * @param index - Zero-based position used for sortable ordering.
+ * @returns The rendered exercise row element.
+ */
 export function ProgramExerciseRow({ exercise, index }: ProgramExerciseRowProps) {
 	const { ref, handleRef, isDragging } = useSortable({
 		id: exercise.id,

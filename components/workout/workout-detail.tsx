@@ -25,6 +25,12 @@ type WorkoutDetailProps = {
 	initialWorkout: NonNullable<WorkoutWithMappedSets>;
 };
 
+/**
+ * Renders the detailed view for a workout, including exercises, sets, sync status, and finish controls.
+ *
+ * @param initialWorkout - The workout data with mapped sets used to initialize component state and render exercises.
+ * @returns The component's rendered UI for viewing and managing the given workout.
+ */
 export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 	const [exerciseSets, setExerciseSets] = useState<WorkoutSetMap>(initialWorkout.exerciseSets);
 
