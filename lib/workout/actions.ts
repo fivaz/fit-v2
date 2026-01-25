@@ -19,6 +19,7 @@ export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: 
 			reps: set.reps,
 			weight: set.weight,
 			time: set.time,
+			isWarmup: set.isWarmup,
 			order: index,
 			workoutExerciseId,
 		})),
