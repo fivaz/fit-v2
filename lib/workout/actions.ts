@@ -11,6 +11,7 @@ import { getUserId } from "@/lib/utils-server";
 import { WorkoutSetMap, workoutWithExercisesAndSets } from "@/lib/workout/type";
 
 export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: WorkoutSetMap) {
+	await devDelay();
 	// 1. Flatten the map into an array compatible with createMany
 	const allSets = Object.entries(exerciseSetsMap).flatMap(([workoutExerciseId, sets]) =>
 		sets.map((set, index) => ({
@@ -18,6 +19,7 @@ export async function syncWorkoutSetsAction(workoutId: string, exerciseSetsMap: 
 			reps: set.reps,
 			weight: set.weight,
 			time: set.time,
+			isWarmup: set.isWarmup,
 			order: index,
 			workoutExerciseId,
 		})),
@@ -59,7 +61,6 @@ export async function getWorkoutByIdAction(id: string) {
 	workout.exercises.forEach((workoutExercise) => {
 		exerciseSets[workoutExercise.id] = workoutExercise.sets.map((set) => ({
 			...set,
-			time: set.time ? set.time.toISOString() : null,
 		}));
 	});
 	return {
@@ -68,7 +69,7 @@ export async function getWorkoutByIdAction(id: string) {
 	};
 }
 
-export type WorkoutWithMappedSets = Awaited<ReturnType<typeof getWorkoutByIdAction>>;
+export type WorkoutWithMappedSets = NonNullable<Awaited<ReturnType<typeof getWorkoutByIdAction>>>;
 
 export async function handleStartWorkoutAction(programId: string) {
 	await devDelay();
@@ -186,7 +187,6 @@ export async function finishWorkoutAction(workoutId: string) {
 	}
 
 	revalidatePath(ROUTES.PROGRESS);
-	redirect(ROUTES.PROGRESS);
 }
 
 export async function redirectToActiveWorkoutAction() {

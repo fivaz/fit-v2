@@ -1,7 +1,17 @@
 import { Prisma } from "@/lib/generated/prisma/client";
-import { Set } from "@/lib/generated/prisma/client";
 
-export type SetUI = Pick<Set, "id" | "reps" | "weight" | "order"> & { time: string | null };
+export const setUIArgs = {
+	select: {
+		id: true,
+		order: true,
+		reps: true,
+		weight: true,
+		time: true,
+		isWarmup: true,
+	},
+} satisfies Prisma.SetDefaultArgs;
+
+export type SetUI = Prisma.SetGetPayload<typeof setUIArgs>;
 
 export const workoutWithExercisesAndSets = {
 	select: {
@@ -38,6 +48,7 @@ export const workoutWithExercisesAndSets = {
 					orderBy: {
 						order: "asc" as const,
 					},
+					...setUIArgs,
 				},
 			},
 		},
@@ -56,5 +67,6 @@ export function getEmptySet(order: number): SetUI {
 		weight: 0,
 		order,
 		time: null,
+		isWarmup: false,
 	};
 }
