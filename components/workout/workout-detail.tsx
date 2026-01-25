@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { format } from "date-fns";
 import { CheckCircle, CloudCheck, CloudUpload, Loader2Icon } from "lucide-react";
@@ -11,6 +12,7 @@ import { WorkoutTimer } from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import { ExerciseCard } from "@/components/workout/workout-exercise-row";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
+import { ROUTES } from "@/lib/consts";
 import { logError } from "@/lib/logger";
 import {
 	finishWorkoutAction,
@@ -18,8 +20,6 @@ import {
 	WorkoutWithMappedSets,
 } from "@/lib/workout/actions";
 import { WorkoutSetMap } from "@/lib/workout/type";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/lib/consts";
 
 type WorkoutDetailProps = {
 	initialWorkout: WorkoutWithMappedSets;
@@ -32,7 +32,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 	const [isFinishing, setIsFinishing] = useState(false);
 	const isFirstRender = useRef(true);
 	const confirm = useConfirm();
-	const router = useRouter()
+	const router = useRouter();
 
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -70,10 +70,17 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 		if (!confirmed) return;
 
 		setIsFinishing(true);
-		await finishWorkoutAction(initialWorkout.id);
-		setIsFinishing(false);
-		toast.success(`Workout finished on ${format(new Date(), "PPpp")}`);
-		router.push(ROUTES.PROGRESS);
+
+		try {
+			await finishWorkoutAction(initialWorkout.id);
+			toast.success(`Workout finished on ${format(new Date(), "PPpp")}`);
+			router.push(ROUTES.PROGRESS);
+		} catch (error) {
+			logError(error, { extra: { context: "WorkoutDetail#handleFinish" } });
+			toast.error("Failed to finish workout");
+		} finally {
+			setIsFinishing(false);
+		}
 	}
 
 	return (
