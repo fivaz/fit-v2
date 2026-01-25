@@ -1,3 +1,9 @@
+## [1.17.1](https://github.com/fivaz/fit-v2/compare/v1.17.0...v1.17.1) (2026-01-25)
+
+### 🧹 Chores
+
+* add some error handling ([f6ad96d](https://github.com/fivaz/fit-v2/commit/f6ad96dd078d2c64b4eca00b024dcb3860808bb5))
+
 ## [1.17.0](https://github.com/fivaz/fit-v2/compare/v1.16.0...v1.17.0) (2026-01-25)
 
 ### ✨ Features
