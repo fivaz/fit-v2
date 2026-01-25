@@ -29,6 +29,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 	const [editingTimeSetId, setEditingTimeSetId] = useState<string | null>(null);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const confirm = useConfirm();
+	const setTime = set.time ? format(new Date(set.time), "HH:mm") : "";
 
 	const [showIcon, setShowIcon] = useState(false);
 
@@ -57,7 +58,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 		}));
 	}
 
-	const patchSet = (field: keyof SetUI, value?: string | number) => {
+	const patchSet = <K extends keyof SetUI>(field: K, value?: SetUI[K]) => {
 		setExerciseSets((map) => ({
 			...map,
 			[exerciseId]: (map[exerciseId] ?? []).map((s) =>
@@ -69,7 +70,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 	const handleTimeInputChange = (timeString: string) => {
 		if (!timeString) return;
 		const date = parse(timeString, "HH:mm", new Date());
-		patchSet("time", date.toISOString());
+		patchSet("time", date);
 	};
 
 	return (
@@ -84,6 +85,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			{/* Toggle Warmup */}
 			<button
 				type="button"
+				aria-label="Toggle warmup set"
 				onClick={() => patchSet("isWarmup")}
 				disabled={isPending}
 				className="flex cursor-pointer items-center justify-center transition-transform active:scale-95"
@@ -137,7 +139,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 						}
 					}}
 					// date-fns format 'HH:mm' matches input type="time" requirement
-					defaultValue={set.time ? format(new Date(set.time), "HH:mm") : ""}
+					defaultValue={setTime}
 					onBlur={() => setEditingTimeSetId(null)}
 					onChange={(e) => handleTimeInputChange(e.target.value)}
 					// This allows the user to tap again to open the native picker
@@ -156,7 +158,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 						if (timerRef.current) {
 							clearTimeout(timerRef.current);
 							if (editingTimeSetId !== set.id) {
-								patchSet("time", new Date().toISOString());
+								patchSet("time", new Date());
 							}
 						}
 					}}
@@ -170,7 +172,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 							: "border-gray-200 bg-gray-50 text-gray-400 hover:border-orange-500 dark:border-gray-600 dark:bg-gray-700",
 					)}
 				>
-					{set.time ? format(new Date(set.time), "HH:mm") : <Clock className="mx-auto h-4 w-4" />}
+					{setTime || <Clock className="mx-auto h-4 w-4" />}
 				</motion.button>
 			)}
 

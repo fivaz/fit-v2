@@ -1,5 +1,4 @@
 import { Prisma } from "@/lib/generated/prisma/client";
-import { Set } from "@/lib/generated/prisma/client";
 
 export const setUIArgs = {
 	select: {
