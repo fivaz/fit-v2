@@ -1,18 +1,14 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { format, parse } from "date-fns";
 import { motion } from "framer-motion";
 import {
-	Clock,
-	Dumbbell,
 	DumbbellIcon,
-	Thermometer,
-	ThermometerSun,
 	ThermometerSunIcon,
 	Trash2,
 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { TimeInput } from "@/components/workout/time-input";
 import { useConfirm } from "@/hooks/confirm/use-confirm";
 import { cn } from "@/lib/utils";
 import { SetUI, WorkoutSetMap } from "@/lib/workout/type";
@@ -26,21 +22,26 @@ type SetRowProps = {
 };
 
 export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: SetRowProps) {
-	const [editingTimeSetId, setEditingTimeSetId] = useState<string | null>(null);
-	const timerRef = useRef<NodeJS.Timeout | null>(null);
-	const confirm = useConfirm();
-	const setTime = set.time ? format(new Date(set.time), "HH:mm") : "";
-
 	const [showIcon, setShowIcon] = useState(false);
+	const iconTimerRef = useRef<NodeJS.Timeout | null>(null);
+	const confirm = useConfirm();
 
-	// Trigger the icon show whenever isWarmup changes
-	useEffect(() => {
-		// eslint-disable-next-line react-hooks/set-state-in-effect
+	const patchSet = <K extends keyof SetUI>(field: K, value: SetUI[K]) => {
+		setExerciseSets((map) => ({
+			...map,
+			[exerciseId]: (map[exerciseId] ?? []).map((s) =>
+				s.id === set.id ? { ...s, [field]: value } : s,
+			),
+		}));
+	};
+
+	const handleToggleWarmup = () => {
+		patchSet("isWarmup", !set.isWarmup);
+
+		if (iconTimerRef.current) clearTimeout(iconTimerRef.current);
 		setShowIcon(true);
-		const timer = setTimeout(() => setShowIcon(false), 1000);
-
-		return () => clearTimeout(timer);
-	}, [set.isWarmup]);
+		iconTimerRef.current = setTimeout(() => setShowIcon(false), 1000);
+	};
 
 	async function handleRemoveSet() {
 		if (set.time || set.reps || set.weight) {
@@ -48,7 +49,6 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 				title: "Delete Set",
 				message: "This set has data. Are you sure you want to delete it?",
 			});
-
 			if (!confirmed) return;
 		}
 
@@ -57,21 +57,6 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			[exerciseId]: (map[exerciseId] ?? []).filter((s) => s.id !== set.id),
 		}));
 	}
-
-	const patchSet = <K extends keyof SetUI>(field: K, value?: SetUI[K]) => {
-		setExerciseSets((map) => ({
-			...map,
-			[exerciseId]: (map[exerciseId] ?? []).map((s) =>
-				s.id === set.id ? { ...s, [field]: value ?? !s[field] } : s,
-			),
-		}));
-	};
-
-	const handleTimeInputChange = (timeString: string) => {
-		if (!timeString) return;
-		const date = parse(timeString, "HH:mm", new Date());
-		patchSet("time", date);
-	};
 
 	return (
 		<motion.div
@@ -86,7 +71,7 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 			<button
 				type="button"
 				aria-label="Toggle warmup set"
-				onClick={() => patchSet("isWarmup")}
+				onClick={handleToggleWarmup}
 				disabled={isPending}
 				className="flex cursor-pointer items-center justify-center transition-transform active:scale-95"
 			>
@@ -110,75 +95,31 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 				</div>
 			</button>
 
-			{/* Reps Input */}
+			{/* Reps */}
 			<Input
 				type="number"
-				inputMode="numeric"
 				value={set.reps || ""}
 				onChange={(e) => patchSet("reps", Number(e.target.value))}
 				className="h-10 border-gray-200 bg-gray-50 text-center dark:border-gray-600 dark:bg-gray-700"
 			/>
 
-			{/* Weight Input */}
+			{/* Weight */}
 			<Input
 				type="number"
-				inputMode="decimal"
 				value={set.weight || ""}
 				onChange={(e) => patchSet("weight", parseFloat(e.target.value))}
 				className="h-10 border-gray-200 bg-gray-50 text-center dark:border-gray-600 dark:bg-gray-700"
 			/>
 
-			{/* Time Input */}
-			{editingTimeSetId === set.id ? (
-				<Input
-					type="time"
-					ref={(input) => {
-						// Manually focus without selecting text when component mounts
-						if (input && document.activeElement !== input) {
-							input.focus();
-						}
-					}}
-					// date-fns format 'HH:mm' matches input type="time" requirement
-					defaultValue={setTime}
-					onBlur={() => setEditingTimeSetId(null)}
-					onChange={(e) => handleTimeInputChange(e.target.value)}
-					// This allows the user to tap again to open the native picker
-					onClick={(e) => e.currentTarget.showPicker?.()}
-					className="h-10 border-orange-500 bg-white p-0 text-center dark:bg-gray-800"
-				/>
-			) : (
-				<motion.button
-					type="button"
-					onPointerDown={() => {
-						timerRef.current = setTimeout(() => {
-							setEditingTimeSetId(set.id);
-						}, 500);
-					}}
-					onPointerUp={() => {
-						if (timerRef.current) {
-							clearTimeout(timerRef.current);
-							if (editingTimeSetId !== set.id) {
-								patchSet("time", new Date());
-							}
-						}
-					}}
-					onPointerLeave={() => {
-						if (timerRef.current) clearTimeout(timerRef.current);
-					}}
-					className={cn(
-						"h-10 rounded-md border text-sm font-medium transition-colors",
-						set.time
-							? "border-green-200 bg-green-50 text-green-700 dark:border-green-900 dark:bg-green-900/20 dark:text-green-400"
-							: "border-gray-200 bg-gray-50 text-gray-400 hover:border-orange-500 dark:border-gray-600 dark:bg-gray-700",
-					)}
-				>
-					{setTime || <Clock className="mx-auto h-4 w-4" />}
-				</motion.button>
-			)}
+			{/* Time (Extracted) */}
+			<TimeInput
+				value={set.time}
+				onUpdate={(date) => patchSet("time", date)}
+				isPending={isPending}
+			/>
 
-			{/* Delete Button */}
+			{/* Delete */}
 			<button
-				disabled={isPending}
 				onClick={handleRemoveSet}
 				className="flex items-center justify-center rounded-lg text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
 			>
