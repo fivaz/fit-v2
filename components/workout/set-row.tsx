@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import { motion } from "framer-motion";
 import {
@@ -25,6 +25,12 @@ export function SetRow({ index, isPending, setExerciseSets, exerciseId, set }: S
 	const [showIcon, setShowIcon] = useState(false);
 	const iconTimerRef = useRef<NodeJS.Timeout | null>(null);
 	const confirm = useConfirm();
+
+	useEffect(() => {
+		return () => {
+			if (iconTimerRef.current) clearTimeout(iconTimerRef.current);
+		};
+	}, []);
 
 	const patchSet = <K extends keyof SetUI>(field: K, value: SetUI[K]) => {
 		setExerciseSets((map) => ({

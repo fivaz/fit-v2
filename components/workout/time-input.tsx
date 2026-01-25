@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { format, parse } from "date-fns";
 import { motion } from "framer-motion";
@@ -17,6 +17,13 @@ export function TimeInput({ value, onUpdate, isPending }: TimeInputProps) {
 	const [isEditing, setIsEditing] = useState(false);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const formattedTime = value ? format(new Date(value), "HH:mm") : "";
+
+	useEffect(() => {
+		return () => {
+			if (timerRef.current) clearTimeout(timerRef.current);
+		};
+	}, []);
+
 
 	const handlePointerDown = () => {
 		// Start timer for long press (edit mode)
