@@ -1,3 +1,25 @@
+## [1.17.0](https://github.com/fivaz/fit-v2/compare/v1.16.0...v1.17.0) (2026-01-25)
+
+### ✨ Features
+
+* add a tooltip to inform about the warm up sets ([78c262b](https://github.com/fivaz/fit-v2/commit/78c262ba1e2b3ac2e8091f450b275f4a024ef50d))
+* add option to toggle set as warmup ([7c8e316](https://github.com/fivaz/fit-v2/commit/7c8e316a8cde46ad0ad99d8cdb730964b76c3d80))
+* improve experience using input type button in set ([affe1f5](https://github.com/fivaz/fit-v2/commit/affe1f54a4e7331af885c5d0504cc59ac249f737))
+* make set toggle prettier ([00f7a72](https://github.com/fivaz/fit-v2/commit/00f7a7243449e5ac121c8ce5b6809597ca5c3e23))
+* show icons to represent when user change set isWarmup ([5153b38](https://github.com/fivaz/fit-v2/commit/5153b38e9939d77901618d2a55ab440892eb9468))
+* use client navigation to redirect after workout ends to show a toast message ([64c5895](https://github.com/fivaz/fit-v2/commit/64c58956e5a85cda1d81f0191afc6e45942a044d))
+
+### 🐛 Bug Fixes
+
+* fix isWarmup was not persisting as it was not part of the sync function ([5a1007d](https://github.com/fivaz/fit-v2/commit/5a1007d4a356c74e8e7b782b0e052dc4bae98395))
+
+### 🔨 Code Refactoring
+
+* keep set.time as a Date object ([dd8f589](https://github.com/fivaz/fit-v2/commit/dd8f589a33bbbd020e973d100d3b785ce6ae0bb4))
+* move time input from set row to its own component ([a90bf0c](https://github.com/fivaz/fit-v2/commit/a90bf0c7f7694b30245aae55682638e11fe36119))
+* simplify set-row ([bfda4ad](https://github.com/fivaz/fit-v2/commit/bfda4ad9766af9351f6426d1ea45030cb84bc616))
+* split work-detail component into two ([b5fb673](https://github.com/fivaz/fit-v2/commit/b5fb673f1966b3c4d5b452a14cdf0eff301c226a))
+
 ## [1.16.0](https://github.com/fivaz/fit-v2/compare/v1.15.2...v1.16.0) (2026-01-18)
 
 ### ✨ Features
