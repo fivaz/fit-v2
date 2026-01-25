@@ -186,7 +186,6 @@ export async function finishWorkoutAction(workoutId: string) {
 	}
 
 	revalidatePath(ROUTES.PROGRESS);
-	redirect(ROUTES.PROGRESS);
 }
 
 export async function redirectToActiveWorkoutAction() {

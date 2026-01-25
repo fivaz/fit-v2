@@ -18,6 +18,8 @@ import {
 	WorkoutWithMappedSets,
 } from "@/lib/workout/actions";
 import { WorkoutSetMap } from "@/lib/workout/type";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/lib/consts";
 
 type WorkoutDetailProps = {
 	initialWorkout: WorkoutWithMappedSets;
@@ -30,6 +32,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 	const [isFinishing, setIsFinishing] = useState(false);
 	const isFirstRender = useRef(true);
 	const confirm = useConfirm();
+	const router = useRouter()
 
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -70,6 +73,7 @@ export function WorkoutDetail({ initialWorkout }: WorkoutDetailProps) {
 		await finishWorkoutAction(initialWorkout.id);
 		setIsFinishing(false);
 		toast.success(`Workout finished on ${format(new Date(), "PPpp")}`);
+		router.push(ROUTES.PROGRESS);
 	}
 
 	return (
