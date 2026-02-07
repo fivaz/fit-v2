@@ -23,7 +23,7 @@ export function ExerciseSelectorItem({
 				className={cn(
 					"group bg-muted/40 relative flex cursor-pointer items-center gap-4 rounded-xl border border-transparent p-3",
 					"hover:bg-muted transition-all active:scale-[0.98]",
-					"has-checked:border-orange-500",
+					"focus:ring-2 focus:ring-orange-500 has-checked:border-orange-500",
 				)}
 			>
 				<div
@@ -31,7 +31,16 @@ export function ExerciseSelectorItem({
 						e.preventDefault(); // It stops the label from toggling the checkbox
 						setShowDetails(true);
 					}}
-					className="relative z-10 h-12 w-12 shrink-0 overflow-hidden rounded-lg border hover:opacity-80"
+					role="button"
+					tabIndex={0}
+					aria-label={`View details for ${exercise.name}`}
+					onKeyDown={(e) => {
+						if (e.key === "Enter" || e.key === " ") {
+							e.preventDefault();
+							setShowDetails(true);
+						}
+					}}
+					className="relative z-10 h-12 w-12 shrink-0 overflow-hidden rounded-lg border hover:opacity-80 focus:ring-2 focus:ring-orange-500"
 				>
 					<img
 						src={exercise.imageUrl || "/exercise.jpg"}

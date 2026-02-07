@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Info, Plus } from "lucide-react";
 
-import { ExerciseDetails } from "@/app/(dashboard)/exercises/_components/exercise-details"; // Ensure path is correct
+import { ExerciseDetails } from "@/app/(dashboard)/exercises/_components/exercise-details";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { SetRow } from "@/components/workout/set-row";
