@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -48,7 +47,7 @@ export async function proxy(req: NextRequest) {
 	}
 
 	const session = await auth.api.getSession({
-		headers: await headers(),
+		headers: req.headers,
 	});
 
 	if (!session) {
