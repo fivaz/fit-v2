@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { ROUTES } from "@/lib/consts";
 import { programsDetailUrl } from "@/lib/programs/navigation";
 
 type ProgramLegacyRouteRedirectProps = {
@@ -15,10 +14,6 @@ export function ProgramLegacyRouteRedirect({ programId }: ProgramLegacyRouteRedi
 	const router = useRouter();
 
 	useEffect(() => {
-		if (programId === "placeholder") {
-			router.replace(ROUTES.PROGRAMS);
-			return;
-		}
 		router.replace(programsDetailUrl(programId));
 	}, [programId, router]);
 
