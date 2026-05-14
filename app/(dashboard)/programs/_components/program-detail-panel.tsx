@@ -32,7 +32,10 @@ export function ProgramDetailPanel({ programId, onBack }: ProgramDetailPanelProp
 	const summaryProgram = summary ? programFromSummary(summary) : undefined;
 	const [loadResult, setLoadResult] = useState<ProgramLoadResult | null>(null);
 	const loadedProgram = loadResult?.programId === programId ? loadResult.program : undefined;
-	const program = loadedProgram ?? summaryProgram ?? null;
+	const program =
+		loadedProgram && summaryProgram
+			? { ...summaryProgram, exercises: loadedProgram.exercises }
+			: (loadedProgram ?? summaryProgram ?? null);
 	const exercisesLoading = loadResult?.programId !== programId;
 
 	useEffect(() => {

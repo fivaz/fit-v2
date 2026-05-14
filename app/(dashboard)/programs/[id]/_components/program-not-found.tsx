@@ -14,7 +14,7 @@ export function ProgramNotFound({ onBack }: ProgramNotFoundProps) {
 		<div className="flex min-h-[40vh] flex-col items-center justify-center gap-4">
 			<p className="text-muted-foreground">Program not found</p>
 			{onBack ? (
-				<Button type="button" variant="outline" onClick={onBack} aria-label="Back to programs">
+				<Button type="button" variant="outline" onClick={onBack}>
 					<ArrowLeftIcon />
 					Go Back
 				</Button>
