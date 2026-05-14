@@ -7,6 +7,19 @@ import { corsHeadersFor, corsPreflightResponse, isAllowedApiCorsOrigin } from "@
 
 const PUBLIC_PATHS = [ROUTES.LOGIN, ROUTES.REGISTER, "/logout"];
 
+function getProgramsShellRewriteUrl(req: NextRequest): URL | null {
+	const detailPrefix = `${ROUTES.PROGRAMS}/`;
+	const pathname = req.nextUrl.pathname;
+	if (!pathname.startsWith(detailPrefix)) return null;
+
+	const detailPath = pathname.slice(detailPrefix.length);
+	if (!detailPath || detailPath.includes("/")) return null;
+
+	const rewriteUrl = req.nextUrl.clone();
+	rewriteUrl.pathname = ROUTES.PROGRAMS;
+	return rewriteUrl;
+}
+
 /** CORS for Capacitor / cross-origin clients hitting `/api/*` (see `lib/cors.ts`). */
 function applyApiCors(request: NextRequest): NextResponse | null {
 	const { pathname } = request.nextUrl;
@@ -53,6 +66,11 @@ export async function proxy(req: NextRequest) {
 	if (!session) {
 		console.warn(`[PROXY] No token found for: ${pathname}. Redirecting to Login.`);
 		return NextResponse.redirect(new URL(ROUTES.LOGIN, req.url));
+	}
+
+	const programsShellRewriteUrl = getProgramsShellRewriteUrl(req);
+	if (programsShellRewriteUrl) {
+		return NextResponse.rewrite(programsShellRewriteUrl);
 	}
 
 	return NextResponse.next();

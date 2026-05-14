@@ -1,12 +1,23 @@
 import { ROUTES } from "@/lib/consts";
 
-export function readProgramsSelectedId(): string | null {
-	if (typeof window === "undefined") return null;
-	return new URLSearchParams(window.location.search).get("id")?.trim() || null;
+type ProgramSearchParams = Pick<URLSearchParams, "get">;
+
+export function readProgramsSelectedId(
+	pathname: string,
+	searchParams?: ProgramSearchParams,
+): string | null {
+	const detailPrefix = `${ROUTES.PROGRAMS}/`;
+	if (pathname.startsWith(detailPrefix)) {
+		const [encodedProgramId] = pathname.slice(detailPrefix.length).split("/");
+		if (!encodedProgramId) return null;
+		return decodeURIComponent(encodedProgramId).trim() || null;
+	}
+
+	return searchParams?.get("id")?.trim() || null;
 }
 
 export function programsDetailUrl(programId: string): string {
-	return `${ROUTES.PROGRAMS}?id=${encodeURIComponent(programId)}`;
+	return `${ROUTES.PROGRAMS}/${encodeURIComponent(programId)}`;
 }
 
 export function pushProgramsSelectedId(programId: string | null): void {

@@ -62,7 +62,7 @@ test.describe("Not found routes", () => {
 
 		await test.step("Unknown program", async () => {
 			await page.goto(`${ROUTES.PROGRAMS}/program-id-that-does-not-exist-0000`);
-			await expect(page).toHaveURL(/\/programs\?id=program-id-that-does-not-exist-0000$/);
+			await expect(page).toHaveURL(/\/programs\/program-id-that-does-not-exist-0000$/);
 			await expect(page.getByText("Program not found")).toBeVisible();
 			await expect(page.getByRole("button", { name: "Go Back" })).toBeVisible();
 		});

@@ -1,14 +1,14 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { ProgramDetailPanel } from "@/app/(dashboard)/programs/_components/program-detail-panel";
 import { ProgramList } from "@/app/(dashboard)/programs/_components/program-list";
 import { ProgramsProvider, useProgramsStore } from "@/hooks/program/store";
 import { getPrograms } from "@/lib/program/api";
 import { ProgramUI } from "@/lib/program/type";
-import { pushProgramsSelectedId } from "@/lib/programs/navigation";
+import { pushProgramsSelectedId, readProgramsSelectedId } from "@/lib/programs/navigation";
 
 function ProgramsHeader() {
 	const { items: programs } = useProgramsStore();
@@ -32,8 +32,9 @@ export default function ProgramsPage() {
 }
 
 function ProgramsPageContent() {
+	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const selectedProgramId = searchParams.get("id")?.trim() || null;
+	const selectedProgramId = readProgramsSelectedId(pathname, searchParams);
 	const [programs, setPrograms] = useState<ProgramUI[]>([]);
 
 	useEffect(() => {
