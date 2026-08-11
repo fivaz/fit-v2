@@ -103,6 +103,11 @@ If you want social login enabled locally, also set:
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
 - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`
 
+To enable **AI coach program generation** (Create Program → AI coach), set:
+
+- `OPENAI_API_KEY` — from [OpenAI](https://platform.openai.com/api-keys)
+- `AI_PROGRAM_MODEL` (optional) — defaults to `gpt-4o-mini`
+
 ### 4) Prepare database
 
 ```bash
