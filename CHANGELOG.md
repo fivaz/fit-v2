@@ -1,3 +1,17 @@
+## [1.29.0](https://github.com/fivaz/fit-v2/compare/v1.28.0...v1.29.0) (2026-08-11)
+
+### ✨ Features
+
+* add AI coach multi-program generation with Gemini ([43df495](https://github.com/fivaz/fit-v2/commit/43df4950f3c980f9a8990ae70de7db5a713c69c0))
+* group AI-generated multi-program splits under one ProgramGroup ([60cccb1](https://github.com/fivaz/fit-v2/commit/60cccb1f3a910d8baf1963796c775f6c6c964b11))
+* submit AI program description with Enter ([d539670](https://github.com/fivaz/fit-v2/commit/d539670f5d7f1d350bb926b85a69394af22dc71d))
+* tighten AI program prompt for count parity and common lifts ([1542cee](https://github.com/fivaz/fit-v2/commit/1542cee5eee6d24c4d70ae1ce5b68945877d9871))
+* update act image ([5e478b1](https://github.com/fivaz/fit-v2/commit/5e478b1d301641b8f020c27c61d704974d54f9d1))
+
+### 🔨 Code Refactoring
+
+* switch AI coach program generation to OpenAI ([e6bf0b8](https://github.com/fivaz/fit-v2/commit/e6bf0b899438f5dffb0f3213a16a6d961d72dfd3))
+
 ## [1.28.0](https://github.com/fivaz/fit-v2/compare/v1.27.3...v1.28.0) (2026-07-06)
 
 ### ✨ Features
